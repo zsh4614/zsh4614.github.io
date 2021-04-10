@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Build the world with code</title>
+  
+  
+  <link href="http://example.com/atom.xml" rel="self"/>
+  
+  <link href="http://example.com/"/>
+  <updated>2021-04-10T06:31:53.692Z</updated>
+  <id>http://example.com/</id>
+  
+  <author>
+    <name>zsh</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>tttt</title>
+    <link href="http://example.com/2021/04/10/tttt/"/>
+    <id>http://example.com/2021/04/10/tttt/</id>
+    <published>2021-04-10T06:31:53.000Z</published>
+    <updated>2021-04-10T06:31:53.692Z</updated>
+    
+    
+    
+    
+    
+  </entry>
+  
+</feed>
