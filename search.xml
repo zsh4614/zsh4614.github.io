@@ -62,6 +62,19 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>test10</title>
+    <url>/2021/04/10/test10/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>git</category>
+      </categories>
+      <tags>
+        <tag>hook</tag>
+        <tag>lint</tag>
+        <tag>xxx</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>test2</title>
     <url>/2021/04/10/test2/</url>
     <content><![CDATA[]]></content>
@@ -90,18 +103,5 @@
     <title>test7</title>
     <url>/2021/04/10/test7/</url>
     <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>test10</title>
-    <url>/2021/04/10/test10/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>git</category>
-      </categories>
-      <tags>
-        <tag>hook</tag>
-        <tag>lint</tag>
-        <tag>xxx</tag>
-      </tags>
   </entry>
 </search>
