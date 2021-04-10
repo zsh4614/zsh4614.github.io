@@ -4,6 +4,7 @@
     <title>C++11之default</title>
     <url>/2021/04/10/C-11%E4%B9%8Bdefault/</url>
     <content><![CDATA[<p>引言：对于default函数，编译器会自动生成函数体定义，从而获得更高的代码执行效率。同时说明了为什么基类的析构函数一定要显式定义成虚析构函数。</p>
+<span id="more"></span>
 <h3 id="1-背景">1.背景</h3>
 <p>C++有4类特殊成员函数，分别是：默认构造函数，默认析构函数，拷贝构造函数以及拷贝赋值运算符，这些类的特殊成员函数负责创建、初始化、销毁，或者拷贝类的对象。如果程序员没有显式地为一个类定义某个特殊成员函数，而又需要用到该特殊成员函数时，则编译器会隐式的为这个类生成一个默认的特殊成员函数。例如：</p>
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">X</span> &#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="keyword">int</span> a;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">X x;</span><br></pre></td></tr></table></figure>
