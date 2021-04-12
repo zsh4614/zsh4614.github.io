@@ -82,7 +82,7 @@
 5.delete可以通过参数禁用某种参数类型的函数，并不会禁用函数的标识符，所以不会影响函数重载；</p>
 ]]></content>
       <categories>
-        <category>C++11</category>
+        <category>C++</category>
       </categories>
       <tags>
         <tag>C++11</tag>
