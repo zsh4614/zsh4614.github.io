@@ -19,31 +19,34 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="怕什么真理无穷进一寸有一寸的欢喜">
-<meta property="og:type" content="website">
-<meta property="og:title" content="欢迎来到我的主页!">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="引言：memset和fill都能进行赋值操作，但是二者有所区别，使用场景和方法也不同。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++之memset和fill函数">
+<meta property="og:url" content="http://example.com/2021/04/17/C-%E4%B9%8Bmemset%E5%92%8Cfill%E5%87%BD%E6%95%B0/index.html">
 <meta property="og:site_name" content="欢迎来到我的主页!">
-<meta property="og:description" content="怕什么真理无穷进一寸有一寸的欢喜">
+<meta property="og:description" content="引言：memset和fill都能进行赋值操作，但是二者有所区别，使用场景和方法也不同。">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-04-16T16:37:45.000Z">
+<meta property="article:modified_time" content="2021-04-16T16:40:03.635Z">
 <meta property="article:author" content="zsh">
-<meta property="article:tag" content="程序员">
+<meta property="article:tag" content="memset">
+<meta property="article:tag" content="fill">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2021/04/17/C-%E4%B9%8Bmemset%E5%92%8Cfill%E5%87%BD%E6%95%B0/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>欢迎来到我的主页!</title>
+  <title>C++之memset和fill函数 | 欢迎来到我的主页!</title>
   
 
 
@@ -185,9 +188,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -203,10 +207,9 @@
       <meta itemprop="name" content="欢迎来到我的主页!">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/04/17/C-%E4%B9%8Bmemset%E5%92%8Cfill%E5%87%BD%E6%95%B0/" class="post-title-link" itemprop="url">C++之memset和fill函数</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          C++之memset和fill函数
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -253,309 +256,53 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>引言：memset和fill都能进行赋值操作，但是二者有所区别，使用场景和方法也不同。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/04/17/C-%E4%B9%8Bmemset%E5%92%8Cfill%E5%87%BD%E6%95%B0/" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
+        <p>引言：memset和fill都能进行赋值操作，但是二者有所区别，使用场景和方法也不同。</p>
+<span id="more"></span>
+<h3 id="1-问题引出">1.问题引出</h3>
+<p>当我们运行下面一段代码试图将数组中的所有数字全部设置为1的时候，会发生预期之外的结果：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">int</span> main &#123;</span><br><span class="line">    <span class="keyword">int</span> a[<span class="number">5</span>];</span><br><span class="line">    <span class="built_in">memset</span>(a, <span class="number">1</span>, <span class="built_in"><span class="keyword">sizeof</span></span>(a));</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">        std::cout &lt;&lt; a[i] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>会发现输出以下的结果：</p>
+<p><code>16843009 16843009 16843009 16843009 16843009</code></p>
+<h3 id="2-原因">2.原因</h3>
+<p>为什么和我们的预期不符？这是因为<code>memset()</code>函数是<strong>以字节为单位进行赋值</strong>的，一个int型数据有4个字节，在上面的例子中我们赋的值是十六进制<code>0x01010101</code>，即二进制数<code>00000001 00000001 00000001 00000001</code>，换算成十进制就是16843009，所以会得出上面的结果。</p>
+<p>所以如果想将int型数组置为想要的十进制数，<strong>只能用<code>memset()</code>置为0或者-1</strong>，因为0的二进制表示全为0， -1的二进制表示全为1，按字节为单位完成赋值的结果保持不变。</p>
+<p>一般情况下，<code>memset()</code>只用来给char型数组赋值，或者对int型数组进行全0或者全1操作。</p>
+<h3 id="3-解决方法">3.解决方法</h3>
+<p><code>fill()</code>函数<strong>按照单元进行赋值</strong>，将一个区间的元素都赋予同一个值。如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;algorithm&gt;</span><br><span class="line">int main() &#123;</span><br><span class="line">	int a[5];</span><br><span class="line">	fill(a, a+5, 1);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以实现对数值中每个元素都赋值为1的目的，也可以对容器进行赋值，注意第一个参数和第二个参数是容器的迭代器。</p>
+<h3 id="4-总结">4.总结</h3>
+<p>1.<code>memset()</code>和<code>fill()</code>都可以实现赋值操作；<br>
+2.<code>memset()</code>是以字节为单位进行，对int型数组赋值只能赋值为0或者-1，<code>fill()</code>以元素为单位进行。</p>
+
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/tags/memset/" rel="tag"># memset</a>
+              <a href="/tags/fill/" rel="tag"># fill</a>
+          </div>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/04/13/%E8%AF%A6%E8%A7%A3C-%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%92%8C%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/header2.jpg">
-      <meta itemprop="name" content="zsh">
-      <meta itemprop="description" content="怕什么真理无穷<br>进一寸有一寸的欢喜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="欢迎来到我的主页!">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/04/13/%E8%AF%A6%E8%A7%A3C-%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%92%8C%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6/" class="post-title-link" itemprop="url">详解C++拷贝构造函数和赋值运算符</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-04-13 01:33:07" itemprop="dateCreated datePublished" datetime="2021-04-13T01:33:07+08:00">2021-04-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-17 00:40:30" itemprop="dateModified" datetime="2021-04-17T00:40:30+08:00">2021-04-17</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C++</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>3.7k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>引言：本文主要介绍了拷贝构造函数和赋值运算符的区别，以及在什么时候调用拷贝构造函数、什么情况下调用赋值运算符；同时较为详细的说明了拷贝构造函数必须以引用的方式传递参数。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/04/13/%E8%AF%A6%E8%A7%A3C-%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%92%8C%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6/" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/04/12/C-11%E4%B9%8Bdeleate/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/header2.jpg">
-      <meta itemprop="name" content="zsh">
-      <meta itemprop="description" content="怕什么真理无穷<br>进一寸有一寸的欢喜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="欢迎来到我的主页!">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/04/12/C-11%E4%B9%8Bdeleate/" class="post-title-link" itemprop="url">C++11之delete</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-04-12 22:56:47 / 修改时间：23:47:38" itemprop="dateCreated datePublished" datetime="2021-04-12T22:56:47+08:00">2021-04-12</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C++</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>2.4k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>引言：delete关键字可以禁用某些函数，或者不期望转换和操作符。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/04/12/C-11%E4%B9%8Bdeleate/" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/04/13/%E8%AF%A6%E8%A7%A3C-%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%92%8C%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6/" rel="prev" title="详解C++拷贝构造函数和赋值运算符">
+      <i class="fa fa-chevron-left"></i> 详解C++拷贝构造函数和赋值运算符
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/04/10/C-11%E4%B9%8Bdefault/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/header2.jpg">
-      <meta itemprop="name" content="zsh">
-      <meta itemprop="description" content="怕什么真理无穷<br>进一寸有一寸的欢喜">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="欢迎来到我的主页!">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/04/10/C-11%E4%B9%8Bdefault/" class="post-title-link" itemprop="url">C++11之default</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-04-10 17:59:20" itemprop="dateCreated datePublished" datetime="2021-04-10T17:59:20+08:00">2021-04-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-12 23:11:09" itemprop="dateModified" datetime="2021-04-12T23:11:09+08:00">2021-04-12</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C++</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>3.3k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>引言：对于default函数，编译器会自动生成函数体定义，从而获得更高的代码执行效率。同时说明了为什么基类的析构函数一定要显式定义成虚析构函数。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/04/10/C-11%E4%B9%8Bdefault/" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-
   
 
 
@@ -608,6 +355,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E9%97%AE%E9%A2%98%E5%BC%95%E5%87%BA"><span class="nav-number">1.</span> <span class="nav-text">1.问题引出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%8E%9F%E5%9B%A0"><span class="nav-number">2.</span> <span class="nav-text">2.原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">3.解决方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">4.总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
