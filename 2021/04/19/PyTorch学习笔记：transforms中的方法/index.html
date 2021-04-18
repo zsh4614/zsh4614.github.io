@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/header2.jpg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/header2.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/header2.jpg">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="引言 ：torchvision.transforms是pytorch中的图像预处理包，包含了很多种对图像数据进行变换的函数，这些都是在我们进行图像数据读入步骤中必不可少的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PyTorch学习笔记：transforms中的方法">
+<meta property="og:url" content="http://example.com/2021/04/19/PyTorch%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%9Atransforms%E4%B8%AD%E7%9A%84%E6%96%B9%E6%B3%95/index.html">
+<meta property="og:site_name" content="欢迎来到我的主页!">
+<meta property="og:description" content="引言 ：torchvision.transforms是pytorch中的图像预处理包，包含了很多种对图像数据进行变换的函数，这些都是在我们进行图像数据读入步骤中必不可少的。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-04-18T16:04:56.000Z">
+<meta property="article:modified_time" content="2021-04-18T16:07:15.537Z">
+<meta property="article:author" content="zsh">
+<meta property="article:tag" content="torchvision.transforms">
+<meta property="article:tag" content="图像预处理函数">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2021/04/19/PyTorch%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%9Atransforms%E4%B8%AD%E7%9A%84%E6%96%B9%E6%B3%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>PyTorch学习笔记：transforms中的方法 | 欢迎来到我的主页!</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="欢迎来到我的主页!" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">欢迎来到我的主页!</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/04/19/PyTorch%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%9Atransforms%E4%B8%AD%E7%9A%84%E6%96%B9%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header2.jpg">
+      <meta itemprop="name" content="zsh">
+      <meta itemprop="description" content="怕什么真理无穷<br>进一寸有一寸的欢喜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欢迎来到我的主页!">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PyTorch学习笔记：transforms中的方法
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-04-19 00:04:56 / 修改时间：00:07:15" itemprop="dateCreated datePublished" datetime="2021-04-19T00:04:56+08:00">2021-04-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PyTorch/" itemprop="url" rel="index"><span itemprop="name">PyTorch</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>引言 ：torchvision.transforms是pytorch中的图像预处理包，包含了很多种对图像数据进行变换的函数，这些都是在我们进行图像数据读入步骤中必不可少的。</p>
+<span id="more"></span>
+<h3 id="1-综述">1.综述</h3>
+<p>transforms中的方法可以归纳为四大类：</p>
+<ul>
+<li>
+<p>裁剪：</p>
+<p>中心裁剪：<code>transforms.CenterCrop</code><br>
+随机裁剪：<code>transforms.RandomCrop</code><br>
+随机长宽比裁剪：<code>transforms.RandomResizedCrop</code><br>
+上下左右中心裁剪：<code>transforms.FiveCrop</code><br>
+上下左右中心裁剪后翻转：<code>transforms.TenCrop</code></p>
+</li>
+<li>
+<p>翻转和旋转：</p>
+<p>依概率p水平翻转：<code>transforms.RandomHorizontalFlip</code><br>
+依概率p垂直翻转：<code>transforms.RandomVerticalFlip</code><br>
+随机翻转：<code>transforms.RandomRotation</code></p>
+</li>
+<li>
+<p>图像变换：</p>
+<p>resize：<code>transforms.Resize</code><br>
+标准化：<code>transforms.Normalize</code><br>
+转tensor并归一化：<code>transforms.ToTensor</code><br>
+填充：<code>transforms.Pad</code><br>
+修改亮度、对比度、饱和度：<code>transforms.ColorTitter</code><br>
+转灰度图：<code>transforms.Grayscale</code><br>
+线性变换：<code>transforms.LinearTransformation</code><br>
+仿射变换：<code>transforms.RandomAffine</code><br>
+依概率p转为灰度图：<code>transforms.RandomGrayscale</code><br>
+将数据转换为PILImage：<code>transforms.ToPILImage</code><br>
+依自定义的lambda函数变换：<code>transforms.Lambda</code></p>
+</li>
+<li>
+<p>对transforms操作，使数据增强更灵活：</p>
+<p>选择一个transforms进行操作：<code>transforms.RandomChoice(transforms)</code><br>
+给一个transforms加上概率，依概率进行操作：<code>transforms.RandomApply(transforms,p=0.5)</code><br>
+将transforms中的操作随机打乱：<code>transforms.RandomOrder</code></p>
+</li>
+</ul>
+<h3 id="2-裁剪">2.裁剪</h3>
+<p><strong>1.中心裁剪</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torchvision.transforms.CenterCrop(size) </span><br></pre></td></tr></table></figure>
+<p><code>size</code>：为sequence或者int，若为sequence，则为(h，w)，若为int，则进行正方形裁剪</p>
+<p><strong>2.随机裁剪</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torchvision.transforms.RandomCrop(size，padding = <span class="literal">None</span>，pad_if_needed = <span class="literal">False</span>，fill = <span class="number">0</span>，padding_mode =<span class="string">&#x27;constant&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p><code>size</code>：为sequence或者int，若为sequence，则为(h，w)，若为int，则进行正方形裁剪</p>
+<p><code>padding</code>：为sequence或者int，可选的，图像每个边上的填充，默认为None，即不填充。如果提供长度为4的序列，则它用于分别填充左，上，右，下边界。如果提供长度为2的序列，则分别用于填充左/右，上/下边界</p>
+<p><code>pad_if_needed</code>：bool类型，如果小于所需大小，它将填充图像以避免引发异常</p>
+<p><code>fill</code>：恒定填充的像素填充值。默认值为0.如果长度为3的元组，则分别用于填充R，G，B通道。仅当padding_mode为constant时才使用此值</p>
+<p><code>padding_mode</code>：填充类型，可选：constant，edge，reflect，symmetric。constant是填充指定像素值，edge是填充边缘像素值，reflect是反射填充，比如用2个元素填充[1,2,3,4]为[3,2,1,2,3,4,3,2]，symmetric是对称填充，比如用2个像素填充[1,2,3,4]为[2,1,1,2,3,4,4,3]</p>
+<p><strong>3.随机长宽比裁剪</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torchvision.transforms.RandomResizedCrop(size, scale=(<span class="number">0.08</span>, <span class="number">1.0</span>), ratio=(<span class="number">0.75</span>, <span class="number">1.3333333333333333</span>), interpolation=<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<p>将给定的PIL图像随机大小和宽高比裁剪，最后resize到指定大小</p>
+<p><code>size</code>：输出大小</p>
+<p><code>scale</code>：裁剪的原始尺寸的大小范围</p>
+<p><code>ratio</code>：裁剪的原始宽高比的宽高比范围</p>
+<p><code>interpolation</code>：resize的插值方式，默认为BILINEAR</p>
+<p><strong>4.上下左右中心裁剪</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torchvision.transforms.FiveCrop(size)</span><br></pre></td></tr></table></figure>
+<p>对图片进行上下左右以及中心裁剪，获得5张图片，返回一个4D-tensor</p>
+<p><code>size</code>： sequence或者int，若为sequence,则为(h,w)，若为int，则为正方形</p>
+<p><strong>5.上下左右中心裁剪后翻转</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torchvision.transforms.TenCrop(size, vertical_flip=<span class="literal">False</span>) </span><br></pre></td></tr></table></figure>
+<p>对图片进行上下左右以及中心裁剪，返回裁剪得到的5张图像加上5张翻转图像共10张图像（默认水平翻转）</p>
+<p><code>size</code>：sequence或者int，若为sequence,则为(h,w)，若为int，则为正方形</p>
+<p><code>vertical_flip</code>：bool类型，使用垂直翻转而不是水平翻转</p>
+<h3 id="3-翻转和旋转">3.翻转和旋转</h3>
+<p><strong>6.依概率p水平翻转</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torchvision.transforms.RandomHorizontalFlip(p=<span class="number">0.5</span>)</span><br></pre></td></tr></table></figure>
+<p>以给定的概率随机水平翻转给定的PIL图像</p>
+<p><code>p</code>：图像被翻转的概率，默认为0.5</p>
+<p><strong>7.依概率p垂直翻转</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torchvision.transforms.RandomVerticalFlip(p=<span class="number">0.5</span>)</span><br></pre></td></tr></table></figure>
+<p>以给定的概率随机垂直翻转给定的PIL图像</p>
+<p><code>p</code>：图像被翻转的概率，默认为0.5</p>
+<p><strong>8.随机旋转</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torchvision.transforms.RandomRotation(degrees, resample=<span class="literal">False</span>, expand=<span class="literal">False</span>, center=<span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
+<p>按角度旋转图像</p>
+<p><code>degrees</code>：sequence 或float或int，要选择的度数范围。如果degrees是一个数字而不是像（min，max）这样的序列，则度数范围将是（-degrees，+ degrees）</p>
+<p><code>resample</code>：插值方式</p>
+<p><code>expand</code>：可选的扩展标志。如果为true，则展开输出以使其足够大以容纳整个旋转图像。如果为false或省略，则使输出图像与输入图像的大小相同。</p>
+<p><code>center</code>：2元tuple，可选的旋转中心。原点是左上角。默认值是图像的中心。</p>
+<h3 id="4-图像变换">4.图像变换</h3>
+<p><strong>9.resize</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torchvision.transforms.Resize(size, interpolation=<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<p>将输入PIL图像的大小调整为给定大小。</p>
+<p><code>size</code>：sequence 或int，所需的输出大小。如果size是类似（h，w）的序列，则输出大小将与此匹配。如果size是int，则<strong>图像的较小边缘将与此数字匹配。即，如果高度&gt;宽度，则图像将重新缩放为（尺寸*高度/宽度，尺寸）</strong></p>
+<p><code>interpolation</code>：插值方式，默认为BILINEAR</p>
+<p><strong>10.标准化</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torchvision.transforms.Normalize(mean, std)</span><br></pre></td></tr></table></figure>
+<p>用平均值和标准差归一化张量图像。给定mean：(M1,…,Mn)和std：(S1,…,Sn)对于n通道，此变换将标准化输入的每个通道</p>
+<p><code>mean</code>：sequence，每个通道的均值序列</p>
+<p><code>std</code>：sequence，每个通道的标准差序列</p>
+<p><strong>11.转tensor并归一化</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torchvision.transforms.ToTensor</span><br></pre></td></tr></table></figure>
+<p>将PIL Image或者 ndarray 转换为tensor，并且归一化至[0-1]。<strong>若自己的ndarray数据尺度有变化，则需要自行修改。</strong></p>
+<p><strong>12.填充</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torchvision.transforms.Pad(padding, fill=<span class="number">0</span>, padding_mode=<span class="string">&#x27;constant&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p><code>padding</code>：为sequence或者int，可选的，图像每个边上的填充，默认为None，即不填充。如果提供长度为4的序列，则它用于分别填充左，上，右，下边界。如果提供长度为2的序列，则分别用于填充左/右，上/下边界</p>
+<p><code>fill</code>：恒定填充的像素填充值。默认值为0.如果长度为3的元组，则分别用于填充R，G，B通道。仅当padding_mode为constant时才使用此值</p>
+<p><code>padding_mode</code>：填充类型，可选：constant，edge，reflect，symmetric。constant是填充指定像素值，edge是填充边缘像素值，reflect是反射填充，比如用2个元素填充[1,2,3,4]为[3,2,1,2,3,4,3,2]，symmetric是对称填充，比如用2个像素填充[1,2,3,4]为[2,1,1,2,3,4,4,3]</p>
+<p><strong>13.修改亮度、对比度和饱和度</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torchvision.transforms.ColorJitter(brightness=<span class="number">0</span>, contrast=<span class="number">0</span>, saturation=<span class="number">0</span>, hue=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p><code>brightness</code>： float或者元组，从该范围内随机选择brightness_factor</p>
+<p><code>contrast</code>：float或者元组，从该范围内随机选择contrast_factor</p>
+<p><code>saturation</code>：float或者元组，从该范围内随机选择saturation_factor</p>
+<p><code>hue</code>：float或者元组，从该范围内随机选择hue_factor</p>
+<p><strong>14.转灰度图</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torchvision.transforms.Grayscale(num_output_channels=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p><code>num_output_channels</code>：当为1时，正常的灰度图，当为3时，r == g == b的图像</p>
+<p><strong>15.线性变换</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torchvision.transforms.LinearTransformation(transformation_matrix) </span><br></pre></td></tr></table></figure>
+<p>用一个转换矩阵和一个离线计算出的均值向量将图片进行转换。给定转换矩阵transformation_matrix后,会将torch.*Tensor平铺并按位减mean_vector之后与转换矩阵做点积（dot product）运算，最后将shape转换成原始尺寸</p>
+<p><strong>16.仿射变换</strong></p>
+<p>图像保持中心不变的随机仿射变换。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torchvision.transforms.RandomAffine(degrees, translate=<span class="literal">None</span>, scale=<span class="literal">None</span>, shear=<span class="literal">None</span>, resample=<span class="literal">False</span>, fillcolor=<span class="number">0</span>) </span><br></pre></td></tr></table></figure>
+<p><code>degrees</code>：sequence或float或int，要选择的度数范围。如果degrees是一个数字而不是像（min，max）这样的序列，则度数范围将是（-degrees，+degrees）。设置为0可停用旋转</p>
+<p><code>translate</code>：元组，可选。水平和垂直平移的最大绝对分数元组。例如translate =（a，b），然后在范围-img_width * a &lt;dx &lt;img_width * a中随机采样水平移位，并且在-img_height * b &lt;dy &lt;img_height * b范围内随机采样垂直移位。默认情况下不会平移</p>
+<p><code>scale</code>：元组，可选。缩放因子间隔，例如（a，b），然后从范围a &lt;= scale &lt;= b中随机采样缩放。默认情况下会保持原始比例</p>
+<p><code>shear</code>：sequence 或float或int，可选，错切角度范围， 如果degrees是一个数字而不是像（min，max）这样的序列，则度数范围将是（-degrees，+ degrees）。默认情况下不会应用错切</p>
+<p><code>resample</code>：插值方式，默认为BILINEAR</p>
+<p><code>fillcolor</code>：输出图像中变换外部区域的可选填充颜色</p>
+<p><strong>17.依概率p转为灰度图</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torchvision.transforms.RandomGrayscale(p=<span class="number">0.1</span>)</span><br></pre></td></tr></table></figure>
+<p>依概率p将图片转换为灰度图，若通道数为3，则输出r == g == b的图像</p>
+<p><strong>18.将数据转换为PILImage</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torchvision.transforms.ToPILImage()</span><br></pre></td></tr></table></figure>
+<p>将tensor 或者 ndarray的数据转换为 PIL Image 类型数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">注：对于一个Tensor的转化过程是</span><br><span class="line">1.将张量的每个元素乘上255</span><br><span class="line">2.将张量的数据类型由FloatTensor转化成Uint8</span><br><span class="line">3.将张量转化成numpy的ndarray类型</span><br><span class="line">4.对ndarray对象做permute (1, 2, 0)的操作</span><br><span class="line">5.利用Image下的fromarray函数，将ndarray对象转化成PILImage形式</span><br><span class="line">6.输出PILImage</span><br></pre></td></tr></table></figure>
+<p><strong>19.依自定义的lambda函数变换</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torchvision.transforms.Lambda（<span class="keyword">lambda</span>）</span><br></pre></td></tr></table></figure>
+<p>将用户定义的lambda应用为变换。</p>
+<p><code>lambda</code>：用于转换的Lambda函数</p>
+<h3 id="5-对transforms操作，使数据增强更灵活">5.对transforms操作，使数据增强更灵活</h3>
+<p><strong>20.选择一个transforms进行操作</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torchvision.transforms.RandomChoice(transforms)</span><br></pre></td></tr></table></figure>
+<p>从给定的一系列transforms中选一个进行操作</p>
+<p><strong>21.给一个transform加上概率，以一定的概率执行该操作</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torchvision.transforms.RandomApply(transforms, p=<span class="number">0.5</span>)</span><br></pre></td></tr></table></figure>
+<p><code>transforms</code>：列表或元组，要操作的transforms列表</p>
+<p><code>p</code>：概率</p>
+<p><strong>22.将transforms中的操作随机打乱</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torchvision.transforms.RandomOrder(transforms)</span><br></pre></td></tr></table></figure>
+<p><code>transforms</code>：列表或元组，要操作的transforms列表</p>
+<h3 id="6-Compose操作">6.Compose操作</h3>
+<p>将一系列操作组合在一起，按顺序执行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torchvision.transforms.Compose(transforms)</span><br></pre></td></tr></table></figure>
+<p><code>transforms</code>：要组合的transforms列表</p>
+<p>例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">transforms.Compose([</span><br><span class="line">    transforms.ToTensor(),</span><br><span class="line">    transforms.Normalize(mean = (<span class="number">0.5</span>, <span class="number">0.5</span>, <span class="number">0.5</span>), std = (<span class="number">0.5</span>, <span class="number">0.5</span>, <span class="number">0.5</span>))</span><br><span class="line">])</span><br></pre></td></tr></table></figure>
+<h3 id="7-总结">7.总结</h3>
+<p>上面所述transforms方法中，只有少部分是经常用到的，熟练掌握经常用到的即可。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/torchvision-transforms/" rel="tag"># torchvision.transforms</a>
+              <a href="/tags/%E5%9B%BE%E5%83%8F%E9%A2%84%E5%A4%84%E7%90%86%E5%87%BD%E6%95%B0/" rel="tag"># 图像预处理函数</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/04/18/C-%E4%B8%AD%E7%9A%84static%E5%85%B3%E9%94%AE%E5%AD%97%E6%80%BB%E7%BB%93/" rel="prev" title="C++中的static关键字总结">
+      <i class="fa fa-chevron-left"></i> C++中的static关键字总结
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%BB%BC%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">1.综述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E8%A3%81%E5%89%AA"><span class="nav-number">2.</span> <span class="nav-text">2.裁剪</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E7%BF%BB%E8%BD%AC%E5%92%8C%E6%97%8B%E8%BD%AC"><span class="nav-number">3.</span> <span class="nav-text">3.翻转和旋转</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%9B%BE%E5%83%8F%E5%8F%98%E6%8D%A2"><span class="nav-number">4.</span> <span class="nav-text">4.图像变换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%AF%B9transforms%E6%93%8D%E4%BD%9C%EF%BC%8C%E4%BD%BF%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA%E6%9B%B4%E7%81%B5%E6%B4%BB"><span class="nav-number">5.</span> <span class="nav-text">5.对transforms操作，使数据增强更灵活</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-Compose%E6%93%8D%E4%BD%9C"><span class="nav-number">6.</span> <span class="nav-text">6.Compose操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">7.总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zsh"
+      src="/images/header2.jpg">
+  <p class="site-author-name" itemprop="name">zsh</p>
+  <div class="site-description" itemprop="description">怕什么真理无穷<br>进一寸有一寸的欢喜</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zsh4614" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zsh4614" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.jianshu.com/u/f513362c9d79" title="简书 → https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;f513362c9d79" rel="noopener" target="_blank"><i class="fas fa-book fa-fw"></i>简书</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zsh4614@gmail.com" title="E-Mail → mailto:zsh4614@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/cjhfhb" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;cjhfhb" rel="noopener" target="_blank"><i class="fa fa-globe-americas fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="powered-by">
+    水滴石穿，绳锯木断。
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      已有<span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人访问
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      总访问<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clickloves.js"></script>
