@@ -471,6 +471,10 @@
       <categories>
         <category>数据结构及实现</category>
       </categories>
+      <tags>
+        <tag>树</tag>
+        <tag>二叉树</tag>
+      </tags>
   </entry>
   <entry>
     <title>详解C++拷贝构造函数和赋值运算符</title>
