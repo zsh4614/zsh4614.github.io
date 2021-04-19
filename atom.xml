@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-04-18T16:07:15.537Z</updated>
+  <updated>2021-04-19T16:24:13.752Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,25 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>数据结构及实现：二叉查找树</title>
+    <link href="http://example.com/2021/04/19/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%8F%8A%E5%AE%9E%E7%8E%B0%EF%BC%9A%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91/"/>
+    <id>http://example.com/2021/04/19/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%8F%8A%E5%AE%9E%E7%8E%B0%EF%BC%9A%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91/</id>
+    <published>2021-04-19T15:32:34.000Z</published>
+    <updated>2021-04-19T16:24:13.752Z</updated>
+    
+    <content type="html"><![CDATA[<p>引言：整体介绍了树的定义，基本术语，二叉树的定义和性质，以及几种特殊的二叉树。</p><span id="more"></span><h3 id="1-树的定义">1.树的定义</h3><p>树是一种数据结构，它是由n（n&gt;=1）个有限节点组成一个具有层次关系的集合。</p><p><img src="https://i.loli.net/2021/04/19/jiL6wsCPZEWlOA3.jpg" alt="二叉树.jpg"></p><p>把它叫做“树”是因为它看起来像一棵倒挂的树，也就是说它是根朝上，而叶朝下的。它具有以下的特点：</p><p>(1) 每个节点有零个或多个子节点；<br>(2)没有父节点的节点称为根节点；<br>(3)每一个非根节点有且只有一个父节点；<br>(4) 除了根节点外，每个子节点可以分为多个不相交的子树。</p><h3 id="2-树的基本术语">2.树的基本术语</h3><p>若一个结点有子树，那么该结点称为子树根的&quot;双亲&quot;，子树的根是该结点的&quot;孩子&quot;。有相同双亲的结点互为&quot;兄弟&quot;。一个结点的所有子树上的任何结点都是该结点的后裔。从根结点到某个结点的路径上的所有结点都是该结点的祖先。</p><p><strong>结点的度</strong>：结点拥有的子树的数目。<br><strong>叶子</strong>：度为零的结点。<br><strong>分支结点</strong>：度不为零的结点。<br><strong>树的度</strong>：树中结点的最大的度。<br><strong>层次</strong>：根结点的层次为1，其余结点的层次等于该结点的双亲结点的层次加1。<br><strong>树的高度</strong>：树中结点的最大层次。<br><strong>无序树</strong>：如果树中结点的各子树之间的次序是不重要的，可以交换位置。<br><strong>有序树</strong>：如果树中结点的各子树之间的次序是重要的, 不可以交换位置。<br><strong>森林</strong>：0个或多个不相交的树组成。对森林加上一个根，森林即成为树；删去根，树即成为森林。</p><h3 id="3-二叉树的定义">3.二叉树的定义</h3><p>二叉树是每个节点最多有两个子树的树结构。它有五种基本形态：二叉树可以是空集；根可以有空的左子树或右子树；或者左、右子树皆为空。</p><p><img src="https://i.loli.net/2021/04/19/hUJdVmo3Ln9H4GD.jpg" alt="二叉树2.jpg"></p><h3 id="4-二叉树的性质">4.二叉树的性质</h3><p>二叉树有以下几个性质：</p><p><strong>性质1</strong>：二叉树第i层上的结点数目最多为 2<sup>{i-1}</sup> (i≥1)。<br><strong>性质2</strong>：深度为k的二叉树至多有2<sup>{k}</sup>-1个结点(k≥1)。<br><strong>性质3</strong>：包含n个结点的二叉树的高度至少为log<sub>2</sub> (n+1)。<br><strong>性质4</strong>：在任意一棵二叉树中，若叶子结点的个数为n<sub>0</sub>，度为2的结点数为n<sub>2</sub>，则n<sub>0</sub>=n<sub>2</sub>+1。</p><blockquote><p>注：性质4的证明<br>因为二叉树中所有结点的度数均不大于2，所以结点总数(记为n)=“0度结点数(n<sub>0</sub>)” + “1度结点数(n<sub>1</sub>)” + “2度结点数(n<sub>2</sub>)”。由此，得到 n=n<sub>0</sub>+n<sub>1</sub>+n<sub>2</sub>；<br>另一方面，0度结点没有孩子，1度结点有一个孩子，2度结点有两个孩子，故二叉树中孩子结点总数是：n<sub>1</sub>+2n<sub>2</sub>。此外，只有根不是任何结点的孩子。故二叉树中的结点总数又可表示为n=n<sub>1</sub>+2n<sub>2</sub>+1，两式相等，可得。</p></blockquote><h3 id="5-满二叉树，完全二叉树和二叉查找树">5.满二叉树，完全二叉树和二叉查找树</h3><p><strong>满二叉树</strong>：高度为h，并且由2<sup>{h}</sup> –1个结点的二叉树，被称为满二叉树。</p><p><img src="https://i.loli.net/2021/04/20/uPBhqe7XQxT6wKU.jpg" alt="满二叉树.jpg"></p><p><strong>完全二叉树</strong>：一棵二叉树中，只有最下面两层结点的度可以小于2，并且最下一层的叶结点集中在靠左的若干位置上。这样的二叉树称为完全二叉树。叶子结点只能出现在最下层和次下层，且最下层的叶子结点集中在树的左部。显然，一棵满二叉树必定是一棵完全二叉树，而完全二叉树未必是满二叉树。</p><p><img src="https://i.loli.net/2021/04/20/cdp2J1GUN87EvjS.jpg" alt="完全二叉树.jpg"></p><p><strong>二叉查找树</strong>：二叉查找树，又被称为<strong>二叉搜索树</strong>。设x为二叉查找树中的一个结点，x节点包含关键字key，节点x的key值记为key[x]。如果y是x的左子树中的一个结点，则key[y] &lt;= key[x]；如果y是x的右子树的一个结点，则key[y] &gt;= key[x]。</p><p><img src="https://i.loli.net/2021/04/20/Ddq61aksuTCjpWK.jpg" alt="二叉查找树.jpg"></p><p>在二叉查找树中：</p><p>（1）若任意节点的左子树不空，则左子树上所有结点的值均小于它的根结点的值；<br>（2）任意节点的右子树不空，则右子树上所有结点的值均大于它的根结点的值；<br>（3）任意节点的左、右子树也分别为二叉查找树；<br>（4）没有key值相等的节点。</p><h3 id="6-总结">6.总结</h3><p>整体介绍了树的定义，基本术语，二叉树的定义和性质，以及几种特殊的二叉树。</p><blockquote><p>本文转载自：<a href="https://www.cnblogs.com/skywang12345/p/3576328.html">https://www.cnblogs.com/skywang12345/p/3576328.html</a></p></blockquote>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;引言：整体介绍了树的定义，基本术语，二叉树的定义和性质，以及几种特殊的二叉树。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="数据结构及实现" scheme="http://example.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%8F%8A%E5%AE%9E%E7%8E%B0/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>PyTorch学习笔记：transforms中的方法</title>
