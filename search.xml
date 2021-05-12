@@ -938,6 +938,7 @@ remove(tree, key)的作用是：删除伸展树中键值为key的节点。<br>
     <title>数据结构及实现</title>
     <url>/2021/04/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%8F%8A%E5%AE%9E%E7%8E%B0/</url>
     <content><![CDATA[<p>引言：R-B Tree，又称为“红黑树”，本文的主要内容包括：红黑树的特性，红黑树的时间复杂度和它的证明，红黑树的左旋、右旋、插入、删除等操作。</p>
+<span id="more"></span>
 <h3 id="红黑树介绍">红黑树介绍</h3>
 <p>R-B Tree，全称是Red-Black Tree，又称为“红黑树”，它一种特殊的二叉查找树。红黑树的每个节点上都有存储位表示节点的颜色，可以是红(Red)或黑(Black)。</p>
 <p><strong>红黑树的特性</strong>:<br>
