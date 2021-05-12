@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-04-25T17:14:29.835Z</updated>
+  <updated>2021-05-12T13:14:49.613Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,66 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>详解roi-pooling和roi-align</title>
+    <link href="http://example.com/2021/05/12/%E8%AF%A6%E8%A7%A3roi-pooling%E5%92%8Croi-align/"/>
+    <id>http://example.com/2021/05/12/%E8%AF%A6%E8%A7%A3roi-pooling%E5%92%8Croi-align/</id>
+    <published>2021-05-12T13:12:53.000Z</published>
+    <updated>2021-05-12T13:14:49.613Z</updated>
+    
+    <content type="html"><![CDATA[<p>引言：roi pooling和roi align是二阶段方法中常用的操作，本文总结二者的具体操作和不同。</p><span id="more"></span><h3 id="概述">概述</h3><p>这两个都是用在rpn之后的。具体来说，从feature map上经过RPN得到一系列的proposals，大概2k个，这些bbox大小不等，如何将这些bbox的特征进行统一表示就变成了一个问题。即需要找一个办法从大小不等的框中提取特征使输出结果是等长的。最开始目标检测模型Faster RCNN中用了一个简单粗暴的办法，叫ROI Pooling。该方式在语义分割这种精细程度高的任务中，不够精准，由此发展来了ROI Align。今天就总结下两者的思想。</p><h3 id="ROI-Pooling">ROI Pooling</h3><p><img src="https://i.loli.net/2021/04/29/NDle8s1MuZ3PLoy.jpg" alt="v2-d59199c554ac7ccfbd2038317aef74f2_720w.jpg"></p><p>假如现在有一个8x8的feature map，现在希望得到2x2的输出，有一个bbox坐标为[0,3,7,8]。这个bbox的w=7，h=5，如果要等分成四块是做不到的，因此在ROI Pooling中会进行取整。就有了上图看到的h被分割为2,3，w被分割成3,4。这样之后在每一块(称为bin)中做max pooling，可以得到下图的结果。</p><p><img src="https://i.loli.net/2021/04/29/4GFZSEMVO7Uq1ot.jpg" alt="v2-7b39628bb13db683b6de701f5b4169f8_720w.jpg"></p><p>这样就可以将任意大小bbox转成2x2表示的feature。ROI Pooling需要取整，这样的取整操作进行了两次，一次是得到bbox在feature map上的坐标时。例如：原图上的bbox大小为665x665，经backbone后，spatial scale=1/32。因此bbox也相应应该缩小为665/32=20.78，但是这并不是一个真实的pixel所在的位置，因此这一步会取为20。0.78的差距反馈到原图就是0.78x32=25个像素的差距。如果是大目标这25的差距可能看不出来，但对于小目标而言差距就比较巨大了。</p><p><img src="https://i.loli.net/2021/04/29/HoVqSw6Y1EvWysp.jpg" alt="v2-6f3dc5f450e6c936869595eaf66a0f4d_720w.jpg"></p><h3 id="ROI-Align">ROI Align</h3><p>因此有人提出不需要进行取整操作，如果计算得到小数，也就是没有落到真实的pixel上，那么就用最近的pixel对这一点虚拟pixel进行双线性插值，得到这个“pixel”的值。具体做法如下图所示：</p><p><img src="https://i.loli.net/2021/04/29/gQnhUMLuG3ZVr28.jpg" alt="v2-03d820b27ffca39854f0febf0ef9e37b_r.jpg"></p><ol><li>将bbox区域按输出要求的size进行等分，很可能等分后各顶点落不到真实的像素点上</li><li>没关系，在每个bin中再取固定的4个点(作者实验后发现取4效果较好)，也就是图二右侧的蓝色点</li><li>针对每一个蓝点，距离它最近的4个真实像素点的值加权(双线性插值)，求得这个蓝点的值</li><li>一个bin内会算出4个新值，在这些新值中取max，作为这个bin的输出值</li><li>最后就能得到2x2的输出</li></ol><blockquote><p>本文转载自：<a href="https://zhuanlan.zhihu.com/p/73138740">https://zhuanlan.zhihu.com/p/73138740</a></p></blockquote>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;引言：roi pooling和roi align是二阶段方法中常用的操作，本文总结二者的具体操作和不同。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="机器学习" scheme="http://example.com/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+    <category term="roi-pooling" scheme="http://example.com/tags/roi-pooling/"/>
+    
+    <category term="roi-align" scheme="http://example.com/tags/roi-align/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>数据结构及实现</title>
+    <link href="http://example.com/2021/04/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%8F%8A%E5%AE%9E%E7%8E%B0/"/>
+    <id>http://example.com/2021/04/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%8F%8A%E5%AE%9E%E7%8E%B0/</id>
+    <published>2021-04-27T15:39:20.000Z</published>
+    <updated>2021-04-27T16:09:51.778Z</updated>
+    
+    <content type="html"><![CDATA[<p>引言：R-B Tree，又称为“红黑树”，本文的主要内容包括：红黑树的特性，红黑树的时间复杂度和它的证明，红黑树的左旋、右旋、插入、删除等操作。</p><h3 id="红黑树介绍">红黑树介绍</h3><p>R-B Tree，全称是Red-Black Tree，又称为“红黑树”，它一种特殊的二叉查找树。红黑树的每个节点上都有存储位表示节点的颜色，可以是红(Red)或黑(Black)。</p><p><strong>红黑树的特性</strong>:<br>（1）每个节点或者是黑色，或者是红色。<br>（2）根节点是黑色。<br>（3）每个叶子节点（NIL）是黑色。 [注意：这里叶子节点，是指为空(NIL或NULL)的叶子节点！]<br>（4）如果一个节点是红色的，则它的子节点必须是黑色的。<br>（5）从一个节点到该节点的子孙节点的所有路径上包含相同数目的黑节点。</p><p><strong>注意</strong>：<br>(01) 特性(3)中的叶子节点，是只为空(NIL或null)的节点。<br>(02) 特性(5)，确保没有一条路径会比其他路径长出俩倍。因而，红黑树是相对是接近平衡的二叉树。</p><p>红黑树示意图如下：</p><p><img src="https://i.loli.net/2021/04/27/bDfAtceGNF58kiV.jpg" alt="红黑树.jpg"></p><h3 id="红黑树的应用">红黑树的应用</h3><p>红黑树的应用比较广泛，主要是用它来存储有序的数据，它的时间复杂度是O(lgn)，效率非常之高。</p><p>例如，<strong>C++ STL中的set、map，以及Linux虚拟内存的管理，都是通过红黑树去实现的</strong>。</p><h3 id="红黑树的时间复杂度和相关证明">红黑树的时间复杂度和相关证明</h3><p><strong>红黑树的时间复杂度为: O(lgn)</strong></p><p>下面通过“数学归纳法”对红黑树的时间复杂度进行证明。</p><p><strong>定理：一棵含有n个节点的红黑树的高度至多为2log(n+1)</strong>.</p><p>证明：<br>“一棵含有n个节点的红黑树的高度至多为2log(n+1)” 的<strong>逆否命题</strong>是 “高度为h的红黑树，它的包含的内节点个数至少为 2<sup>h/2</sup>-1个”。</p><p>我们只需要证明逆否命题，即可证明原命题为真；即只需证明 “高度为h的红黑树，它的包含的内节点个数至少为 2h/2-1个”。</p><p>从某个节点x出发（不包括该节点）到达一个叶节点的任意一条路径上，黑色节点的个数称为该节点的黑高度(x’s black height)，记为<strong>bh(x)</strong>。关于bh(x)有两点需要说明：</p><p>第1点：根据红黑树的&quot;<strong>特性(5)</strong> ，即<em>从一个节点到该节点的子孙节点的所有路径上包含相同数目的黑节点</em>&quot;可知，从节点x出发到达的所有的叶节点具有相同数目的黑节点。<strong>这也就意味着，bh(x)的值是唯一的</strong>！<br>第2点：根据红黑色的&quot;特性(4)，即<em>如果一个节点是红色的，则它的子节点必须是黑色的</em>&quot;可知，从节点x出发达到叶节点&quot;所经历的黑节点数目&quot;&gt;= “所经历的红节点的数目”。假设x是根节点，则可以得出结论&quot;<strong>bh(x) &gt;= h/2</strong>&quot;。进而，我们只需证明 &quot;高度为h的红黑树，它的包含的黑节点个数至少为 2<sup>bh(x)</sup>-1个&quot;即可。</p><p>到这里，我们将需要证明的定理已经由**&quot;一棵含有n个节点的红黑树的高度至多为2log(n+1)“<strong>转变成只需要证明</strong>&quot;高度为h的红黑树，它的包含的内节点个数至少为 2<sup>bh(x)</sup>-1个”。**</p><p>下面通过&quot;数学归纳法&quot;开始论证高度为h的红黑树，它的包含的内节点个数至少为 2<sup>bh(x)</sup>-1个&quot;。</p><p>(01) 当树的高度h=0时，<br>内节点个数是0，bh(x) 为0，2<sup>bh(x)</sup>-1 也为 0。显然，原命题成立。</p><p>(02) 当h&gt;0，且树的高度为 h-1 时，它包含的节点个数至少为 2<sup>bh(x)</sup>-1-1。这个是根据(01)推断出来的！</p><p>下面，由树的高度为 h-1 的已知条件推出“树的高度为 h 时，它所包含的节点树为 2<sup>bh(x)</sup>-1”。</p><p>当树的高度为 h 时，<br>对于节点x(x为根节点)，其黑高度为bh(x)。<br>对于节点x的左右子树，它们黑高度为 bh(x) 或者 bh(x)-1。<br>根据(02)的已知条件，我们已知 “x的左右子树，即高度为 h-1 的节点，它包含的节点至少为 2<sup>bh(x)</sup>-1-1 个”；</p><p>所以，节点x所包含的节点至少为 ( 2<sup>bh(x)</sup>-1-1 ) + ( 2<sup>bh(x)</sup>-1-1 ) + 1 = 2<sup>bh(x)</sup>-1。即节点x所包含的节点至少为 2<sup>bh(x)</sup>-1。<br>因此，原命题成立。</p><p>由(01)、(02)得出，“高度为h的红黑树，它的包含的内节点个数至少为 2<sup>bh(x)</sup>-1个”。<br>因此，“一棵含有n个节点的红黑树的高度至多为2log(n+1)”。</p><h3 id="红黑树的基本操作-一-左旋和右旋">红黑树的基本操作(一) 左旋和右旋</h3><p>红黑树的基本操作是<strong>添加</strong>、<strong>删除</strong>。在对红黑树进行添加或删除之后，都会用到旋转方法。为什么呢？道理很简单，添加或删除红黑树中的节点之后，红黑树就发生了变化，可能不满足红黑树的5条性质，也就不再是一颗红黑树了，而是一颗普通的树。而通过旋转，可以使这颗树重新成为红黑树。简单点说，旋转的目的是让树保持红黑树的特性。<br>旋转包括两种：<strong>左旋</strong> 和 <strong>右旋</strong>。下面分别对它们进行介绍。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;引言：R-B Tree，又称为“红黑树”，本文的主要内容包括：红黑树的特性，红黑树的时间复杂度和它的证明，红黑树的左旋、右旋、插入、删除等操作。&lt;/p&gt;
+&lt;h3 id=&quot;红黑树介绍&quot;&gt;红黑树介绍&lt;/h3&gt;
+&lt;p&gt;R-B Tree，全称是Red-Black Tree，又称为“</summary>
+      
+    
+    
+    
+    <category term="数据结构及实现：红黑树" scheme="http://example.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%8F%8A%E5%AE%9E%E7%8E%B0%EF%BC%9A%E7%BA%A2%E9%BB%91%E6%A0%91/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>理解C++中的左值和右值</title>
+    <link href="http://example.com/2021/04/26/%E7%90%86%E8%A7%A3C-%E4%B8%AD%E7%9A%84%E5%B7%A6%E5%80%BC%E5%92%8C%E5%8F%B3%E5%80%BC/"/>
+    <id>http://example.com/2021/04/26/%E7%90%86%E8%A7%A3C-%E4%B8%AD%E7%9A%84%E5%B7%A6%E5%80%BC%E5%92%8C%E5%8F%B3%E5%80%BC/</id>
+    <published>2021-04-25T17:29:29.000Z</published>
+    <updated>2021-04-26T15:51:15.048Z</updated>
+    
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>数据结构及实现：伸展树</title>
