@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/header2.jpg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/header2.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/header2.jpg">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="引言：本文翻译自国外博主Bzarg在2015年写的一篇卡尔曼滤波的图解。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="经典算法：卡尔曼滤波（图解推导）">
+<meta property="og:url" content="http://example.com/2021/05/24/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95%EF%BC%9A%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2%EF%BC%88%E5%9B%BE%E8%A7%A3%E6%8E%A8%E5%AF%BC%EF%BC%89/index.html">
+<meta property="og:site_name" content="欢迎来到我的主页!">
+<meta property="og:description" content="引言：本文翻译自国外博主Bzarg在2015年写的一篇卡尔曼滤波的图解。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/tmSXqv7sRf9P6FC.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/7bj6ryBc4fMaeE9.png">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/VPt7HL4wMcaEZvf.png">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/wp4NDdIZl8EH5sQ.png">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/akiCweMZIXhRJus.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/QIOpYyKaEqeDZki.png">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/XOQhw7EG1nlbMzq.png">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/Ugzas51T2e83mHJ.png">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/N4HQ1Jrq86LEuCm.png">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/mp4zoHRAkQCcEnu.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/vn2s18qwYNje3Ql.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/hibCd4yzZr8EwVx.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/bZgBprOUPf8WqQM.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/ilCmqGR1awOcWpg.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/92dpmA3cJ5TCvNa.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/etgk3Inhlm8E1Wd.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/M6neCKhrPYOIWzV.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/WC5EIrhRmOxU6ya.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/fKRH5ZGvQzUXis3.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/Y5AvPyXsC8JaFKg.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/KXNsh5GRSY1xpbE.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/72BFutEgcpAq5jl.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/aWxnoL2UKdQv3cS.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/IkaUXst49c13HEC.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/kDbOIEhpj8fLwga.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/hRPIA6ZkDC4WVTu.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/5ylrfT3eAtiqEn9.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/elyvYbRBks9FVZh.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/UjPb1LfCnmrQkGF.png">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/zEl6UjiPLBDmGfQ.png">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/9U1MAkrv7jpEYw4.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/Ll3wR16UnqFoJtO.png">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/vjf9RsMGbIQE23N.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/aiEYnxhTKLQsRec.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/ZwMnGEljsW3FSXq.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/2k5ZD19KwQ4cbgY.jpg">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=K">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/ur956PgedMq47oV.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/aZlki8CpGLf7PJb.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/2lc56dFy3fGb1Ne.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/hZrmD1IuW75wR9i.png">
+<meta property="article:published_time" content="2021-05-24T15:05:05.000Z">
+<meta property="article:modified_time" content="2021-05-24T15:06:42.197Z">
+<meta property="article:author" content="zsh">
+<meta property="article:tag" content="卡尔曼滤波">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/05/22/tmSXqv7sRf9P6FC.jpg">
+
+<link rel="canonical" href="http://example.com/2021/05/24/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95%EF%BC%9A%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2%EF%BC%88%E5%9B%BE%E8%A7%A3%E6%8E%A8%E5%AF%BC%EF%BC%89/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>经典算法：卡尔曼滤波（图解推导） | 欢迎来到我的主页!</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="欢迎来到我的主页!" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">欢迎来到我的主页!</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-resource">
+
+    <a href="/categories/%E5%A4%96%E9%83%A8%E8%B5%84%E6%BA%90/" rel="section"><i class="fa fa-server fa-fw"></i>资源</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/24/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95%EF%BC%9A%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2%EF%BC%88%E5%9B%BE%E8%A7%A3%E6%8E%A8%E5%AF%BC%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header2.jpg">
+      <meta itemprop="name" content="zsh">
+      <meta itemprop="description" content="怕什么真理无穷<br>进一寸有一寸的欢喜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欢迎来到我的主页!">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          经典算法：卡尔曼滤波（图解推导）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-05-24 23:05:05 / 修改时间：23:06:42" itemprop="dateCreated datePublished" datetime="2021-05-24T23:05:05+08:00">2021-05-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">经典算法</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>引言：本文翻译自国外博主Bzarg在2015年写的一篇卡尔曼滤波的图解。</p>
+<span id="more"></span>
+<h3 id="背景">背景</h3>
+<p>卡尔曼滤波（Kalman filter）是一种高效的自回归滤波器，它能在存在诸多不确定性情况的组合信息中估计动态系统的状态，是一种强大的、通用性极强的工具。它的提出者，鲁道夫.E.卡尔曼，在一次访问NASA埃姆斯研究中心时，发现这种方法能帮助解决阿波罗计划的轨道预测问题，后来NASA在阿波罗飞船的导航系统中确实也用到了这个滤波器。最终，飞船正确驶向月球，完成了人类历史上的第一次登月。</p>
+<p><img src="https://i.loli.net/2021/05/22/tmSXqv7sRf9P6FC.jpg" alt="v2-e7fade003119539cd2892c23ff924ca1_720w.jpg"></p>
+<h3 id="什么是卡尔曼滤波">什么是卡尔曼滤波</h3>
+<p>对于这个滤波器，我们几乎可以下这么一个定论：只要是存在不确定信息的动态系统，卡尔曼滤波就可以对系统下一步要做什么做出有根据的推测。即便有噪声信息干扰，卡尔曼滤波通常也能很好的弄清楚究竟发生了什么，找出现象间不易察觉的相关性。</p>
+<p>因此卡尔曼滤波非常适合不断变化的系统，它的优点还有内存占用较小（只需保留前一个状态）、速度快，是实时问题和嵌入式系统的理想选择。</p>
+<p>如果你曾经Google过卡尔曼滤波的教程（如今有一点点改善），你会发现相关的算法教程非常可怕，而且也没具体说清楚是什么。事实上，卡尔曼滤波很简单，如果我们以正确的方式看它，理解是很水到渠成的事。</p>
+<p>本文会用大量清晰、美观的图片和颜色来解释这个概念，读者只需具备概率论和矩阵的一般基础知识。</p>
+<h3 id="我们能用卡尔曼滤波做什么">我们能用卡尔曼滤波做什么</h3>
+<p>让我们举个例子：你造了一个可以在树林里四处溜达的小机器人，为了让它实现导航，机器人需要知道自己所处的位置。</p>
+<p><img src="https://i.loli.net/2021/05/22/7bj6ryBc4fMaeE9.png" alt="robot_forest-300x160.png"></p>
+<p>也就是说，机器人有一个包含位置信息和速度信息的状态$\vec{x}_k$：</p>
+<p><img src="https://i.loli.net/2021/05/22/VPt7HL4wMcaEZvf.png" alt="Screenshot from 2021-05-22 18-35-17.png"></p>
+<p>注意，在这个例子中，状态是位置和速度，放进其他问题里，它也可以是水箱里的液体体积、汽车引擎温度、触摸板上指尖的位置，或者其他任何数据。</p>
+<p>我们的小机器人装有GPS传感器，定位精度10米。虽然一般来说这点精度够用了，但我们希望它的定位误差能再小点，毕竟树林里到处都是土坑和陡坡，如果机器人稍稍偏了那么几米，它就有可能滚落山坡。所以GPS提供的信息还不够充分。</p>
+<p><img src="https://i.loli.net/2021/05/22/wp4NDdIZl8EH5sQ.png" alt="robot_ohnoes-300x283.png"></p>
+<p>我们也可以<strong>预测</strong>机器人是怎么移动的：它会把指令发送给控制轮子的马达，如果这一刻它始终朝一个方向前进，没有遇到任何障碍物，那么下一刻它可能会继续坚持这个路线。但是机器人对自己的状态不是全知的：它可能会逆风行驶，轮子打滑，滚落颠簸地形……所以车轮转动次数并不能完全代表实际行驶距离，基于这个距离的预测也不完美。</p>
+<p>这个问题下，GPS为我们提供了一些关于状态的信息，但那是间接的、不准确的；我们的预测提供了关于机器人轨迹的信息，但那也是间接的、不准确的。</p>
+<p>但以上就是我们能够获得的全部信息，在它们的基础上，我们是否能给出一个完整预测，让它的准确度比机器人搜集的单次预测汇总更高？用了卡尔曼滤波，这个问题可以迎刃而解。</p>
+<h3 id="卡尔曼滤波眼里的机器人问题">卡尔曼滤波眼里的机器人问题</h3>
+<p>还是上面这个问题，我们有一个状态，它和速度、位置有关：</p>
+<p><img src="https://i.loli.net/2021/05/22/akiCweMZIXhRJus.jpg" alt="v2-a1a901c6aad3d87b47b148a3e5cdddbe_720w.jpg"></p>
+<p>我们不知道它们的实际值是多少，但掌握着一些速度和位置的可能组合，其中某些组合的可能性更高：</p>
+<p><img src="https://i.loli.net/2021/05/22/QIOpYyKaEqeDZki.png" alt="gauss_0.png"></p>
+<p>卡尔曼滤波假设两个变量（在我们的例子里是位置和速度）都应该是<strong>随机的</strong>，而且符合<strong>高斯分布</strong>。每个变量都有一个<strong>均值</strong> $\mu$，它是随机分布的中心；有一个方差$\sigma^2$ ，它衡量组合的不确定性。</p>
+<p><img src="https://i.loli.net/2021/05/22/XOQhw7EG1nlbMzq.png" alt="gauss_1.png"></p>
+<p>在上图中，位置和速度是<strong>不相关</strong>的，这意味着我们不能从一个变量推测另一个变量。</p>
+<p>那么如果位置和速度相关呢？如下图所示，机器人前往特定位置的可能性取决于它拥有的速度。</p>
+<p><img src="https://i.loli.net/2021/05/22/Ugzas51T2e83mHJ.png" alt="gauss_3.png"></p>
+<p>这不难理解，如果基于旧位置估计新位置，我们会产生这两个结论：如果速度很快，机器人可能移动得更远，所以得到的位置会更远；如果速度很慢，机器人就走不了那么远。</p>
+<p>这种关系对目标跟踪来说非常重要，因为它提供了更多信息：一个可以衡量可能性的标准。这就是卡尔曼滤波的目标：从不确定信息中挤出尽可能多的信息！</p>
+<p>为了捕获这种相关性，我们用的是协方差矩阵。简而言之，矩阵的每个值是第 $i$ 个变量和第 $j$个变量之间的相关程度（由于矩阵是对称的，$i$ 和$j$的位置可以随便交换）。我们用$\varSigma$表示协方差矩阵，在这个例子中，就是$\varSigma_{ij}$。</p>
+<p><img src="https://i.loli.net/2021/05/22/N4HQ1Jrq86LEuCm.png" alt="gauss_2.png"></p>
+<h3 id="用矩阵描述问题">用矩阵描述问题</h3>
+<p>为了把以上关于状态的信息建模为高斯分布（图中色块），我们还需要$k$时的两个信息：最佳估计$\mathbf{\hat{x}_k}$ （均值，也就是$\mu$)，协方差矩阵$\mathbf{P_k}$ 。（虽然还是用了位置和速度两个变量，但只要和问题相关，卡尔曼滤波可以包含任意数量的变量）</p>
+<p><img src="https://i.loli.net/2021/05/22/mp4zoHRAkQCcEnu.jpg" alt="v2-2ac6f7823c6e340805cce06b61c8fa16_720w.jpg"></p>
+<p>接下来，我们要通过查看当前状态（k-1时）来预测下一个状态（k时）。这里我们查看的状态不是真值，但预测函数无视真假，可以给出新分布：</p>
+<p><img src="https://i.loli.net/2021/05/22/vn2s18qwYNje3Ql.jpg" alt="gauss_7.jpg"></p>
+<p>我们可以用矩阵$\mathbf{F_k}$表示这个预测步骤：</p>
+<p><img src="https://i.loli.net/2021/05/22/hibCd4yzZr8EwVx.jpg" alt="gauss_8.jpg"></p>
+<p>它从原始预测中取每一点，并将其移动到新的预测位置。如果原始预测是正确的，系统就会移动到新位置。</p>
+<p>这是怎么做到的？为什么我们可以用矩阵来预测机器人下一刻的位置和速度？下面是个简单公式：</p>
+<p><img src="https://i.loli.net/2021/05/22/bZgBprOUPf8WqQM.jpg" alt="v2-03ed134b88639dbfe347012511440a3a_720w.jpg"></p>
+<p>换成矩阵形式：</p>
+<p><img src="https://i.loli.net/2021/05/22/ilCmqGR1awOcWpg.jpg" alt="v2-2916712c805c703b37fce364549dadf6_720w.jpg"></p>
+<p>这是一个预测矩阵，它能给出机器人的下一个状态，但目前我们还不知道协方差矩阵的更新方法。这也是我们要引出下面这个等式的原因：如果我们将分布中的每个点乘以矩阵$\color{firebrick}{\mathbf{A}}$，那么它的协方差矩阵会发生什么变化</p>
+<p><img src="https://i.loli.net/2021/05/22/92dpmA3cJ5TCvNa.jpg" alt="v2-69a02c2142ed47d086a9a948cb8b17b1_720w.jpg"></p>
+<p>把这个式子和上面的最佳估计$\mathbf{\hat{x}_k}$结合，可得：</p>
+<p><img src="https://i.loli.net/2021/05/22/etgk3Inhlm8E1Wd.jpg" alt="v2-dbf13375a23f07e1040adf38ea186aa7_720w.jpg"></p>
+<h3 id="外部影响">外部影响</h3>
+<p>但是，除了速度和位置，外因也会对系统造成影响。比如模拟火车运动，除了列车自驾系统，列车操作员可能会手动调速。在我们的机器人示例中，导航软件也可以发出停止指令。对于这些信息，我们把它作为一个向量$\color{darkorange}{\vec{\mathbf{u}_k}}$，纳入预测系统作为修正。</p>
+<p>假设油门设置和控制命令是已知的，我们知道火车的预期加速度$\color{darkorange}{a}$。根据运动学基本定理，我们可得：</p>
+<p><img src="https://i.loli.net/2021/05/22/M6neCKhrPYOIWzV.jpg" alt="v2-e0cd414e3b6d4ef4f8a57c8b156a5103_720w.jpg"></p>
+<p>把它转成矩阵形式：</p>
+<p><img src="https://i.loli.net/2021/05/22/WC5EIrhRmOxU6ya.jpg" alt="v2-64e50bf118c8039f6228b5c817490601_720w.jpg"></p>
+<p>$\mathbf{B}_k$是控制矩阵，$\color{darkorange}{\vec{\mathbf{u}_k}}$是控制向量。如果外部环境异常简单，我们可以忽略这部分内容，但是如果添加了外部影响后，模型的准确率还是上不去，这又是为什么呢？</p>
+<h3 id="外部不确定性">外部不确定性</h3>
+<p>当一个国家只按照自己的步子发展时，它会自生自灭。当一个国家开始依赖外部力量发展时，只要这些外部力量是已知的，我们也能预测它的存亡。</p>
+<p>但是，如果存在我们不知道的力量呢？当我们监控无人机时，它可能会受到风的影响；当我们跟踪轮式机器人时，它的轮胎可能会打滑，或者粗糙地面会降低它的移速。这些因素是难以掌握的，如果出现其中的任意一种情况，预测结果就难以保障。</p>
+<p>这要求我们在每个预测步骤后再加上一些新的不确定性，来模拟和“世界”相关的所有不确定性：</p>
+<p><img src="https://i.loli.net/2021/05/22/fKRH5ZGvQzUXis3.jpg" alt="gauss_9.jpg"></p>
+<p>如上图所示，加上外部不确定性后，$\color{royalblue}{\mathbf{\hat{x}}_{k-1}}$的每个预测状态都可能会移动到另一点，也就是蓝色的高斯分布会移动到紫色高斯分布的位置，并且具有协方差$\color{mediumaquamarine}{\mathbf{Q}_k}$。换句话说，我们把这些不确定影响视为协方差$\color{mediumaquamarine}{\mathbf{Q}_k}$ 的噪声。</p>
+<p><img src="https://i.loli.net/2021/05/22/Y5AvPyXsC8JaFKg.jpg" alt="gauss_10a.jpg"></p>
+<p>这个紫色的高斯分布拥有和原分布相同的均值，但协方差不同。</p>
+<p><img src="https://i.loli.net/2021/05/22/KXNsh5GRSY1xpbE.jpg" alt="gauss_10b.jpg"></p>
+<p>我们在原式上加入${\color{mediumaquamarine}{\mathbf{Q}_k}}$，得到预测步骤的完整表达式：</p>
+<p><img src="https://i.loli.net/2021/05/22/72BFutEgcpAq5jl.jpg" alt="v2-2c8b709435f6c99ef9b00bba18d32b09_720w.jpg"></p>
+<p>简而言之，这里：</p>
+<p><font color='deeppink'>新的最佳估计</font>是基于<font color='royalblue'>原最佳估计</font>和<font color='darkorange'>已知外部影响</font>校正后得到的预测。</p>
+<p><font color='deeppink'>新的不确定性</font>是基于<font color='royalblue'>原不确定性</font>和<font color='mediumaquamarine'>外部环境的不确定性</font>得到的预测。</p>
+<p>现在，得到最终的预测结果，我们把传感器数据加入其中，会发生什么呢？</p>
+<h3 id="通过测量值来修正估计值">通过测量值来修正估计值</h3>
+<p>我们可能有好几个传感器，它们一起提供有关系统状态的信息。传感器的作用不是我们关心的重点，它可以读取位置，可以读取速度，重点是，它能告诉我们关于状态的间接信息——它是状态下产生的一组读数。</p>
+<p><img src="https://i.loli.net/2021/05/22/aWxnoL2UKdQv3cS.jpg" alt="gauss_12.jpg"></p>
+<p>请注意，读数的规模和状态的规模不一定相同，所以我们把传感器读数转换矩阵设为$\mathbf{H}_k$。</p>
+<p><img src="https://i.loli.net/2021/05/22/IkaUXst49c13HEC.jpg" alt="gauss_13.jpg"></p>
+<p>把这些分布转换为一般形式：</p>
+<p><img src="https://i.loli.net/2021/05/22/kDbOIEhpj8fLwga.jpg" alt="v2-531d486ddd0875207e79b16d19006ca5_720w.jpg"></p>
+<p>卡尔曼滤波的一大优点是擅长处理传感器噪声。换句话说，由于种种因素，传感器记录的信息其实是不准的，一个状态事实上可以产生多种读数。</p>
+<p><img src="https://i.loli.net/2021/05/22/hRPIA6ZkDC4WVTu.jpg" alt="gauss_14.jpg"></p>
+<p><img src="https://i.loli.net/2021/05/22/5ylrfT3eAtiqEn9.jpg" alt="gauss_11.jpg"></p>
+<p>我们将这种不确定性（即传感器噪声）的协方差设为$\color{mediumaquamarine}{\mathbf{R}_k}$，读数的分布均值设为$\color{yellowgreen}{\vec{\mathbf{z}_k}}$。</p>
+<p>现在我们得到了两块高斯分布，一块围绕预测的均值，另一块围绕传感器读数。</p>
+<p><img src="https://i.loli.net/2021/05/22/elyvYbRBks9FVZh.jpg" alt="gauss_4.jpg"></p>
+<p>如果要生成靠谱预测，模型必须调和这两个信息。也就是说，对于任何可能的读数$(z_1,z_2)$，这两种方法预测的状态都有可能是准的，也都有可能是不准的。重点是我们怎么找到这两个准确率。</p>
+<p>最简单的方法是两者相乘：</p>
+<p><img src="https://i.loli.net/2021/05/22/UjPb1LfCnmrQkGF.png" alt="gauss_6a.png"></p>
+<p>两块高斯分布相乘后，我们可以得到它们的重叠部分，这也是会出现最佳估计的区域。换个角度看，它看起来也符合高斯分布：</p>
+<p><img src="https://i.loli.net/2021/05/22/zEl6UjiPLBDmGfQ.png" alt="gauss_6.png"></p>
+<p>事实证明，当你把两个高斯分布和它们各自的均值和协方差矩阵相乘时，你会得到一个拥有独立均值和协方差矩阵的新高斯分布。最后剩下的问题就不难解决了：我们必须有一个公式来从旧的参数中获取这些新参数！</p>
+<h3 id="结合高斯">结合高斯</h3>
+<blockquote>
+<p>关于两个高斯分布的乘积仍为高斯分布的证明见：</p>
+</blockquote>
+<p>让我们从一维看起，设方差为$\sigma^2$，均值为$\mu$，一个标准一维高斯钟形曲线方程如下所示：</p>
+<p><img src="https://i.loli.net/2021/05/22/9U1MAkrv7jpEYw4.jpg" alt="v2-97fd17b2ea76d5452a22725f19f99580_720w.jpg"></p>
+<p>那么两条高斯曲线相乘呢，下面的蓝色曲线代表两个高斯分布的（未归一化）交集：</p>
+<p><img src="https://i.loli.net/2021/05/22/Ll3wR16UnqFoJtO.png" alt="gauss_joint.png"></p>
+<p><img src="https://i.loli.net/2021/05/22/vjf9RsMGbIQE23N.jpg" alt="v2-44fae648700cd28c6ed7c82e91c864a9_720w.jpg"></p>
+<p>把这个式子按照一维方程进行扩展，并进行归一化使其概率和为1，可得：</p>
+<p><img src="https://i.loli.net/2021/05/22/aiEYnxhTKLQsRec.jpg" alt="v2-f3119ec5da2279746e27b0e2e31ccfb9_720w.jpg"></p>
+<p>如果有些太复杂，我们用k简化一下：</p>
+<p><img src="https://i.loli.net/2021/05/22/ZwMnGEljsW3FSXq.jpg" alt="v2-2881114c10fc274482b013e408df9ce9_720w.jpg"></p>
+<p>以上是一维的内容，如果是多维空间，把这个式子转成矩阵格式：</p>
+<p><img src="https://i.loli.net/2021/05/22/2k5ZD19KwQ4cbgY.jpg" alt="v2-1c02a4b31a146aba44c5082079df1e8c_720w.jpg"></p>
+<p>这个矩阵 <img src="https://www.zhihu.com/equation?tex=K" alt="[公式]"> 就是我们说的<strong>卡尔曼增益</strong>，easy！</p>
+<h3 id="把他们结合在一起">把他们结合在一起</h3>
+<p>截至目前，我们有用矩阵$(\color{fuchsia}{\mu_0}, \color{deeppink}{\Sigma_0}) = (\color{fuchsia}{\mathbf{H}_k \mathbf{\hat{x}}_k}, \color{deeppink}{\mathbf{H}_k \mathbf{P}_k \mathbf{H}_k^T})$预测的分布，有用传感器读数$(\color{yellowgreen}{\mu_1}, \color{mediumaquamarine}{\Sigma_1}) = (\color{yellowgreen}{\vec{\mathbf{z}_k}}, \color{mediumaquamarine}{\mathbf{R}_k})$预测的分布。把它们代入上节的矩阵等式中：</p>
+<p><img src="https://i.loli.net/2021/05/22/ur956PgedMq47oV.jpg" alt="v2-9cb02f4cb340f4bee98bf8fdef80867b_720w.jpg"></p>
+<p>相应的，卡尔曼增益就是：</p>
+<p><img src="https://i.loli.net/2021/05/22/aZlki8CpGLf7PJb.jpg" alt="v2-c2a3f0e191354e598e09d4fdd59b8d25_720w.jpg"></p>
+<p>考虑到$\color{purple}{\mathbf{K}}$里还包含着一个$\mathbf{H}_k$，我们再精简一下上式：</p>
+<p><img src="https://i.loli.net/2021/05/22/2lc56dFy3fGb1Ne.jpg" alt="v2-47b92e3442751ff8266b4d18e30bda2a_720w.jpg"></p>
+<p>最后，$\color{royalblue}{\mathbf{\hat{x}}_k’}$是我们最终的最佳估计值，我们可以把它和$\color{royalblue}{\mathbf{P}_k’}$继续放进去做另一轮预测：</p>
+<p><img src="https://i.loli.net/2021/05/22/hZrmD1IuW75wR9i.png" alt="kalflow.png"></p>
+<blockquote>
+<p>参考：<a target="_blank" rel="noopener" href="http://www.bzarg.com/p/how-a-kalman-filter-works-in-pictures/#mathybits">http://www.bzarg.com/p/how-a-kalman-filter-works-in-pictures/#mathybits</a></p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/" rel="tag"># 卡尔曼滤波</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/05/20/LeetCode%E7%AC%AC%E4%B8%89%E9%A2%98%EF%BC%9A%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2/" rel="prev" title="LeetCode第三题：无重复字符的最长子串">
+      <i class="fa fa-chevron-left"></i> LeetCode第三题：无重复字符的最长子串
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2"><span class="nav-number">2.</span> <span class="nav-text">什么是卡尔曼滤波</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%91%E4%BB%AC%E8%83%BD%E7%94%A8%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2%E5%81%9A%E4%BB%80%E4%B9%88"><span class="nav-number">3.</span> <span class="nav-text">我们能用卡尔曼滤波做什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2%E7%9C%BC%E9%87%8C%E7%9A%84%E6%9C%BA%E5%99%A8%E4%BA%BA%E9%97%AE%E9%A2%98"><span class="nav-number">4.</span> <span class="nav-text">卡尔曼滤波眼里的机器人问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E7%9F%A9%E9%98%B5%E6%8F%8F%E8%BF%B0%E9%97%AE%E9%A2%98"><span class="nav-number">5.</span> <span class="nav-text">用矩阵描述问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%96%E9%83%A8%E5%BD%B1%E5%93%8D"><span class="nav-number">6.</span> <span class="nav-text">外部影响</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%96%E9%83%A8%E4%B8%8D%E7%A1%AE%E5%AE%9A%E6%80%A7"><span class="nav-number">7.</span> <span class="nav-text">外部不确定性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E6%B5%8B%E9%87%8F%E5%80%BC%E6%9D%A5%E4%BF%AE%E6%AD%A3%E4%BC%B0%E8%AE%A1%E5%80%BC"><span class="nav-number">8.</span> <span class="nav-text">通过测量值来修正估计值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E5%90%88%E9%AB%98%E6%96%AF"><span class="nav-number">9.</span> <span class="nav-text">结合高斯</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%8A%E4%BB%96%E4%BB%AC%E7%BB%93%E5%90%88%E5%9C%A8%E4%B8%80%E8%B5%B7"><span class="nav-number">10.</span> <span class="nav-text">把他们结合在一起</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zsh"
+      src="/images/header2.jpg">
+  <p class="site-author-name" itemprop="name">zsh</p>
+  <div class="site-description" itemprop="description">怕什么真理无穷<br>进一寸有一寸的欢喜</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zsh4614" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zsh4614" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.jianshu.com/u/f513362c9d79" title="简书 → https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;f513362c9d79" rel="noopener" target="_blank"><i class="fas fa-book fa-fw"></i>简书</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zsh4614@gmail.com" title="E-Mail → mailto:zsh4614@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/cjhfhb" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;cjhfhb" rel="noopener" target="_blank"><i class="fa fa-globe-americas fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="powered-by">
+    水滴石穿，绳锯木断。
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      已有<span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人访问
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      总访问<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clickloves.js"></script>
