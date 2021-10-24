@@ -19,20 +19,20 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="引言：本文主要分析LeetCode第一题，Python和C++实现；并对哈希做了简单说明。">
+  <meta name="description" content="题目 给定两个大小分别为 m 和 n 的正序（从小到大）数组 nums1 和 nums2。请你找出并返回这两个正序数组的 中位数 。 示例 示例 1： 123输入：nums1 &#x3D; [1,3], nums2 &#x3D; [2]输出：2.00000解释：合并数组 &#x3D; [1,2,3] ，中位数 2 示例 2： 123输入：nums1 &#x3D; [1,2], nums2 &amp;#x3">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LeetCode第一题：两数之和">
-<meta property="og:url" content="http://example.com/2021/05/17/leetcode%E7%AC%AC%E4%B8%80%E9%A2%98%EF%BC%9A%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/index.html">
+<meta property="og:title" content="LeetCode第四题：寻找两个正序数组的中位数">
+<meta property="og:url" content="http://example.com/2021/05/25/LeetCode%E7%AC%AC%E5%9B%9B%E9%A2%98%EF%BC%9A%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/index.html">
 <meta property="og:site_name" content="欢迎来到我的主页!">
-<meta property="og:description" content="引言：本文主要分析LeetCode第一题，Python和C++实现；并对哈希做了简单说明。">
+<meta property="og:description" content="题目 给定两个大小分别为 m 和 n 的正序（从小到大）数组 nums1 和 nums2。请你找出并返回这两个正序数组的 中位数 。 示例 示例 1： 123输入：nums1 &#x3D; [1,3], nums2 &#x3D; [2]输出：2.00000解释：合并数组 &#x3D; [1,2,3] ，中位数 2 示例 2： 123输入：nums1 &#x3D; [1,2], nums2 &amp;#x3">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-05-17T15:54:17.000Z">
-<meta property="article:modified_time" content="2021-05-17T16:38:31.707Z">
+<meta property="article:published_time" content="2021-05-24T16:36:29.000Z">
+<meta property="article:modified_time" content="2021-05-24T16:45:29.772Z">
 <meta property="article:author" content="zsh">
-<meta property="article:tag" content="哈希">
+<meta property="article:tag" content="程序员">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/2021/05/17/leetcode%E7%AC%AC%E4%B8%80%E9%A2%98%EF%BC%9A%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/">
+<link rel="canonical" href="http://example.com/2021/05/25/LeetCode%E7%AC%AC%E5%9B%9B%E9%A2%98%EF%BC%9A%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/">
 
 
 <script id="page-configurations">
@@ -45,7 +45,7 @@
   };
 </script>
 
-  <title>LeetCode第一题：两数之和 | 欢迎来到我的主页!</title>
+  <title>LeetCode第四题：寻找两个正序数组的中位数 | 欢迎来到我的主页!</title>
   
 
 
@@ -199,7 +199,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/17/leetcode%E7%AC%AC%E4%B8%80%E9%A2%98%EF%BC%9A%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/25/LeetCode%E7%AC%AC%E5%9B%9B%E9%A2%98%EF%BC%9A%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/header2.jpg">
@@ -212,7 +212,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          LeetCode第一题：两数之和
+          LeetCode第四题：寻找两个正序数组的中位数
         </h1>
 
         <div class="post-meta">
@@ -221,16 +221,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2021-05-17 23:54:17" itemprop="dateCreated datePublished" datetime="2021-05-17T23:54:17+08:00">2021-05-17</time>
+              <time title="创建时间：2021-05-25 00:36:29 / 修改时间：00:45:29" itemprop="dateCreated datePublished" datetime="2021-05-25T00:36:29+08:00">2021-05-25</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-05-18 00:38:31" itemprop="dateModified" datetime="2021-05-18T00:38:31+08:00">2021-05-18</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -254,14 +248,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.9k</span>
+              <span>655</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -273,40 +267,36 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>引言：本文主要分析LeetCode第一题，Python和C++实现；并对哈希做了简单说明。</p>
-<span id="more"></span>
-<h3 id="题目">题目</h3>
-<p>给定一个整数数组 nums 和一个整数目标值 target，请你在该数组中找出 和为目标值 的那 两个 整数，并返回它们的数组下标。<br>
-你可以假设每种输入只会对应一个答案。但是，数组中同一个元素在答案里不能重复出现。<br>
-你可以按任意顺序返回答案。</p>
+        <h3 id="题目">题目</h3>
+<p>给定两个大小分别为 <code>m</code> 和 <code>n</code> 的正序（从小到大）数组 <code>nums1</code> 和 <code>nums2</code>。请你找出并返回这两个正序数组的 <strong>中位数</strong> 。</p>
 <h3 id="示例">示例</h3>
-<p>输入：nums = [2,7,11,15], target = 9<br>
-输出：[0,1]<br>
-解释：因为 nums[0] + nums[1] == 9 ，返回 [0, 1] 。</p>
-<h3 id="分析">分析</h3>
-<p>1.注意题目输出下标，同时注意条件约束：返回结果不能是同一个元素的下标，但是可以使两个相等的元素的下标。</p>
-<p>2.最直观的想法是两层循环嵌套，时间复杂度O(n<sup>2</sup>)</p>
-<p>3.耗时主要在查找上，由于哈希查找的时间复杂度为O(1)，所以采用哈希</p>
-<h3 id="实现">实现</h3>
-<h4 id="Python">Python</h4>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">twoSum</span>(<span class="params">nums, target</span>):</span></span><br><span class="line">    hashmap = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> i, num <span class="keyword">in</span> <span class="built_in">enumerate</span>(nums):</span><br><span class="line">        <span class="keyword">if</span> target - num <span class="keyword">in</span> hashmap:</span><br><span class="line">            <span class="keyword">return</span> [i, hashmap.get(target - num)]</span><br><span class="line">        hashmap[num] = i</span><br><span class="line">        <span class="comment"># 注意，hashmap[num] = i一定要写在if之后，否则不能返回两个元素相等的情况</span></span><br></pre></td></tr></table></figure>
+<p>示例 1：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：nums1 &#x3D; [1,3], nums2 &#x3D; [2]</span><br><span class="line">输出：2.00000</span><br><span class="line">解释：合并数组 &#x3D; [1,2,3] ，中位数 2</span><br></pre></td></tr></table></figure>
+<p>示例 2：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：nums1 &#x3D; [1,2], nums2 &#x3D; [3,4]</span><br><span class="line">输出：2.50000</span><br><span class="line">解释：合并数组 &#x3D; [1,2,3,4] ，中位数 (2 + 3) &#x2F; 2 &#x3D; 2.5</span><br></pre></td></tr></table></figure>
+<p>示例 3：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：nums1 &#x3D; [0,0], nums2 &#x3D; [0,0]</span><br><span class="line">输出：0.00000</span><br></pre></td></tr></table></figure>
+<p>示例 4：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：nums1 &#x3D; [], nums2 &#x3D; [1]</span><br><span class="line">输出：1.00000</span><br></pre></td></tr></table></figure>
+<p>示例 5：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：nums1 &#x3D; [2], nums2 &#x3D; []</span><br><span class="line">输出：2.00000</span><br></pre></td></tr></table></figure>
+<p>提示：</p>
 <ul>
-<li>小技巧：访问字典最好使用dict.get(key)而不是使用dict[key]，因为当key不存在时前者会返回None，而后者会抛出异常。</li>
+<li>nums1.length == m</li>
+<li>nums2.length == n</li>
+<li>0 &lt;= m &lt;= 1000</li>
+<li>0 &lt;= n &lt;= 1000</li>
+<li>1 &lt;= m + n &lt;= 2000</li>
+<li>-106 &lt;= nums1[i], nums2[i] &lt;= 106。</li>
 </ul>
-<h4 id="C">C++</h4>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">twoSum</span><span class="params">(vector&lt;<span class="keyword">int</span>&gt;&amp; nums, <span class="keyword">int</span> target)</span> </span>&#123;</span><br><span class="line">    map&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; hashmap;</span><br><span class="line">    <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">result</span><span class="params">(<span class="number">2</span>, <span class="number">-1</span>)</span></span>;	<span class="comment">// 初始化存放结果的容器为&#123;-1， -1&#125;</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">        <span class="keyword">if</span>(hashmap.<span class="built_in">count</span>(target - nums[i]) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            result[<span class="number">0</span>] = i;</span><br><span class="line">            result[<span class="number">1</span>] = hashmap[target - nums[i]];</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        hashmap[nums[i]] = i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="拓展">拓展</h3>
-<h4 id="什么是哈希表？">什么是哈希表？</h4>
-<p>哈希表（Hash table，也叫散列表），是根据关键码值(Key value)而直接进行访问的数据结构。也就是说，它通过把关键码值映射到表中一个位置来访问记录，以加快查找的速度。这个映射函数叫做散列函数，存放记录的数组叫做散列表。</p>
-<p>记录的存储位置=f(关键字)</p>
-<p>这里的对应关系f称为散列函数，又称为哈希（Hash函数），采用散列技术将记录存储在一块连续的存储空间中，这块连续存储空间称为散列表或哈希表（Hash table）。</p>
-<p>哈希表hashtable(key，value) 就是把Key通过一个固定的算法函数既所谓的哈希函数转换成一个整型数字，然后就将该数字对数组长度进行取余，取余结果就当作数组的下标，将value存储在以该数字为下标的数组空间里。（或者：把任意长度的输入（又叫做预映射， pre-image），通过散列算法，变换成固定长度的输出，该输出就是散列值。这种转换是一种压缩映射，也就是，散列值的空间通常远小于输入的空间，不同的输入可能会散列成相同的输出，而不可能从散列值来唯一的确定输入值。简单的说就是一种将任意长度的消息压缩到某一固定长度的消息摘要的函数。）<br>
-而当使用哈希表进行查询的时候，就是再次使用哈希函数将key转换为对应的数组下标，并定位到该空间获取value，如此一来，就可以充分利用到数组的定位性能进行数据定位。</p>
-<h4 id="Hash的应用">Hash的应用</h4>
-<p>1、Hash主要用于信息安全领域中加密算法，它把一些不同长度的信息转化成杂乱的128位的编码,这些编码值叫做Hash值. 也可以说，Hash就是找到一种数据内容和数据存放地址之间的映射关系。</p>
-<p>2、查找：哈希表，又称为散列，是一种更加快捷的查找技术。我们之前的查找，都是这样一种思路：集合中拿出来一个元素，看看是否与我们要找的相等，如果不等，缩小范围，继续查找。而哈希表是完全另外一种思路：当我知道key值以后，我就可以直接计算出这个元素在集合中的位置，根本不需要一次又一次的查找！</p>
-<p>举一个例子，假如我的数组A中，第i个元素里面装的key就是i，那么数字3肯定是在第3个位置，数字10肯定是在第10个位置。哈希表就是利用利用这种基本的思想，建立一个从key到位置的函数，然后进行直接计算查找。</p>
-<p>3、Hash表在海量数据处理中有着广泛应用。</p>
+<h3 id="分析">分析</h3>
+<ul>
+<li>最简单的思路，需要遍历一遍</li>
+<li>题目是求中位数，其实就是<strong>求第 <code>k</code> 小数的一种特殊情况，而求第 <code>k</code> 小数有一种算法</strong>，就是二分法，时间复杂度可以达到O（log(m+n)）</li>
+</ul>
+<h3 id="实现">实现</h3>
+<h4 id="python">python</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">findMedianSortedArrays</span>(<span class="params">self, nums1, nums2</span>):</span></span><br><span class="line">    k = (<span class="built_in">len</span>(nums1) + <span class="built_in">len</span>(nums2))</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -315,9 +305,6 @@
     
 
       <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/%E5%93%88%E5%B8%8C/" rel="tag"># 哈希</a>
-          </div>
 
         
 
@@ -325,12 +312,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/05/15/PyTorch%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB%E4%B9%8BDP-DDP%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%B9%B6%E8%A1%8C%E5%92%8C%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83%E8%AF%A6%E8%A7%A3/" rel="prev" title="PyTorch源码解读之DP&DDP：数据并行和分布式训练详解">
-      <i class="fa fa-chevron-left"></i> PyTorch源码解读之DP&DDP：数据并行和分布式训练详解
+    <a href="/2021/05/24/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95%EF%BC%9A%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2%EF%BC%88%E5%9B%BE%E8%A7%A3%E6%8E%A8%E5%AF%BC%EF%BC%89/" rel="prev" title="经典算法：卡尔曼滤波（图解推导）">
+      <i class="fa fa-chevron-left"></i> 经典算法：卡尔曼滤波（图解推导）
     </a></div>
       <div class="post-nav-item">
-    <a href="/2021/05/18/LeetCode%E7%AC%AC%E4%BA%8C%E9%A2%98%EF%BC%9A%E4%B8%A4%E6%95%B0%E7%9B%B8%E5%8A%A0/" rel="next" title="LeetCode第二题：两数相加">
-      LeetCode第二题：两数相加 <i class="fa fa-chevron-right"></i>
+    <a href="/2021/06/13/C-11%E4%B9%8Bshared-ptr/" rel="next" title="C++11之shared_ptr">
+      C++11之shared_ptr <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -390,7 +377,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.</span> <span class="nav-text">示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">3.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.</span> <span class="nav-text">实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Python"><span class="nav-number">4.1.</span> <span class="nav-text">Python</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C"><span class="nav-number">4.2.</span> <span class="nav-text">C++</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%93%E5%B1%95"><span class="nav-number">5.</span> <span class="nav-text">拓展</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%93%88%E5%B8%8C%E8%A1%A8%EF%BC%9F"><span class="nav-number">5.1.</span> <span class="nav-text">什么是哈希表？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hash%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">5.2.</span> <span class="nav-text">Hash的应用</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.</span> <span class="nav-text">示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">3.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.</span> <span class="nav-text">实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#python"><span class="nav-number">4.1.</span> <span class="nav-text">python</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -406,7 +393,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -419,7 +406,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-count">55</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

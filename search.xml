@@ -1283,51 +1283,6 @@ output_padding=0表示不进行填补，output_padding=1表示进行填补一圈
       </tags>
   </entry>
   <entry>
-    <title>LeetCode第一题：两数之和</title>
-    <url>/2021/05/17/leetcode%E7%AC%AC%E4%B8%80%E9%A2%98%EF%BC%9A%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/</url>
-    <content><![CDATA[<p>引言：本文主要分析LeetCode第一题，Python和C++实现；并对哈希做了简单说明。</p>
-<span id="more"></span>
-<h3 id="题目">题目</h3>
-<p>给定一个整数数组 nums 和一个整数目标值 target，请你在该数组中找出 和为目标值 的那 两个 整数，并返回它们的数组下标。<br>
-你可以假设每种输入只会对应一个答案。但是，数组中同一个元素在答案里不能重复出现。<br>
-你可以按任意顺序返回答案。</p>
-<h3 id="示例">示例</h3>
-<p>输入：nums = [2,7,11,15], target = 9<br>
-输出：[0,1]<br>
-解释：因为 nums[0] + nums[1] == 9 ，返回 [0, 1] 。</p>
-<h3 id="分析">分析</h3>
-<p>1.注意题目输出下标，同时注意条件约束：返回结果不能是同一个元素的下标，但是可以使两个相等的元素的下标。</p>
-<p>2.最直观的想法是两层循环嵌套，时间复杂度O(n<sup>2</sup>)</p>
-<p>3.耗时主要在查找上，由于哈希查找的时间复杂度为O(1)，所以采用哈希</p>
-<h3 id="实现">实现</h3>
-<h4 id="Python">Python</h4>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">twoSum</span>(<span class="params">nums, target</span>):</span></span><br><span class="line">    hashmap = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> i, num <span class="keyword">in</span> <span class="built_in">enumerate</span>(nums):</span><br><span class="line">        <span class="keyword">if</span> target - num <span class="keyword">in</span> hashmap:</span><br><span class="line">            <span class="keyword">return</span> [i, hashmap.get(target - num)]</span><br><span class="line">        hashmap[num] = i</span><br><span class="line">        <span class="comment"># 注意，hashmap[num] = i一定要写在if之后，否则不能返回两个元素相等的情况</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>小技巧：访问字典最好使用dict.get(key)而不是使用dict[key]，因为当key不存在时前者会返回None，而后者会抛出异常。</li>
-</ul>
-<h4 id="C">C++</h4>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">twoSum</span><span class="params">(vector&lt;<span class="keyword">int</span>&gt;&amp; nums, <span class="keyword">int</span> target)</span> </span>&#123;</span><br><span class="line">    map&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; hashmap;</span><br><span class="line">    <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">result</span><span class="params">(<span class="number">2</span>, <span class="number">-1</span>)</span></span>;	<span class="comment">// 初始化存放结果的容器为&#123;-1， -1&#125;</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">        <span class="keyword">if</span>(hashmap.<span class="built_in">count</span>(target - nums[i]) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            result[<span class="number">0</span>] = i;</span><br><span class="line">            result[<span class="number">1</span>] = hashmap[target - nums[i]];</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        hashmap[nums[i]] = i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="拓展">拓展</h3>
-<h4 id="什么是哈希表？">什么是哈希表？</h4>
-<p>哈希表（Hash table，也叫散列表），是根据关键码值(Key value)而直接进行访问的数据结构。也就是说，它通过把关键码值映射到表中一个位置来访问记录，以加快查找的速度。这个映射函数叫做散列函数，存放记录的数组叫做散列表。</p>
-<p>记录的存储位置=f(关键字)</p>
-<p>这里的对应关系f称为散列函数，又称为哈希（Hash函数），采用散列技术将记录存储在一块连续的存储空间中，这块连续存储空间称为散列表或哈希表（Hash table）。</p>
-<p>哈希表hashtable(key，value) 就是把Key通过一个固定的算法函数既所谓的哈希函数转换成一个整型数字，然后就将该数字对数组长度进行取余，取余结果就当作数组的下标，将value存储在以该数字为下标的数组空间里。（或者：把任意长度的输入（又叫做预映射， pre-image），通过散列算法，变换成固定长度的输出，该输出就是散列值。这种转换是一种压缩映射，也就是，散列值的空间通常远小于输入的空间，不同的输入可能会散列成相同的输出，而不可能从散列值来唯一的确定输入值。简单的说就是一种将任意长度的消息压缩到某一固定长度的消息摘要的函数。）<br>
-而当使用哈希表进行查询的时候，就是再次使用哈希函数将key转换为对应的数组下标，并定位到该空间获取value，如此一来，就可以充分利用到数组的定位性能进行数据定位。</p>
-<h4 id="Hash的应用">Hash的应用</h4>
-<p>1、Hash主要用于信息安全领域中加密算法，它把一些不同长度的信息转化成杂乱的128位的编码,这些编码值叫做Hash值. 也可以说，Hash就是找到一种数据内容和数据存放地址之间的映射关系。</p>
-<p>2、查找：哈希表，又称为散列，是一种更加快捷的查找技术。我们之前的查找，都是这样一种思路：集合中拿出来一个元素，看看是否与我们要找的相等，如果不等，缩小范围，继续查找。而哈希表是完全另外一种思路：当我知道key值以后，我就可以直接计算出这个元素在集合中的位置，根本不需要一次又一次的查找！</p>
-<p>举一个例子，假如我的数组A中，第i个元素里面装的key就是i，那么数字3肯定是在第3个位置，数字10肯定是在第10个位置。哈希表就是利用利用这种基本的思想，建立一个从key到位置的函数，然后进行直接计算查找。</p>
-<p>3、Hash表在海量数据处理中有着广泛应用。</p>
-]]></content>
-      <categories>
-        <category>LeetCode</category>
-      </categories>
-      <tags>
-        <tag>哈希</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>LeetCode第二题：两数相加</title>
     <url>/2021/05/18/LeetCode%E7%AC%AC%E4%BA%8C%E9%A2%98%EF%BC%9A%E4%B8%A4%E6%95%B0%E7%9B%B8%E5%8A%A0/</url>
     <content><![CDATA[<p>引言：本文主要分析LeetCode第二题，Python和C++实现；并对链表做了简单说明。</p>
@@ -1618,5 +1573,215 @@ output_padding=0表示不进行填补，output_padding=1表示进行填补一圈
       <tags>
         <tag>卡尔曼滤波</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>C++11之shared_ptr</title>
+    <url>/2021/06/13/C-11%E4%B9%8Bshared-ptr/</url>
+    <content><![CDATA[<p>引言：本节介绍C++11新特性之 shared_ptr 智能指针。</p>
+<span id="more"></span>
+<h3 id="背景">背景</h3>
+<p>在实际的 C++ 开发中，我们经常会遇到诸如程序运行中突然崩溃、程序运行所用内存越来越多最终不得不重启等问题，这些问题往往都是内存资源管理不当造成的。比如：</p>
+<ul>
+<li>有些内存资源已经被释放，但指向它的指针并没有改变指向（成为了野指针），并且后续还在使用；</li>
+<li>有些内存资源已经被释放，后期又试图再释放一次（重复释放同一块内存会导致程序运行崩溃）；</li>
+<li>没有及时释放不再使用的内存资源，造成内存泄漏，程序占用的内存资源越来越多。</li>
+</ul>
+<p>针对以上这些情况，很多程序员认为 C++ 语言应该提供更友好的内存管理机制，这样就可以将精力集中于开发项目的各个功能上。事实上，显示内存管理的替代方案很早就有了，早在 1959 年前后，就有人提出了“垃圾自动回收”机制。所谓垃圾，指的是那些不再使用或者没有任何指针指向的内存空间，而“回收”则指的是将这些“垃圾”收集起来以便再次利用。如今，垃圾回收机制已经大行其道，得到了诸多编程语言的支持，例如 Java、Python、C#、PHP 等。而 C++ 虽然从来没有公开得支持过垃圾回收机制，但 C++98/03 标准中，支持使用 auto_ptr 智能指针来实现堆内存的自动回收；C++11 新标准在废弃 auto_ptr 的同时，增添了 **unique_ptr、shared_ptr 以及 weak_ptr **这 3 个智能指针来实现堆内存的自动回收。所谓智能指针，可以从字面上理解为“智能”的指针。具体来讲，智能指针和普通指针的用法是相似的，不同之处在于，智能指针可以在适当时机自动释放分配的内存。也就是说，<strong>使用智能指针可以很好地避免“忘记释放内存而导致内存泄漏”问题出现</strong>。由此可见，C++ 也逐渐开始支持垃圾回收机制了，尽管目前支持程度还有限。</p>
+<p>C++ 智能指针底层是采用引用计数的方式实现的。简单的理解，智能指针在申请堆内存空间的同时，会为其配备一个整形值（初始值为 1），每当有新对象使用此堆内存时，该整形值 +1；反之，每当使用此堆内存的对象被释放时，该整形值减 1。当堆空间对应的整形值为 0 时，即表明不再有对象使用它，该堆空间就会被释放掉。</p>
+<h3 id="说明">说明</h3>
+<p>实际上，每种智能指针都是以类模板的方式实现的，shared_ptr 也不例外。shared_ptr&lt;T&gt;（其中 T 表示指针指向的具体数据类型）的定义位于<code>&lt;memory&gt;</code>头文件，并位于 std 命名空间中，因此在使用该类型指针时，程序中应包含如下 2 行代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta"># <span class="meta-keyword">include</span><span class="meta-string">&lt;memory&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std；	<span class="comment">//也可以不添加，则后续在使用 shared_ptr 智能指针时，就需要明确指明std::。</span></span><br></pre></td></tr></table></figure>
+<p>值得一提的是，和 unique_ptr、weak_ptr 不同之处在于，<strong>多个 shared_ptr 智能指针可以共同使用同一块堆内存</strong>。并且，由于该类型智能指针在实现上采用的是引用计数机制，即便有一个 shared_ptr 指针放弃了堆内存的“使用权”（引用计数减 1），也不会影响其他指向同一堆内存的 shared_ptr 指针（只有引用计数为 0 时，堆内存才会被自动释放）。</p>
+<h3 id="shared-ptr智能指针的创建">shared_ptr智能指针的创建</h3>
+<p>shared_ptr&lt;T&gt; 类模板中，提供了多种实用的构造函数，这里列举了几个常用的构造函数（以构建指向 int 类型数据的智能指针为例）。</p>
+<ol>
+<li>通过如下 2 种方式，可以构造出 shared_ptr<T> 类型的空智能指针：</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">std::shared_ptr&lt;<span class="keyword">int</span>&gt; p1;			<span class="comment">// 不传入任何参数			</span></span><br><span class="line"><span class="function">std::shared_ptr&lt;<span class="keyword">int</span>&gt; <span class="title">p2</span><span class="params">(<span class="literal">nullptr</span>)</span></span>;	<span class="comment">// 传入空指针nullptr</span></span><br></pre></td></tr></table></figure>
+<p>注意，<strong>空的 shared_ptr 指针，其初始引用计数为 0，而不是 1。</strong></p>
+<ol start="2">
+<li>在构建 shared_ptr 智能指针，也可以明确其指向。例如：</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">std::shared_ptr&lt;<span class="keyword">int</span>&gt; <span class="title">p3</span><span class="params">(<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">10</span>))</span></span>;</span><br></pre></td></tr></table></figure>
+<p>由此，我们就成功构建了一个 shared_ptr 智能指针，其指向一块存有 10 这个 int 类型数据的堆内存空间。</p>
+<p>同时，C++11 标准中还提供了 std::make_shared&lt;T&gt; 模板函数，其可以用于初始化 shared_ptr 智能指针，例如：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">std::shared_ptr&lt;<span class="keyword">int</span>&gt; p3 = make_shared&lt;<span class="keyword">int</span>&gt;(<span class="number">10</span>);</span><br></pre></td></tr></table></figure>
+<p>以上 2 种方式创建的 p3 是完全相同。</p>
+<p><strong>注意，不能将一个原始指针直接赋值给一个智能指针：</strong></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">std::shared_ptr&lt;<span class="keyword">int</span>&gt; p3 = <span class="keyword">new</span> <span class="built_in"><span class="keyword">int</span></span>(<span class="number">10</span>);		<span class="comment">// 错误 </span></span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>除此之外，shared_ptr&lt;T&gt; 模板还提供有相应的拷贝构造函数和移动构造函数，例如：</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 调用拷贝构造函数</span></span><br><span class="line"><span class="function">std::shared_ptr&lt;<span class="keyword">int</span>&gt; <span class="title">p4</span><span class="params">(p3)</span></span>;	<span class="comment">//或者</span></span><br><span class="line">std::shared_ptr&lt;<span class="keyword">int</span>&gt; p4 = p3;</span><br><span class="line"><span class="comment">// 调用移动构造函数</span></span><br><span class="line"><span class="function">std::shared_ptr&lt;<span class="keyword">int</span>&gt; <span class="title">p5</span><span class="params">(std::move(p4))</span></span>;	<span class="comment">// 或者</span></span><br><span class="line">std::shared_ptr&lt;<span class="keyword">int</span>&gt; p5 = std::<span class="built_in">move</span>(p4);</span><br></pre></td></tr></table></figure>
+<p>如上所示，p3 和 p4 都是 shared_ptr 类型的智能指针，因此可以用 p3 来初始化 p4，由于 p3 是左值，因此会调用拷贝构造函数。需要注意的是，如果 p3 为空智能指针，则 p4 也为空智能指针，其引用计数初始值为 0；反之，则表明 p4 和 p3 指向同一块堆内存，同时该堆空间的引用计数会加 1。</p>
+<p>而对于 std::move(p4) 来说，该函数会强制将 p4 转换成对应的右值，因此初始化 p5 调用的是移动构造函数。另外和调用拷贝构造函数不同，用 std::move(p4) 初始化 p5，会使得 p5 拥有了 p4 的堆内存，而 p4 则变成了空智能指针。</p>
+<p><strong>注意，同一普通指针不能同时为多个 shared_ptr 对象赋值，否则会导致程序发生异常。例如：</strong></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span>* ptr = <span class="keyword">new</span> <span class="keyword">int</span>;</span><br><span class="line"><span class="function">std::shared_ptr&lt;<span class="keyword">int</span>&gt; <span class="title">p1</span><span class="params">(ptr)</span></span>;</span><br><span class="line"><span class="function">std::shared_ptr&lt;<span class="keyword">int</span>&gt; <span class="title">p2</span><span class="params">(ptr)</span></span>;	<span class="comment">// 错误</span></span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>在初始化 shared_ptr 智能指针时，还可以自定义所指堆内存的释放规则，这样当堆内存的引用计数为 0 时，会优先调用我们自定义的释放规则。</li>
+</ol>
+<p>在某些场景中，自定义释放规则是很有必要的。比如，<strong>对于申请的动态数组来说，shared_ptr 指针默认的释放规则是不支持释放数组的，只能自定义对应的释放规则，才能正确地释放申请的堆内存。</strong></p>
+<p>对于申请的动态数组，释放规则可以使用 C++11 标准中提供的 default_delete&lt;T&gt; 模板类，我们也可以自定义释放规则：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 指定 default_delete 作为释放规则</span></span><br><span class="line"><span class="function">std::shared_ptr&lt;<span class="keyword">int</span>&gt; <span class="title">p6</span><span class="params">(<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>], std::default_delete&lt;<span class="keyword">int</span> []&gt;())</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 自定义释放规则</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">deleteInt</span><span class="params">(<span class="keyword">int</span> *p)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">delete</span> [] p;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化 </span></span><br></pre></td></tr></table></figure>
+]]></content>
+  </entry>
+  <entry>
+    <title>LeetCode第一一五题：不同子序列</title>
+    <url>/2021/10/24/LeetCode%E7%AC%AC%E4%B8%80%E4%B8%80%E4%BA%94%E9%A2%98%EF%BC%9A%E4%B8%8D%E5%90%8C%E5%AD%90%E5%BA%8F%E5%88%97/</url>
+    <content><![CDATA[<p>引言：本文主要分析LeetCode第一一五题，利用C++实现；并进行了空间优化，另外还可以利用dfs进行时间优化。</p>
+<span id="more"></span>
+<h3 id="题目">题目</h3>
+<p>给定一个字符串 s 和一个字符串 t ，计算在 s 的子序列中 t 出现的个数。</p>
+<p>字符串的一个 子序列 是指，通过删除一些（也可以不删除）字符且不干扰剩余字符相对位置所组成的新字符串。（例如，“ACE” 是 “ABCDE” 的一个子序列，而 “AEC” 不是）</p>
+<p>题目数据保证答案符合 32 位带符号整数范围。</p>
+<h3 id="示例">示例</h3>
+<p><strong>示例1：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：s &#x3D; &quot;rabbbit&quot;, t &#x3D; &quot;rabbit&quot;</span><br><span class="line">输出：3</span><br></pre></td></tr></table></figure>
+<p><strong>示例2：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：s &#x3D; &quot;babgbag&quot;, t &#x3D; &quot;bag&quot;</span><br><span class="line">输出：5</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>0 &lt;= s.length, t.length &lt;= 1000</code></li>
+<li><code>s</code> 和 <code>t</code> 由英文字母组成</li>
+</ul>
+<h3 id="分析">分析</h3>
+<p>1.可以用动态规划的方法求解，<code>dp[i][j]</code>表示<code>s[0]</code>到<code>s[i]</code>之中有多少个<code>t[0]</code>到<code>t[j]</code>序列。</p>
+<p>从最后一个字符看，假设s和t的长度分别是n和m，如果<code>s[n-1]</code>和<code>t[m-1]</code>不相等，那么显然只能在<code>s[0]</code>到<code>s[n-2]</code>中去找t；如果<code>s[n-1]</code>和<code>t[m-1]</code>相等，那么又分为两种情况，一是用<code>s[n-1]</code>，那么需要在<code>s[0]</code>到<code>s[n-2]</code>中去找<code>t[0]</code>到<code>t[m-2]</code>，另一种是不用<code>s[n-1]</code>，那么这就变成了和<code>s[n-1]</code>和<code>t[m-1]</code>不相等相同的情况，那么<code>s[n-1]</code>和<code>t[m-1]</code>相等时的方案数就是这两种情况之和。</p>
+<p>伪代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">if s[n-1] !&#x3D; t[m-1]:</span><br><span class="line">    dp[n-1][m-1] &#x3D; dp[n-2][m-1]</span><br><span class="line">else:</span><br><span class="line">    dp[n-1][m-1] &#x3D; dp[n-2][m-1] + dp[n-2][m-2]</span><br></pre></td></tr></table></figure>
+<p>2.按照上述分析，是一个二维的动态规划，当s比较长时，那么所需要开辟的空间就会非常大，所以还需要进行空间上的优化。可以发现<code>dp[n-1][m-1]</code>只和<code>dp[n-2][m-1]</code>与<code>dp[n-2][m-2]</code>有关，即这个二维数组只和它左上方和上方的元素有关，这样就可以不开辟二维数组，只开辟一维数组，然后不断更新，需要注意的是，要进行倒序更新。</p>
+<h3 id="实现">实现</h3>
+<h4 id="c">c++</h4>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">numDistinct</span><span class="params">(string s, string t)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (s.<span class="built_in">size</span>() &lt; t.<span class="built_in">size</span>()) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    vector&lt;vector&lt;<span class="keyword">size_t</span>&gt;&gt; <span class="built_in">dp</span>(s.<span class="built_in">size</span>(), vector&lt;<span class="keyword">size_t</span>&gt;(t.<span class="built_in">size</span>(), <span class="number">0</span>));</span><br><span class="line">    dp[<span class="number">0</span>][<span class="number">0</span>] = (s[<span class="number">0</span>] == t[<span class="number">0</span>]) ? <span class="number">1</span> : <span class="number">0</span>; </span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; t.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">        dp[<span class="number">0</span>][i] = <span class="number">0</span>;</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; s.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">        dp[i][<span class="number">0</span>] = (s[i] == t[<span class="number">0</span>]) ? (dp[i<span class="number">-1</span>][<span class="number">0</span>] + <span class="number">1</span>) : dp[i<span class="number">-1</span>][<span class="number">0</span>]; </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; s.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt; t.<span class="built_in">size</span>(); ++j) &#123;</span><br><span class="line">            <span class="keyword">if</span>(i &lt; j) &#123;</span><br><span class="line">                dp[i][j] = <span class="number">0</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (s[i] == t[j]) &#123;</span><br><span class="line">                    dp[i][j] = dp[i<span class="number">-1</span>][j<span class="number">-1</span>] + dp[i<span class="number">-1</span>][j];  </span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    dp[i][j] = dp[i<span class="number">-1</span>][j];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> dp[s.<span class="built_in">size</span>() - <span class="number">1</span>][t.<span class="built_in">size</span>() - <span class="number">1</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="空间优化">空间优化</h4>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">numDistinct</span><span class="params">(string s, string t)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (s.<span class="built_in">size</span>() &lt; t.<span class="built_in">size</span>()) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">vector&lt;<span class="keyword">unsigned</span> <span class="keyword">int</span>&gt; <span class="title">dp</span><span class="params">(t.size(), <span class="number">0</span>)</span></span>;</span><br><span class="line">    dp[<span class="number">0</span>] = (s[<span class="number">0</span>] == t[<span class="number">0</span>]) ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; t.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">        dp[i] = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; s.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = t.<span class="built_in">size</span>() - <span class="number">1</span>; j &gt; <span class="number">0</span>; --j)&#123;</span><br><span class="line">            dp[j] = (s[i] == t[j]) ? (dp[j] + dp[j<span class="number">-1</span>]) : dp[j];</span><br><span class="line">        &#125; </span><br><span class="line">        dp[<span class="number">0</span>] = (s[i] == t[<span class="number">0</span>]) ? (dp[<span class="number">0</span>] + <span class="number">1</span>) : dp[<span class="number">0</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> dp[t.<span class="built_in">size</span>() - <span class="number">1</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="拓展">拓展</h3>
+<p>这道题属于困难，优化的方法比较多，还有时间优化的余地，之后可以用dfs进行时间优化。</p>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+      </categories>
+      <tags>
+        <tag>动态规划</tag>
+        <tag>算法优化</tag>
+        <tag>dfs</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LeetCode第一题：两数之和</title>
+    <url>/2021/10/24/LeetCode%E7%AC%AC%E4%B8%80%E4%B9%9D%E5%85%AB%E9%A2%98%EF%BC%9A%E6%89%93%E5%AE%B6%E5%8A%AB%E8%88%8D/</url>
+    <content><![CDATA[<p>引言：本文主要分析LeetCode第一九八题，属于典型动态规划，最后C++实现。</p>
+<span id="more"></span>
+<h4 id="题目">题目</h4>
+<p>你是一个专业的小偷，计划偷窃沿街的房屋。每间房内都藏有一定的现金，影响你偷窃的唯一制约因素就是相邻的房屋装有相互连通的防盗系统，如果两间相邻的房屋在同一晚上被小偷闯入，系统会自动报警。</p>
+<p>给定一个代表每个房屋存放金额的非负整数数组，计算你不触动警报装置的情况下 ，一夜之内能够偷窃到的最高金额。</p>
+<h4 id="示例">示例</h4>
+<h5 id="示例1">示例1</h5>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：[1,2,3,1]</span><br><span class="line">输出：4</span><br><span class="line">解释：偷窃 1 号房屋 (金额 &#x3D; 1) ，然后偷窃 3 号房屋 (金额 &#x3D; 3)。</span><br><span class="line">     偷窃到的最高金额 &#x3D; 1 + 3 &#x3D; 4 。</span><br></pre></td></tr></table></figure>
+<h5 id="示例2">示例2</h5>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：[2,7,9,3,1]</span><br><span class="line">输出：12</span><br><span class="line">解释：偷窃 1 号房屋 (金额 &#x3D; 2), 偷窃 3 号房屋 (金额 &#x3D; 9)，接着偷窃 5 号房屋 (金额 &#x3D; 1)。</span><br><span class="line">     偷窃到的最高金额 &#x3D; 2 + 9 + 1 &#x3D; 12 。</span><br></pre></td></tr></table></figure>
+<h5 id="提示">提示</h5>
+<ul>
+<li><code>1 &lt;= nums.length &lt;= 100</code></li>
+<li><code>0 &lt;= nums[i] &lt;= 400</code></li>
+</ul>
+<h4 id="分析">分析</h4>
+<p>对于第i辆车，可以选择偷和不偷，最后求偷的情况下和不偷的情况下哪种情况偷的总数更多就可以了。偷的情况<code>dp[i]=dp[i-2]+p[i]</code>，不偷的情况<code>dp[i]=dp[i-1]</code>。</p>
+<h4 id="实现">实现</h4>
+<p>C++</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">rob</span><span class="params">(vector&lt;<span class="keyword">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n = nums.<span class="built_in">size</span>();</span><br><span class="line">    <span class="keyword">int</span> prepre = <span class="number">0</span>, pre = <span class="number">0</span>, now = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">        now = <span class="built_in">max</span>(pre, prepre+nums[i]);</span><br><span class="line">        prepre = pre;</span><br><span class="line">        pre = now;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> now;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="总结">总结</h4>
+<p>这道题很典型的dp问题，而且思路比较简单，我刚开始复杂了，但是也没太复杂：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 初始解法</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">rob</span><span class="params">(vector&lt;<span class="keyword">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">y</span><span class="params">(nums.size(), <span class="number">0</span>)</span></span>;</span><br><span class="line">        <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">n</span><span class="params">(nums.size(), <span class="number">0</span>)</span></span>;</span><br><span class="line">        y[<span class="number">0</span>] = nums[<span class="number">0</span>];</span><br><span class="line">        n[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; nums.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">            y[i] = n[i - <span class="number">1</span>] + nums[i];</span><br><span class="line">            n[i] = <span class="built_in">max</span>(y[i - <span class="number">1</span>], n[i - <span class="number">1</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">max</span>(y[nums.<span class="built_in">size</span>() - <span class="number">1</span>], n[nums.<span class="built_in">size</span>() - <span class="number">1</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 空间优化</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">rob</span><span class="params">(vector&lt;<span class="keyword">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        vector&lt;<span class="keyword">int</span>&gt; dp = &#123;nums[<span class="number">0</span>], <span class="number">0</span>, nums[<span class="number">0</span>]&#125;;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; nums.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">            dp[<span class="number">0</span>] = dp[<span class="number">1</span>] + nums[i];</span><br><span class="line">            dp[<span class="number">1</span>] = <span class="built_in">max</span>(dp[<span class="number">2</span>], dp[<span class="number">1</span>]);</span><br><span class="line">            dp[<span class="number">2</span>] = dp[<span class="number">0</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">max</span>(dp[<span class="number">0</span>], dp[<span class="number">1</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+      </categories>
+      <tags>
+        <tag>动态规划</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LeetCode第一题：两数之和</title>
+    <url>/2021/05/17/LeetCode%E7%AC%AC%E4%B8%80%E9%A2%98%EF%BC%9A%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/</url>
+    <content><![CDATA[<p>引言：本文主要分析LeetCode第一题，Python和C++实现；并对哈希做了简单说明。</p>
+<span id="more"></span>
+<h3 id="题目">题目</h3>
+<p>给定一个整数数组 nums 和一个整数目标值 target，请你在该数组中找出 和为目标值 的那 两个 整数，并返回它们的数组下标。<br>
+你可以假设每种输入只会对应一个答案。但是，数组中同一个元素在答案里不能重复出现。<br>
+你可以按任意顺序返回答案。</p>
+<h3 id="示例">示例</h3>
+<p>输入：nums = [2,7,11,15], target = 9<br>
+输出：[0,1]<br>
+解释：因为 nums[0] + nums[1] == 9 ，返回 [0, 1] 。</p>
+<h3 id="分析">分析</h3>
+<p>1.注意题目输出下标，同时注意条件约束：返回结果不能是同一个元素的下标，但是可以使两个相等的元素的下标。</p>
+<p>2.最直观的想法是两层循环嵌套，时间复杂度O(n<sup>2</sup>)</p>
+<p>3.耗时主要在查找上，由于哈希查找的时间复杂度为O(1)，所以采用哈希</p>
+<h3 id="实现">实现</h3>
+<h4 id="Python">Python</h4>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">twoSum</span>(<span class="params">nums, target</span>):</span></span><br><span class="line">    hashmap = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> i, num <span class="keyword">in</span> <span class="built_in">enumerate</span>(nums):</span><br><span class="line">        <span class="keyword">if</span> target - num <span class="keyword">in</span> hashmap:</span><br><span class="line">            <span class="keyword">return</span> [i, hashmap.get(target - num)]</span><br><span class="line">        hashmap[num] = i</span><br><span class="line">        <span class="comment"># 注意，hashmap[num] = i一定要写在if之后，否则不能返回两个元素相等的情况</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>小技巧：访问字典最好使用dict.get(key)而不是使用dict[key]，因为当key不存在时前者会返回None，而后者会抛出异常。</li>
+</ul>
+<h4 id="C">C++</h4>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">twoSum</span><span class="params">(vector&lt;<span class="keyword">int</span>&gt;&amp; nums, <span class="keyword">int</span> target)</span> </span>&#123;</span><br><span class="line">    map&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; hashmap;</span><br><span class="line">    <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">result</span><span class="params">(<span class="number">2</span>, <span class="number">-1</span>)</span></span>;	<span class="comment">// 初始化存放结果的容器为&#123;-1， -1&#125;</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">        <span class="keyword">if</span>(hashmap.<span class="built_in">count</span>(target - nums[i]) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            result[<span class="number">0</span>] = i;</span><br><span class="line">            result[<span class="number">1</span>] = hashmap[target - nums[i]];</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        hashmap[nums[i]] = i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="拓展">拓展</h3>
+<h4 id="什么是哈希表？">什么是哈希表？</h4>
+<p>哈希表（Hash table，也叫散列表），是根据关键码值(Key value)而直接进行访问的数据结构。也就是说，它通过把关键码值映射到表中一个位置来访问记录，以加快查找的速度。这个映射函数叫做散列函数，存放记录的数组叫做散列表。</p>
+<p>记录的存储位置=f(关键字)</p>
+<p>这里的对应关系f称为散列函数，又称为哈希（Hash函数），采用散列技术将记录存储在一块连续的存储空间中，这块连续存储空间称为散列表或哈希表（Hash table）。</p>
+<p>哈希表hashtable(key，value) 就是把Key通过一个固定的算法函数既所谓的哈希函数转换成一个整型数字，然后就将该数字对数组长度进行取余，取余结果就当作数组的下标，将value存储在以该数字为下标的数组空间里。（或者：把任意长度的输入（又叫做预映射， pre-image），通过散列算法，变换成固定长度的输出，该输出就是散列值。这种转换是一种压缩映射，也就是，散列值的空间通常远小于输入的空间，不同的输入可能会散列成相同的输出，而不可能从散列值来唯一的确定输入值。简单的说就是一种将任意长度的消息压缩到某一固定长度的消息摘要的函数。）<br>
+而当使用哈希表进行查询的时候，就是再次使用哈希函数将key转换为对应的数组下标，并定位到该空间获取value，如此一来，就可以充分利用到数组的定位性能进行数据定位。</p>
+<h4 id="Hash的应用">Hash的应用</h4>
+<p>1、Hash主要用于信息安全领域中加密算法，它把一些不同长度的信息转化成杂乱的128位的编码,这些编码值叫做Hash值. 也可以说，Hash就是找到一种数据内容和数据存放地址之间的映射关系。</p>
+<p>2、查找：哈希表，又称为散列，是一种更加快捷的查找技术。我们之前的查找，都是这样一种思路：集合中拿出来一个元素，看看是否与我们要找的相等，如果不等，缩小范围，继续查找。而哈希表是完全另外一种思路：当我知道key值以后，我就可以直接计算出这个元素在集合中的位置，根本不需要一次又一次的查找！</p>
+<p>举一个例子，假如我的数组A中，第i个元素里面装的key就是i，那么数字3肯定是在第3个位置，数字10肯定是在第10个位置。哈希表就是利用利用这种基本的思想，建立一个从key到位置的函数，然后进行直接计算查找。</p>
+<p>3、Hash表在海量数据处理中有着广泛应用。</p>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+      </categories>
+      <tags>
+        <tag>哈希</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LeetCode第四题：寻找两个正序数组的中位数</title>
+    <url>/2021/05/25/LeetCode%E7%AC%AC%E5%9B%9B%E9%A2%98%EF%BC%9A%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/</url>
+    <content><![CDATA[<h3 id="题目">题目</h3>
+<p>给定两个大小分别为 <code>m</code> 和 <code>n</code> 的正序（从小到大）数组 <code>nums1</code> 和 <code>nums2</code>。请你找出并返回这两个正序数组的 <strong>中位数</strong> 。</p>
+<h3 id="示例">示例</h3>
+<p>示例 1：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：nums1 &#x3D; [1,3], nums2 &#x3D; [2]</span><br><span class="line">输出：2.00000</span><br><span class="line">解释：合并数组 &#x3D; [1,2,3] ，中位数 2</span><br></pre></td></tr></table></figure>
+<p>示例 2：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：nums1 &#x3D; [1,2], nums2 &#x3D; [3,4]</span><br><span class="line">输出：2.50000</span><br><span class="line">解释：合并数组 &#x3D; [1,2,3,4] ，中位数 (2 + 3) &#x2F; 2 &#x3D; 2.5</span><br></pre></td></tr></table></figure>
+<p>示例 3：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：nums1 &#x3D; [0,0], nums2 &#x3D; [0,0]</span><br><span class="line">输出：0.00000</span><br></pre></td></tr></table></figure>
+<p>示例 4：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：nums1 &#x3D; [], nums2 &#x3D; [1]</span><br><span class="line">输出：1.00000</span><br></pre></td></tr></table></figure>
+<p>示例 5：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：nums1 &#x3D; [2], nums2 &#x3D; []</span><br><span class="line">输出：2.00000</span><br></pre></td></tr></table></figure>
+<p>提示：</p>
+<ul>
+<li>nums1.length == m</li>
+<li>nums2.length == n</li>
+<li>0 &lt;= m &lt;= 1000</li>
+<li>0 &lt;= n &lt;= 1000</li>
+<li>1 &lt;= m + n &lt;= 2000</li>
+<li>-106 &lt;= nums1[i], nums2[i] &lt;= 106。</li>
+</ul>
+<h3 id="分析">分析</h3>
+<ul>
+<li>最简单的思路，需要遍历一遍</li>
+<li>题目是求中位数，其实就是<strong>求第 <code>k</code> 小数的一种特殊情况，而求第 <code>k</code> 小数有一种算法</strong>，就是二分法，时间复杂度可以达到O（log(m+n)）</li>
+</ul>
+<h3 id="实现">实现</h3>
+<h4 id="python">python</h4>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">findMedianSortedArrays</span>(<span class="params">self, nums1, nums2</span>):</span></span><br><span class="line">    k = (<span class="built_in">len</span>(nums1) + <span class="built_in">len</span>(nums2))</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+      </categories>
   </entry>
 </search>
