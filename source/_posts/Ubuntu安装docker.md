@@ -9,9 +9,9 @@ categories:
 - Deploy
 ---
 
-<!--more-->
-
 引言：本文主要介绍在ubuntu上安装docker的方法。
+
+<!--more-->
 
 ### docker安装
 

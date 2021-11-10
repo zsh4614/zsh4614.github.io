@@ -8,9 +8,9 @@ categories:
 - Deploy
 ---
 
-<!--more-->
-
 引言：本文主要介绍Ubuntu的ssh相关服务。
+
+<!--more-->
 
 ### 设置ssh免密登录
 

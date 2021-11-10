@@ -8,9 +8,9 @@ categories:
 - Deploy
 ---
 
-<!--more-->
-
 引言：本文主要介绍如何在Ubuntu18.04上安装OpenPAI v1.8.0。
+
+<!--more-->
 
 ### 环境要求
 

@@ -9,9 +9,9 @@ categories:
 - Deploy
 ---
 
-<!--more-->
-
 引言：本文主要介绍在ubuntu系统上安装nvidia显卡驱动的方法，并优化驱动。
+
+<!--more-->
 
 ### 安装显卡驱动
 

@@ -9,9 +9,9 @@ categories:
 - Deploy
 ---
 
-<!--more-->
-
 引言：本文主要介绍ubuntu系统（包含desktop和server版本）挂载磁盘的方法，包括临时挂载和永久挂载。
+
+<!--more-->
 
 ### 格式化磁盘
 
