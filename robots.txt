@@ -1,5 +1,12 @@
 User-agent: *
-Allow: /_posts/
-Disallow: /about/
-
+Allow: /
+Allow: /archives/
+Allow: /categories/
+Allow: /tags/
+Allow: /about/
+Disallow: /vendors/
+Disallow: /js/
+Disallow: /css/
+Disallow: /fonts/
+Disallow: /fancybox/
 Sitemap: https://zsh4614.cn/sitemap.xml
