@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /_posts/
+Disallow: /about/
 
 Sitemap: https://zsh4614.cn/sitemap.xml
