@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /_posts/
+
+Sitemap: https://zsh4614.cn/sitemap.xml
