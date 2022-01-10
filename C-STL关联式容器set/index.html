@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+<meta name="google-site-verification" content="1aOZ-Mqx4wpQNb6_FZv6-oqB1p4VGmQ0nlu-EuBSzgU" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/header2.jpg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/header2.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/header2.jpg">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zsh4614.cn","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="引言：本文主要介绍c++的STL中的关联式容器set，包括其接口，用法和注意事项。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++之STL关联式容器set">
+<meta property="og:url" content="https://zsh4614.cn/C-STL%E5%85%B3%E8%81%94%E5%BC%8F%E5%AE%B9%E5%99%A8set/index.html">
+<meta property="og:site_name" content="欢迎来到我的主页!">
+<meta property="og:description" content="引言：本文主要介绍c++的STL中的关联式容器set，包括其接口，用法和注意事项。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2022/01/10/ldfXza6AqFe25Np.png">
+<meta property="article:published_time" content="2022-01-10T15:01:04.000Z">
+<meta property="article:modified_time" content="2022-01-10T16:40:50.027Z">
+<meta property="article:author" content="zsh">
+<meta property="article:tag" content="set">
+<meta property="article:tag" content="STL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/01/10/ldfXza6AqFe25Np.png">
+
+<link rel="canonical" href="https://zsh4614.cn/C-STL%E5%85%B3%E8%81%94%E5%BC%8F%E5%AE%B9%E5%99%A8set/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>C++之STL关联式容器set | 欢迎来到我的主页!</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="欢迎来到我的主页!" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">欢迎来到我的主页!</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-resource">
+
+    <a href="/categories/%E5%A4%96%E9%83%A8%E8%B5%84%E6%BA%90/" rel="section"><i class="fa fa-server fa-fw"></i>资源</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zsh4614.cn/C-STL%E5%85%B3%E8%81%94%E5%BC%8F%E5%AE%B9%E5%99%A8set/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header2.jpg">
+      <meta itemprop="name" content="zsh">
+      <meta itemprop="description" content="怕什么真理无穷<br>进一寸有一寸的欢喜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欢迎来到我的主页!">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C++之STL关联式容器set
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-01-10 23:01:04" itemprop="dateCreated datePublished" datetime="2022-01-10T23:01:04+08:00">2022-01-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-01-11 00:40:50" itemprop="dateModified" datetime="2022-01-11T00:40:50+08:00">2022-01-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C++</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>11k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>10 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>引言：本文主要介绍c++的STL中的关联式容器set，包括其接口，用法和注意事项。</p>
+<span id="more"></span>
+<h3 id="综述">综述</h3>
+<p>set本质上也是一种关联式容器，只是在存储键值对时，要求键值必须相等。举个例子，如下有 2 组键值对数据：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;&lt;&#39;a&#39;, 1&gt;, &lt;&#39;b&#39;, 2&gt;, &lt;&#39;c&#39;, 3&gt;&#125;</span><br><span class="line">&#123;&lt;&#39;a&#39;, &#39;a&#39;&gt;, &lt;&#39;b&#39;, &#39;b&#39;&gt;, &lt;&#39;c&#39;, &#39;c&#39;&gt;&#125;</span><br></pre></td></tr></table></figure>
+<p>显然，第一组数据中各键值对的键和值不相等，而第二组中各键值对的键和值对应相等。对于 set 容器来说，只能存储第 2 组键值对，而<strong>无法存储第一组键值对</strong>。</p>
+<p>基于 set 容器的这种特性，当使用 set 容器存储键值对时，只需要为其提供各键值对中的 value 值（也就是 key 的值）即可。仍以存储上面第 2 组键值对为例，只需要为 set 容器提供 {‘a’,‘b’,‘c’} ，该容器即可成功将它们存储起来。</p>
+<p>set容器会自行根据键的大小对存储的键值对进行排序。另外，使用 set 容器存储的<strong>各个元素的值必须各不相同</strong>。更重要的是，从语法上讲 set 容器并没有强制对存储元素的类型做 const 修饰，即 set 容器中存储的元素的值是可以修改的。但是，C++ 标准为了防止用户修改容器中元素的值，对所有可能会实现此操作的行为做了限制，使得在正常情况下，用户是无法做到修改 set 容器中元素的值的。<strong>切勿尝试直接修改 set 容器中已存储元素的值，这很有可能破坏 set 容器中元素的有序性，最正确的修改 set 容器中元素值的做法是：先删除该元素，然后再添加一个修改后的元素。</strong></p>
+<p>set 容器的类模板定义如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt; <span class="class"><span class="keyword">class</span> <span class="title">T</span>,                        // 键 <span class="title">key</span> 和值 <span class="title">value</span> 的类型</span></span><br><span class="line"><span class="class">           <span class="keyword">class</span> <span class="title">Compare</span> =</span> less&lt;T&gt;,        <span class="comment">// 指定 set 容器内部的排序规则</span></span><br><span class="line">           <span class="class"><span class="keyword">class</span> <span class="title">Alloc</span> =</span> allocator&lt;T&gt;      <span class="comment">// 指定分配器对象的类型</span></span><br><span class="line">           &gt; <span class="class"><span class="keyword">class</span> <span class="title">set</span>;</span></span><br></pre></td></tr></table></figure>
+<p>注意，由于 set 容器存储的各个键值对，其键和值完全相同，也就意味着它们的类型相同，因此 set 容器类模板的定义中，仅有第 1 个参数用于设定存储数据的类型。对于 set 类模板中的 3 个参数，后 2 个参数自带默认值，且几乎所有场景中只需使用前 2 个参数，第 3 个参数不会用到。</p>
+<h3 id="创建">创建</h3>
+<p>常见的创建 set 容器的方法，大致有以下 5 种。</p>
+<ol>
+<li>调用默认构造函数，创建空的 set 容器。比如：</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::set&lt;std::string&gt; myset;</span><br></pre></td></tr></table></figure>
+<p>由此就创建好了一个 set 容器，该容器采用默认的std::less<T>规则，会对存储的 string 类型元素做升序排序。注意，<strong>由于 set 容器支持随时向内部添加新的元素，因此创建空 set 容器的方法是经常使用的。</strong></p>
+<ol start="2">
+<li>除此之外，set 类模板还支持在创建 set 容器的同时，对其进行初始化。例如：</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::set&lt;std::string&gt; myset&#123;<span class="string">&quot;http://c.biancheng.net/java/&quot;</span>,</span><br><span class="line">                            <span class="string">&quot;http://c.biancheng.net/stl/&quot;</span>,</span><br><span class="line">                            <span class="string">&quot;http://c.biancheng.net/python/&quot;</span>&#125;;</span><br></pre></td></tr></table></figure>
+<p>由此即创建好了包含 3 个 string 元素的 myset 容器。由于其采用默认的 std::less<T> 规则，因此其内部存储 string 元素的顺序如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&quot;http:&#x2F;&#x2F;c.biancheng.net&#x2F;java&#x2F;&quot;</span><br><span class="line">&quot;http:&#x2F;&#x2F;c.biancheng.net&#x2F;python&#x2F;&quot;</span><br><span class="line">&quot;http:&#x2F;&#x2F;c.biancheng.net&#x2F;stl&#x2F;&quot;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>set 类模板中还提供了拷贝（复制）构造函数，可以实现在创建新 set 容器的同时，将已有 set 容器中存储的所有元素全部复制到新 set 容器中。例如，在第 2 种方式创建的 myset 容器的基础上，执行如下代码：</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::set&lt;std::string&gt; <span class="title">copyset</span><span class="params">(myset)</span></span>;</span><br><span class="line"><span class="comment">//等同于</span></span><br><span class="line"><span class="comment">//std::set&lt;std::string&gt; copyset = myset</span></span><br></pre></td></tr></table></figure>
+<p>该行代码在创建 copyset 容器的基础上，还会将 myset 容器中存储的所有元素，全部复制给 copyset 容器一份。</p>
+<p>另外，C++ 11 标准还为 set 类模板新增了移动构造函数，其功能是实现创建新 set 容器的同时，利用临时的 set 容器为其初始化。比如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">set&lt;string&gt; <span class="title">retSet</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::set&lt;std::string&gt; myset&#123; <span class="string">&quot;http://c.biancheng.net/java/&quot;</span>,</span><br><span class="line">                            <span class="string">&quot;http://c.biancheng.net/stl/&quot;</span>,</span><br><span class="line">                            <span class="string">&quot;http://c.biancheng.net/python/&quot;</span> &#125;;</span><br><span class="line">    <span class="keyword">return</span> myset;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">std::set&lt;std::string&gt; <span class="title">copyset</span><span class="params">(retSet())</span></span>;</span><br><span class="line"><span class="comment">//或者</span></span><br><span class="line"><span class="comment">//std::set&lt;std::string&gt; copyset = retSet();</span></span><br></pre></td></tr></table></figure>
+<p>注意，<strong>由于 retSet() 函数的返回值是一个临时 set 容器，因此在初始化 copyset 容器时，其内部调用的是 set 类模板中的移动构造函数，而非拷贝构造函数</strong></p>
+<ol start="4">
+<li>在第 3 种方式的基础上，set 类模板还支持取已有 set 容器中的部分元素，来初始化新 set 容器。例如：</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">std::set&lt;std::string&gt; myset&#123; <span class="string">&quot;http://c.biancheng.net/java/&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;http://c.biancheng.net/stl/&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;http://c.biancheng.net/python/&quot;</span> &#125;;</span><br><span class="line"><span class="function">std::set&lt;std::string&gt; <span class="title">copyset</span><span class="params">(++myset.begin(), myset.end())</span></span>;</span><br></pre></td></tr></table></figure>
+<p>由此初始化的 copyset 容器，其内部仅存有如下 2 个 string 字符串：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;http:&#x2F;&#x2F;c.biancheng.net&#x2F;python&#x2F;&quot;</span><br><span class="line">&quot;http:&#x2F;&#x2F;c.biancheng.net&#x2F;stl&#x2F;&quot;</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>以上几种方式创建的 set 容器，都采用了默认的std::less<T>规则。其实，借助 set 类模板定义中第 2 个参数，我们完全可以手动修改 set 容器中的排序规则。比如：</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">std::set&lt;std::string,std::greater&lt;string&gt; &gt; myset&#123;</span><br><span class="line">    <span class="string">&quot;http://c.biancheng.net/java/&quot;</span>,</span><br><span class="line">    <span class="string">&quot;http://c.biancheng.net/stl/&quot;</span>,</span><br><span class="line">    <span class="string">&quot;http://c.biancheng.net/python/&quot;</span>&#125;;</span><br></pre></td></tr></table></figure>
+<p>通过选用 std::greater<string> 降序规则，myset 容器中元素的存储顺序为:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&quot;http:&#x2F;&#x2F;c.biancheng.net&#x2F;stl&#x2F;&quot;</span><br><span class="line">&quot;http:&#x2F;&#x2F;c.biancheng.net&#x2F;python&#x2F;&quot;</span><br><span class="line">&quot;http:&#x2F;&#x2F;c.biancheng.net&#x2F;java&#x2F;&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="成员方法">成员方法</h3>
+<p>下表列出了 set 容器提供的常用成员方法以及各自的功能。</p>
+<p><img src="https://s2.loli.net/2022/01/10/ldfXza6AqFe25Np.png" alt="image.png"></p>
+<h3 id="迭代器">迭代器</h3>
+<p>和其他容器不同，set 容器类模板中未提供 at() 成员函数，也未对 [] 运算符进行重载。因此，<strong>要想访问 set 容器中存储的元素，只能借助 set 容器的迭代器。</strong></p>
+<p>值得一提的是，C++ STL 标准库为 set 容器配置的迭代器类型为双向迭代器。这意味着，假设 p 为此类型的迭代器，则其只能进行 ++p、p++、–p、p–、*p 操作，并且 2 个双向迭代器之间做比较，也只能使用 == 或者 != 运算符。</p>
+<p>注意，set成员函数返回的迭代器，指向的只是 set 容器中存储的元素，而不再是键值对。另外，set成员方法返回的迭代器，<strong>无论是 const 类型还是非 const 类型，都不能用于修改 set 容器中的值</strong>。</p>
+<p>下面程序以 begin()/end() 为例，演示了如何使用图 2 中相关迭代器遍历 set 容器：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;set&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//创建并初始化set容器</span></span><br><span class="line">    std::set&lt;std::string&gt; myset&#123; <span class="string">&quot;http://c.biancheng.net/java/&quot;</span>,</span><br><span class="line">                                 <span class="string">&quot;http://c.biancheng.net/stl/&quot;</span>,</span><br><span class="line">                                 <span class="string">&quot;http://c.biancheng.net/python/&quot;</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">//利用双向迭代器，遍历myset</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> iter = myset.<span class="built_in">begin</span>(); iter != myset.<span class="built_in">end</span>(); ++iter) &#123;</span><br><span class="line">        cout &lt;&lt; *iter &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>除此之外，如果只想遍历 set 容器中指定区域内的部分数据，则可以借助 find()、lower_bound() 以及 upper_bound() 实现。通过调用它们，可以获取一个指向指定元素的迭代器。</p>
+<p><strong>需要特别指出的是，equal_range(val) 函数的返回值是一个 pair 类型数据，其包含 2 个迭代器，表示 set 容器中和指定参数 val 相等的元素所在的区域，但由于 set 容器中存储的元素各不相等，因此该函数返回的这 2 个迭代器所表示的范围中，最多只会包含 1 个元素。</strong></p>
+<p>值得一提的是，虽然 C++ STL 标准中，set 类模板中包含 lower_bound()、upper_bound()、equal_range() 这 3 个成员函数，但它们更适用于 multiset 容器，几乎不会用于操作 set 容器。</p>
+<h3 id="insert-方法">insert()方法</h3>
+<p>为满足不同场景的需要，C++ 11 标准的 set 类模板中提供了多种不同语法格式的 insert() 成员方法，它们各自的功能和用法如下所示。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//普通引用方式传参</span></span><br><span class="line">pair&lt;iterator,bool&gt; insert (const value_type&amp; val);</span><br><span class="line"><span class="comment">//右值引用方式传参</span></span><br><span class="line">pair&lt;iterator,bool&gt; insert (value_type&amp;&amp; val);</span><br></pre></td></tr></table></figure>
+<p>其中，val 表示要添加的新元素，该方法的返回值为 pair 类型。以上 2 种格式的区别仅在于传递参数的方式不同，即第一种采用普通引用的方式传参，而第二种采用右值引用的方式传参。右值引用为 C++ 11 新添加的一种引用方式。</p>
+<p><strong>可以看到，以上 2 种语法格式的 insert() 方法，返回的都是 pair 类型的值，其包含 2 个数据，一个迭代器和一个 bool 值：</strong></p>
+<ul>
+<li>当向 set 容器添加元素成功时，该迭代器指向 set 容器新添加的元素，bool 类型的值为 true；</li>
+<li>如果添加失败，即证明原 set 容器中已存有相同的元素，此时返回的迭代器就指向容器中相同的此元素，同时 bool 类型的值为 false。</li>
+</ul>
+<p>举个例子：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;set&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//创建并初始化set容器</span></span><br><span class="line">    std::set&lt;std::string&gt; myset;</span><br><span class="line">    <span class="comment">//准备接受 insert() 的返回值</span></span><br><span class="line">    pair&lt;set&lt;string&gt;::iterator, <span class="keyword">bool</span>&gt; retpair;</span><br><span class="line">    <span class="comment">//采用普通引用传值方式</span></span><br><span class="line">    string str = <span class="string">&quot;http://c.biancheng.net/stl/&quot;</span>;</span><br><span class="line">    retpair = myset.<span class="built_in">insert</span>(str);</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;iter-&gt;&quot;</span> &lt;&lt; *(retpair.first) &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; <span class="string">&quot;bool = &quot;</span> &lt;&lt; retpair.second &lt;&lt; endl;</span><br><span class="line">    <span class="comment">//采用右值引用传值方式</span></span><br><span class="line">    retpair = myset.<span class="built_in">insert</span>(<span class="string">&quot;http://c.biancheng.net/python/&quot;</span>);</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;iter-&gt;&quot;</span> &lt;&lt; *(retpair.first) &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; <span class="string">&quot;bool = &quot;</span> &lt;&lt; retpair.second &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>程序执行结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">iter-&gt;http:&#x2F;&#x2F;c.biancheng.net&#x2F;stl&#x2F; bool &#x3D; 1</span><br><span class="line">iter-&gt;http:&#x2F;&#x2F;c.biancheng.net&#x2F;python&#x2F; bool &#x3D; 1</span><br></pre></td></tr></table></figure>
+<p>通过观察输出结果不难看出，程序中两次借助 insert() 方法向 set 容器中添加元素，都成功了。</p>
+<ol start="2">
+<li>insert() 还可以指定将新元素插入到 set 容器中的具体位置，其语法格式如下：</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//以普通引用的方式传递 val 值</span></span><br><span class="line"><span class="function">iterator <span class="title">insert</span> <span class="params">(const_iterator position, <span class="keyword">const</span> value_type&amp; val)</span></span>;</span><br><span class="line"><span class="comment">//以右值引用的方式传递 val 值</span></span><br><span class="line"><span class="function">iterator <span class="title">insert</span> <span class="params">(const_iterator position, value_type&amp;&amp; val)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>以上 2 种语法格式中，insert() 函数的返回值为迭代器：</p>
+<ul>
+<li>当向 set 容器添加元素成功时，该迭代器指向容器中新添加的元素；</li>
+<li>当添加失败时，证明原 set 容器中已有相同的元素，该迭代器就指向 set 容器中相同的这个元素。</li>
+</ul>
+<p>举个例子：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;set&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//创建并初始化set容器</span></span><br><span class="line">    std::set&lt;std::string&gt; myset;</span><br><span class="line">    <span class="comment">//准备接受 insert() 的返回值</span></span><br><span class="line">    set&lt;string&gt;::iterator iter;</span><br><span class="line">    <span class="comment">//采用普通引用传值方式</span></span><br><span class="line">    string str = <span class="string">&quot;http://c.biancheng.net/stl/&quot;</span>;</span><br><span class="line">    iter = myset.<span class="built_in">insert</span>(myset.<span class="built_in">begin</span>(),str);</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;myset size =&quot;</span> &lt;&lt; myset.<span class="built_in">size</span>() &lt;&lt; endl;</span><br><span class="line">    <span class="comment">//采用右值引用传值方式</span></span><br><span class="line">    iter = myset.<span class="built_in">insert</span>(myset.<span class="built_in">end</span>(),<span class="string">&quot;http://c.biancheng.net/python/&quot;</span>);</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;myset size =&quot;</span> &lt;&lt; myset.<span class="built_in">size</span>() &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>程序执行结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">myset size &#x3D;1</span><br><span class="line">myset size &#x3D;2</span><br></pre></td></tr></table></figure>
+<p>注意，使用 insert() 方法将目标元素插入到 set 容器指定位置后，如果该元素破坏了容器内部的有序状态，set 容器还会自行对新元素的位置做进一步调整。也就是说，<strong>insert() 方法中指定新元素插入的位置，并不一定就是该元素最终所处的位置。</strong></p>
+<ol start="3">
+<li>insert() 方法支持向当前 set 容器中插入其它 set 容器指定区域内的所有元素，只要这 2 个 set 容器存储的元素类型相同即可。</li>
+</ol>
+<p>insert() 方法的语法格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">template &lt;class InputIterator&gt;</span><br><span class="line">  void insert (InputIterator first, InputIterator last);</span><br></pre></td></tr></table></figure>
+<p>其中 first 和 last 都是迭代器，它们的组合 [first,last) 可以表示另一 set 容器中的一块区域，该区域包括 first 迭代器指向的元素，但不包含 last 迭代器指向的元素。</p>
+<p>举个例子：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;set&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//创建并初始化set容器</span></span><br><span class="line">    std::set&lt;std::string&gt; myset&#123; <span class="string">&quot;http://c.biancheng.net/stl/&quot;</span>,</span><br><span class="line">                                <span class="string">&quot;http://c.biancheng.net/python/&quot;</span>,</span><br><span class="line">                                <span class="string">&quot;http://c.biancheng.net/java/&quot;</span> &#125;;</span><br><span class="line">    <span class="comment">//创建一个同类型的空 set 容器</span></span><br><span class="line">    std::set&lt;std::string&gt; otherset;</span><br><span class="line">    <span class="comment">//利用 myset 初始化 otherset</span></span><br><span class="line">    otherset.<span class="built_in">insert</span>(++myset.<span class="built_in">begin</span>(), myset.<span class="built_in">end</span>());</span><br><span class="line">    <span class="comment">//输出 otherset 容器中的元素</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> iter = otherset.<span class="built_in">begin</span>(); iter != otherset.<span class="built_in">end</span>(); ++iter) &#123;</span><br><span class="line">        cout &lt;&lt; *iter &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>程序执行结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;c.biancheng.net&#x2F;python&#x2F;</span><br><span class="line">http:&#x2F;&#x2F;c.biancheng.net&#x2F;stl&#x2F;</span><br></pre></td></tr></table></figure>
+<p>注意，程序第 15 行在初始化 otherset 容器时，选取的是 myset 容器中从第 2 个元素开始（包括此元素）直到容器末尾范围内的所有元素，所以程序输出结果中只有 2 个字符串。</p>
+<ol start="4">
+<li>采用如下格式的 insert() 方法，可实现一次向 set 容器中添加多个元素：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void insert ( &#123;E1, E2,...,En&#125; );</span><br></pre></td></tr></table></figure>
+<p>其中，Ei 表示新添加的元素。</p>
+<p>值的一提的是，C++ 11 标准的 set 类模板中，还提供有另外 2 个成员方法，分别为<strong>implace() 和 implace_hint() 方法，借助它们不但能实现向 set 容器添加新元素的功能，其实现效率也比 insert() 成员方法更高</strong>。</p>
+<h3 id="emplace-和emplace-hint-方法">emplace()和emplace_hint()方法</h3>
+<p>emplace() 和 emplace_hint() 是 C++ 11 标准加入到 set 类模板中的，相比具有同样功能的 insert() 方法，完成同样的任务，emplace() 和 emplace_hint() 的效率会更高。</p>
+<p>emplace() 方法的语法格式如下：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;class... Args&gt;</span><br><span class="line">  pair&lt;iterator,bool&gt; emplace (Args&amp;&amp;... args);</span><br></pre></td></tr></table></figure>
+<p>其中，参数 (Args&amp;&amp;… args) 指的是，只需要传入构建新元素所需的数据即可，该方法可以自行利用这些数据构建出要添加的元素。**比如，若 set 容器中存储的元素类型为自定义的结构体或者类，则在使用 emplace() 方法向容器中添加新元素时，构造新结构体变量（或者类对象）需要多少个数据，就需要为该方法传入相应个数的数据。<br>
+**</p>
+<p>另外，该方法的返回值类型为 pair 类型，其包含 2 个元素，一个迭代器和一个 bool 值：</p>
+<ul>
+<li>当该方法将目标元素成功添加到 set 容器中时，其返回的迭代器指向新插入的元素，同时 bool 值为 true；</li>
+<li>当添加失败时，则表明原 set 容器中已存在相同值的元素，此时返回的迭代器指向容器中具有相同键的这个元素，同时 bool 值为 false。</li>
+</ul>
+<p>下面程序演示 emplace() 方法的具体用法：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;set&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//创建并初始化 set 容器</span></span><br><span class="line">    std::set&lt;string&gt;myset;</span><br><span class="line">    <span class="comment">//向 myset 容器中添加元素</span></span><br><span class="line">    pair&lt;set&lt;string, string&gt;::iterator, <span class="keyword">bool</span>&gt; ret = myset.<span class="built_in">emplace</span>(<span class="string">&quot;http://c.biancheng.net/stl/&quot;</span>);</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;myset size = &quot;</span> &lt;&lt; myset.<span class="built_in">size</span>() &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;ret.iter = &lt;&quot;</span> &lt;&lt; *(ret.first) &lt;&lt; <span class="string">&quot;, &quot;</span> &lt;&lt; ret.second &lt;&lt; <span class="string">&quot;&gt;&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>程序执行结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">myset size &#x3D; 1</span><br><span class="line">ret.iter &#x3D; &lt;http:&#x2F;&#x2F;c.biancheng.net&#x2F;stl&#x2F;, 1&gt;</span><br></pre></td></tr></table></figure>
+<p>显然，从执行结果可以看出，通过调用 emplace() 方法，成功向空 myset 容器中添加了一个元素，并且该方法的返回值中就包含指向新添加元素的迭代器。</p>
+<p>emplace_hint() 方法的功能和 emplace() 类似，其语法格式如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;class... Args&gt;</span><br><span class="line">  <span class="function">iterator <span class="title">emplace_hint</span> <span class="params">(const_iterator position, Args&amp;&amp;... args)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>和 emplace() 方法相比，有以下 2 点不同：</p>
+<ul>
+<li>该方法需要额外传入一个迭代器，用来指明新元素添加到 set 容器的具体位置（<strong>新元素会添加到该迭代器指向元素的前面</strong>）；</li>
+<li>返回值是一个迭代器，而不再是 pair 对象。当成功添加元素时，返回的迭代器指向新添加的元素；反之，如果添加失败，则迭代器就指向 set 容器和要添加元素的值相同的元素。</li>
+</ul>
+<p>下面程序演示 emplace_hint() 方法的用法：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;set&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//创建并初始化 set 容器</span></span><br><span class="line">    std::set&lt;string&gt;myset;</span><br><span class="line">    <span class="comment">//在 set 容器的指定位置添加键值对</span></span><br><span class="line">    set&lt;string&gt;::iterator iter = myset.<span class="built_in">emplace_hint</span>(myset.<span class="built_in">begin</span>(), <span class="string">&quot;http://c.biancheng.net/stl/&quot;</span>);</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;myset size = &quot;</span> &lt;&lt; myset.<span class="built_in">size</span>() &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; *iter &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>程序执行结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">myset size &#x3D; 1</span><br><span class="line">http:&#x2F;&#x2F;c.biancheng.net&#x2F;stl&#x2F;</span><br></pre></td></tr></table></figure>
+<p>注意，和 insert() 方法一样，虽然 emplace_hint() 方法中指定了添加新元素的位置，但 set 容器为了保持数据的有序状态，可能会移动其位置。</p>
+<p>以上内容讲解了 emplace() 和 emplace_hint() 的用法，至于比 insert() 执行效率高的原因，可参照 map 容器 emplace() 和 emplace_hint() 比 insert() 效率高的原因，它们是完全一样的。</p>
+<h3 id="erase-和clear-方法">erase()和clear()方法</h3>
+<p>如果想删除 set 容器存储的元素，可以选择用 erase() 或者 clear() 成员方法。</p>
+<p>set 类模板中，erase() 方法有 3 种语法格式，分别如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//删除 set 容器中值为 val 的元素</span></span><br><span class="line"><span class="function">size_type <span class="title">erase</span> <span class="params">(<span class="keyword">const</span> value_type&amp; val)</span></span>;</span><br><span class="line"><span class="comment">//删除 position 迭代器指向的元素</span></span><br><span class="line"><span class="function">iterator  <span class="title">erase</span> <span class="params">(const_iterator position)</span></span>;</span><br><span class="line"><span class="comment">//删除 [first,last) 区间内的所有元素</span></span><br><span class="line"><span class="function">iterator  <span class="title">erase</span> <span class="params">(const_iterator first, const_iterator last)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>其中，第 1 种格式的 erase() 方法，其返回值为一个整数，<strong>表示成功删除的元素个数</strong>；后 2 种格式的 erase() 方法，返回值都是迭代器，其指向的是 set 容器中<strong>删除元素之后的第一个元素</strong>。</p>
+<p>注意，如果要删除的元素就是 set 容器最后一个元素，则 erase() 方法返回的迭代器就指向新 set 容器中最后一个元素之后的位置（等价于 end() 方法返回的迭代器）。</p>
+<p>如果需要删除 set 容器中存储的所有元素，可以使用 clear() 成员方法。该方法的语法格式如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+<p>显然，该方法不需要传入任何参数，也没有任何返回值。</p>
+<p>疑问：<br>
+1.既然const的迭代器和非const的迭代器都不能修改值，那有什么区别？<br>
+2.右值引用<br>
+3.为什么emplace没有返回值也能调用成功，是所有函数都这样吗？<br>
+4.emplace效率高的原因？</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/set/" rel="tag"># set</a>
+              <a href="/tags/STL/" rel="tag"># STL</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/LeetCode%E7%AC%AC%E4%B8%80%E5%9B%9B%E4%B8%80%E9%A2%98%EF%BC%9A%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/" rel="prev" title="LeetCode第一四一题：环形链表">
+      <i class="fa fa-chevron-left"></i> LeetCode第一四一题：环形链表
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%BC%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">综述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA"><span class="nav-number">2.</span> <span class="nav-text">创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">成员方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%AD%E4%BB%A3%E5%99%A8"><span class="nav-number">4.</span> <span class="nav-text">迭代器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#insert-%E6%96%B9%E6%B3%95"><span class="nav-number">5.</span> <span class="nav-text">insert()方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emplace-%E5%92%8Cemplace-hint-%E6%96%B9%E6%B3%95"><span class="nav-number">6.</span> <span class="nav-text">emplace()和emplace_hint()方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#erase-%E5%92%8Cclear-%E6%96%B9%E6%B3%95"><span class="nav-number">7.</span> <span class="nav-text">erase()和clear()方法</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zsh"
+      src="/images/header2.jpg">
+  <p class="site-author-name" itemprop="name">zsh</p>
+  <div class="site-description" itemprop="description">怕什么真理无穷<br>进一寸有一寸的欢喜</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">83</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zsh4614" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zsh4614" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.jianshu.com/u/f513362c9d79" title="简书 → https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;f513362c9d79" rel="noopener" target="_blank"><i class="fas fa-book fa-fw"></i>简书</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zsh4614@gmail.com" title="E-Mail → mailto:zsh4614@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/cjhfhb" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;cjhfhb" rel="noopener" target="_blank"><i class="fa fa-globe-americas fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="powered-by">
+    水滴石穿，绳锯木断。
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      已有<span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人访问
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      总访问<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clickloves.js"></script>
