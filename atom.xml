@@ -6,7 +6,7 @@
   <link href="https://zsh4614.cn/atom.xml" rel="self"/>
   
   <link href="https://zsh4614.cn/"/>
-  <updated>2022-01-09T15:16:32.080Z</updated>
+  <updated>2022-01-10T14:55:38.648Z</updated>
   <id>https://zsh4614.cn/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>LeetCode第一四一题：环形链表</title>
+    <link href="https://zsh4614.cn/LeetCode%E7%AC%AC%E4%B8%80%E5%9B%9B%E4%B8%80%E9%A2%98%EF%BC%9A%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/"/>
+    <id>https://zsh4614.cn/LeetCode%E7%AC%AC%E4%B8%80%E5%9B%9B%E4%B8%80%E9%A2%98%EF%BC%9A%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/</id>
+    <published>2022-01-09T15:19:12.000Z</published>
+    <updated>2022-01-10T14:55:38.648Z</updated>
+    
+    <content type="html"><![CDATA[<p>引言：本文主要介绍leetcode第一四一题，判断一个链表是否有环，并给出其实现。</p><span id="more"></span><h3 id="题目">题目</h3><p>给你一个链表的头节点 head ，判断链表中是否有环。</p><p>如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，评测系统内部使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。</p><p>如果链表中存在环，则返回 true 。 否则，返回 false 。</p><h3 id="示例">示例</h3><p><strong>示例1</strong></p><p><img src="https://s2.loli.net/2022/01/09/TPnu4a8cX2GUMkJ.png" alt="image.png"></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：head &#x3D; [3,2,0,-4], pos &#x3D; 1</span><br><span class="line">输出：true</span><br><span class="line">解释：链表中有一个环，其尾部连接到第二个节点。</span><br></pre></td></tr></table></figure><p><strong>示例2</strong></p><p><img src="https://s2.loli.net/2022/01/09/QzmCcjGbatMUu1E.png" alt="image.png"></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：head &#x3D; [1,2], pos &#x3D; 0</span><br><span class="line">输出：true</span><br><span class="line">解释：链表中有一个环，其尾部连接到第一个节点。</span><br></pre></td></tr></table></figure><p><strong>示例3</strong></p><p><img src="https://s2.loli.net/2022/01/09/QncUVqxFeY8jEyl.png" alt="image.png"></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：head &#x3D; [1], pos &#x3D; -1</span><br><span class="line">输出：false</span><br><span class="line">解释：链表中没有环。</span><br></pre></td></tr></table></figure><p><strong>提示：</strong></p><ul><li>链表中节点的数目范围是 [0, 10^4]</li><li>10^5 &lt;= Node.val &lt;= 10^5</li><li>pos 为 -1 或者链表中的一个 有效索引 。</li></ul><h3 id="分析">分析</h3><p>本题目最容易想到的是遍历链表，在遍历的过程中把每个结点存储起来，同时查询存储的里面是否有当前结点，如果有，那么说明是个环，如果遍历完没有，说明没有环；但是链表判圈有更加适合的判圈算法——<strong>佛洛依德判圈算法</strong>。</p><h3 id="实现">实现</h3><h4 id="实现一（哈希）">实现一（哈希）</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">hasCycle</span><span class="params">(ListNode *head)</span> </span>&#123;</span><br><span class="line">    unordered_set&lt;ListNode*&gt; hashset;</span><br><span class="line">    <span class="keyword">while</span> (head != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (hashset.<span class="built_in">find</span>(head) != hashset.<span class="built_in">end</span>()) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        hashset.<span class="built_in">emplace</span>(head);</span><br><span class="line">        head = head-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>时间复杂度：O(n)</p><p>空间复杂度：O(n)</p><h4 id="实现二（判圈算法）">实现二（判圈算法）</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">hasCycle</span><span class="params">(ListNode *head)</span> </span>&#123;</span><br><span class="line">    ListNode *slow = <span class="keyword">new</span> <span class="built_in">ListNode</span>(<span class="number">0</span>);</span><br><span class="line">    slow-&gt;next = head;</span><br><span class="line">    ListNode *fast = <span class="keyword">new</span> <span class="built_in">ListNode</span>(<span class="number">0</span>);</span><br><span class="line">    fast-&gt;next = head;</span><br><span class="line">    <span class="keyword">while</span> (fast != <span class="literal">nullptr</span> &amp;&amp; fast-&gt;next != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (fast == slow) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        fast = fast-&gt;next-&gt;next;</span><br><span class="line">        slow = slow-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p><strong>注意开始的状态，要把slow和fast定义为不同的指针，否则直接就输出true了，总而言之，一定要保证特殊情况下，尤其是开始状态的正确性</strong></p><h3 id="拓展">拓展</h3><p>1.<a href="">哈希容器（无序关联式容器）</a></p><p>2.<a href="">佛洛依德判圈算法</a></p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;引言：本文主要介绍leetcode第一四一题，判断一个链表是否有环，并给出其实现。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="LeetCode" scheme="https://zsh4614.cn/categories/LeetCode/"/>
+    
+    
+    <category term="链表" scheme="https://zsh4614.cn/tags/%E9%93%BE%E8%A1%A8/"/>
+    
+    <category term="判圈算法" scheme="https://zsh4614.cn/tags/%E5%88%A4%E5%9C%88%E7%AE%97%E6%B3%95/"/>
+    
+    <category term="哈希" scheme="https://zsh4614.cn/tags/%E5%93%88%E5%B8%8C/"/>
+    
+  </entry>
   
   <entry>
     <title>LeetCode第二十一题：合并两个有序链表</title>
@@ -56,9 +81,9 @@
     <category term="C++" scheme="https://zsh4614.cn/categories/C/"/>
     
     
-    <category term="虚函数" scheme="https://zsh4614.cn/tags/%E8%99%9A%E5%87%BD%E6%95%B0/"/>
-    
     <category term="动态多态" scheme="https://zsh4614.cn/tags/%E5%8A%A8%E6%80%81%E5%A4%9A%E6%80%81/"/>
+    
+    <category term="虚函数" scheme="https://zsh4614.cn/tags/%E8%99%9A%E5%87%BD%E6%95%B0/"/>
     
     <category term="纯虚函数" scheme="https://zsh4614.cn/tags/%E7%BA%AF%E8%99%9A%E5%87%BD%E6%95%B0/"/>
     
@@ -303,9 +328,9 @@
     <category term="Deploy" scheme="https://zsh4614.cn/categories/Deploy/"/>
     
     
-    <category term="基础环境" scheme="https://zsh4614.cn/tags/%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83/"/>
-    
     <category term="docker" scheme="https://zsh4614.cn/tags/docker/"/>
+    
+    <category term="基础环境" scheme="https://zsh4614.cn/tags/%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83/"/>
     
   </entry>
   
@@ -446,27 +471,6 @@
     <category term="聚类" scheme="https://zsh4614.cn/tags/%E8%81%9A%E7%B1%BB/"/>
     
     <category term="floodfill" scheme="https://zsh4614.cn/tags/floodfill/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Hexo在多台电脑上维护github个人主页</title>
-    <link href="https://zsh4614.cn/Hexo%E5%9C%A8%E5%A4%9A%E5%8F%B0%E7%94%B5%E8%84%91%E4%B8%8A%E7%BB%B4%E6%8A%A4github%E4%B8%AA%E4%BA%BA%E4%B8%BB%E9%A1%B5/"/>
-    <id>https://zsh4614.cn/Hexo%E5%9C%A8%E5%A4%9A%E5%8F%B0%E7%94%B5%E8%84%91%E4%B8%8A%E7%BB%B4%E6%8A%A4github%E4%B8%AA%E4%BA%BA%E4%B8%BB%E9%A1%B5/</id>
-    <published>2021-10-30T07:27:04.000Z</published>
-    <updated>2021-12-01T17:30:30.011Z</updated>
-    
-    <content type="html"><![CDATA[<p>引言：本文主要介绍如何在两台（多台）电脑上维护自己的github pages博客。</p><span id="more"></span><h3 id="介绍">介绍</h3><p>总体方法是利用git分支实现。hexo生成的静态博客文件默认放在master分支上，可以新建一个分支用来存放源文件，在其他电脑上只需要git clone这个分支即可进行更新和发布等操作。</p><h3 id="环境">环境</h3><p>在操作之前，先在新电脑上安装好hexo需要的环境：</p><p><strong>安装npm和node.js:</strong></p><p>到<a href="https://nodejs.org/dist/latest/">官网</a>下载最新的压缩包，解压后在bin目录下有npm和node的可执行文件，但是安装路径没有在系统环境变量中，所以添加到系统环境中，有多种方法，这里我进行了软链接：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo ln -s ~/software/node-v17.0.1-linux-x64/bin/node /usr/local/bin/node</span><br><span class="line">sudo ln -s ~/software/node-v17.0.1-linux-x64/bin/npm /usr/local/bin/npm</span><br></pre></td></tr></table></figure><p><strong>安装hexo：</strong></p><p>直接使用npm安装：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure><p>同样需要加到系统环境中：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ln -s ~/software/node-v17.0.1-linux-x64/lib/node_modules/hexo-cli/bin/hexo /usr/local/bin/hexo</span><br></pre></td></tr></table></figure><h3 id="步骤">步骤</h3><p>1.给github博客仓库新建一个hexo分支，设置为默认分支。</p><p>2.将当前电脑的ssh key添加到github上。</p><p>3.执行git clone命令将hexo克隆到本地，将除了.git的文件全部删除，然后add-commit-push更新到远程。</p><p>4.将原来博客根目录下（即包含themes、source等文件夹的那个目录）所有文件拷贝到本地hexo分支文件夹。</p><p>5.删除themes文件夹每个主题的.git文件夹和.gitignore文件。</p><p>6.执行add-commit-push更新到远程。</p><p>7.之后在任何配置好博客环境的电脑上都采用如下操作维护博客：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pull-add-commit-push</span><br><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;引言：本文主要介绍如何在两台（多台）电脑上维护自己的github pages博客。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="Deploy" scheme="https://zsh4614.cn/categories/Deploy/"/>
-    
-    
-    <category term="个人主页" scheme="https://zsh4614.cn/tags/%E4%B8%AA%E4%BA%BA%E4%B8%BB%E9%A1%B5/"/>
     
   </entry>
   
