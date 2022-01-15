@@ -616,4 +616,187 @@ int main()
 }
 ```
 
-值得一提的是，除了 insert() 方法，**map 类模板还提供 emplace() 和 emplace_hint() 方法，它们也可以完成向 map 容器中插入键值对的操作，且效率还会 insert() 方法高**。关于这 2 个方法，会在下一节做详细介绍。
+值得一提的是，除了 insert() 方法，**map 类模板还提供 emplace() 和 emplace_hint() 方法，它们也可以完成向 map 容器中插入键值对的操作，且效率还会比insert() 方法高**。关于这 2 个方法，会在下一节做详细介绍。
+### operator[]和insert()效率对比
+
+map 容器模板类中提供有 operator[ ] 和 insert() 这 2 个成员方法，而值得一提的是，这 2 个方法具有相同的功能，它们既可以实现向 map 容器中添加新的键值对元素，也可以实现更新（修改）map 容器已存储键值对的值。
+
+显然，map 模板类中 operator[ ] 和 insert() 的功能发生了重叠，这就产生了一个问题，谁的执行效率更高呢？
+
+**结论：当实现“向 map 容器中添加新键值对元素”的操作时，insert() 成员方法的执行效率更高；而在实现“更新 map 容器指定键值对的值”的操作时，operator[ ] 的效率更高。**
+
+首先解释一下，为什么实现向 map 容器中添加新键值对元素，insert() 方法的执行效率比 operator[ ] 更高？回顾程序一中，如下语句完成了向空 mymap 容器添加新的键值对元素：
+
+```c++
+mymap["STL教程"] = "http://c.biancheng.net/java/";
+```
+
+此行代码中，mymap["STL教程"] 实际上是 mymap.operator[ ](“STL教程”) 的缩写（底层调用的 operator[ ] 方法），该方法会返回一个指向 “STL教程” 对应的 value 值的引用。
+
+但需要注意的是，由于此时 mymap 容器是空的，并没有 "STL教程" 对应的 value 值。这种情况下，operator[ ] 方法会默认构造一个 string 对象，并将其作为 "STL教程" 对应的 value 值，然后返回一个指向此 string 对象的引用。在此基础上，代码还会将 "http://c.biancheng.net.java/" 赋值给这个 string 对象。
+
+也就是说，上面这行代码的执行流程，可以等效为如下程序：
+
+```c++
+typedef map<string, string> mstr;
+//创建要添加的默认键值对元素
+pair<mstr::iterator, bool>res = mymap.insert(mstr::value_type("STL教程", string()));
+//将新键值对的值赋值为指定的值
+res.first->second = "http://c.biancheng.net/java/";
+```
+可以看到，使用 operator[ ] 添加新键值对元素的流程是，先构造一个有默认值的键值对，然后再为其 value 赋值。
+
+那么，为什么不直接构造一个要添加的键值对元素呢，比如：
+
+```c++
+mymap.insert(mstr::value_type("STL教程", "http://c.biancheng.net/java/"));
+```
+
+此行代码和上面程序的执行效果完全相同，但它省略了创建临时 string 对象的过程以及析构该对象的过程，同时还省略了调用 string 类重载的赋值运算符。由于可见，同样是完成向 map 容器添加新键值对，insert() 方法比 operator[ ] 的执行效率更高
+
+仍以程序一中的代码为例，如下分别是 operator[ ] 和 insert() 实现更新 mymap 容器中指定键对应的值的代码：
+
+```
+//operator[]
+mymap["STL教程"] = "http://c.biancheng.net/stl/";
+//insert()
+std::pair<string, string> STL = { "Java教程","http://c.biancheng.net/python/" };
+mymap.insert(STL).first->second = "http://c.biancheng.net/java/";
+```
+
+仅仅从语法形式本身来考虑，或许已经促使很多读者选择 operator[ ] 了。接下来，我们再从执行效率的角度对比以上 2 种实现方式。
+
+从上面代码可以看到，insert() 方法在进行更新操作之前，需要有一个 pair 类型（也就是 map::value_type 类型）元素做参数。这意味着，该方法要多构造一个 pair 对象（附带要构造 2 个 string 对象），并且事后还要析构此 pair 对象（附带 2 个 string 对象的析构）。
+
+而和 insert() 方法相比，operator[ ] 就不需要使用 pair 对象，自然不需要构造（并析构）任何 pair 对象或者 string 对象。因此，对于更新已经存储在 map 容器中键值对的值，应优先使用 operator[ ] 方法。
+
+### emplace()和emplace_hint()方法
+
+和 insert() 方法相比，emplace() 和 emplace_hint() 方法的使用要简单很多，因为它们各自只有一种语法格式。其中，emplace() 方法的语法格式如下：
+
+```c++
+template <class... Args>
+  pair<iterator,bool> emplace (Args&&... args);
+```
+
+参数 (Args&&... args) 指的是，这里只需要将创建新键值对所需的数据作为参数直接传入即可，此方法可以自行利用这些数据构建出指定的键值对。另外，该方法的返回值也是一个 pair 对象，其中 pair.first 为一个迭代器，pair.second 为一个 bool 类型变量：
+当该方法将键值对成功插入到 map 容器中时，其返回的迭代器指向该新插入的键值对，同时 bool 变量的值为 true；
+当插入失败时，则表明 map 容器中存在具有相同键的键值对，此时返回的迭代器指向此具有相同键的键值对，同时 bool 变量的值为 false。
+
+下面程序演示 emplace() 方法的具体用法：
+
+```c++
+#include <iostream>
+#include <map>  //map
+#include <string> //string
+using namespace std;
+int main()
+{
+    //创建并初始化 map 容器
+    std::map<string, string>mymap;
+    //插入键值对
+    pair<map<string, string>::iterator, bool> ret = mymap.emplace("STL教程", "http://c.biancheng.net/stl/");
+    cout << "1、ret.iter = <{" << ret.first->first << ", " << ret.first->second << "}, " << ret.second << ">" << endl;
+    //插入新键值对
+    ret = mymap.emplace("C语言教程", "http://c.biancheng.net/c/");
+    cout << "2、ret.iter = <{" << ret.first->first << ", " << ret.first->second << "}, " << ret.second << ">" << endl;
+    //失败插入的样例
+    ret = mymap.emplace("STL教程", "http://c.biancheng.net/java/");
+    cout << "3、ret.iter = <{" << ret.first->first << ", " << ret.first->second << "}, " << ret.second << ">" << endl;
+    return 0;
+}
+```
+
+可以看到，程序中共执行了 3 次向 map 容器插入键值对的操作，其中前 2 次都成功了，第 3 次由于要插入的键值对的键和 map 容器中已存在的键值对的键相同，因此插入失败。
+
+emplace_hint() 方法的功能和 emplace() 类似，其语法格式如下：
+
+```c++
+template <class... Args>
+  iterator emplace_hint (const_iterator position, Args&&... args);
+```
+
+显然和 emplace() 语法格式相比，有以下 2 点不同：
+
+- 该方法不仅要传入创建键值对所需要的数据，还需要传入一个迭代器作为第一个参数，指明要插入的位置（新键值对键会插入到该迭代器指向的键值对的前面）；
+- 该方法的返回值是一个迭代器，而不再是 pair 对象。当成功插入新键值对时，返回的迭代器指向新插入的键值对；反之，如果插入失败，则表明 map 容器中存有相同键的键值对，返回的迭代器就指向这个键值对。
+
+注意，和 insert() 方法一样，虽然 emplace_hint() 方法指定了插入键值对的位置，但 map 容器为了保持存储键值对的有序状态，可能会移动其位置。
+
+### 插入效率
+
+上一节在学习 C++STL map 容器的 emplace() 和 emplace_hint() 的基本用法时，还遗留了一个问题，即为什么 emplace() 和 emplace_hint() 的执行效率会比 insert() 高？
+
+原因很简单，它们向 map 容器插入键值对时，底层的实现方式不同：
+
+- 使用 insert() 向 map 容器中插入键值对的过程是，先创建该键值对，然后再将该键值对复制或者移动到 map 容器中的指定位置；
+- 使用 emplace() 或 emplace_hint() 插入键值对的过程是，直接在 map 容器中的指定位置构造该键值对。
+
+也就是说，向 map 容器中插入键值对时，emplace() 和 emplace_hint() 方法都省略了移动键值对的过程，因此执行效率更高。下面程序提供了有利的证明：
+
+```c++
+#include <iostream>
+#include <map>  //map
+#include <string> //string
+using namespace std;
+
+class testDemo
+{
+public:
+    testDemo(int num) :num(num) {
+        std::cout << "调用构造函数" << endl;
+    }
+    testDemo(const testDemo& other) :num(other.num) {
+        std::cout << "调用拷贝构造函数" << endl;
+    }
+    testDemo(testDemo&& other) :num(other.num) {
+        std::cout << "调用移动构造函数" << endl;
+    }
+private:
+    int num;
+};
+
+int main()
+{
+    //创建空 map 容器
+    std::map<std::string, testDemo>mymap;
+
+    cout << "insert():" << endl;
+    mymap.insert({ "http://c.biancheng.net/stl/", testDemo(1) });
+   
+    cout << "emplace():" << endl;
+    mymap.emplace( "http://c.biancheng.net/stl/:", 1);
+
+    cout << "emplace_hint():" << endl;
+    mymap.emplace_hint(mymap.begin(), "http://c.biancheng.net/stl/", 1);
+    return 0;
+}
+```
+
+程序输出结果为：
+
+```
+insert():
+调用构造函数
+调用移动构造函数
+调用移动构造函数
+emplace():
+调用构造函数
+emplace_hint():
+调用构造函数
+```
+
+分析一下这个程序。首先，我们创建了一个存储 <string,tempDemo> 类型键值对的空 map 容器，接下来分别用 insert()、emplace() 和 emplace_hint() 方法向该 map 容器中插入相同的键值对。
+
+从输出结果可以看出，在使用 insert() 方法向 map 容器插入键值对时，整个插入过程调用了 1 次 tempDemo 类的构造函数，同时还调用了 2 次移动构造函数。实际上，程序第 28 行代码底层的执行过程，可以分解为以下 3 步：
+
+```c++
+//构造类对象
+testDemo val = testDemo(1); //调用 1 次构造函数
+//构造键值对
+auto pai = make_pair("http://c.biancheng.net/stl/", val); //调用 1 次移动构造函数
+//完成插入操作
+mymap.insert(pai); //调用 1 次移动构造函数
+```
+
+而完成同样的插入操作，emplace() 和 emplace_hint() 方法都只调用了 1 次构造函数，这足以证明，这 2 个方法是在 map 容器内部直接构造的键值对。
