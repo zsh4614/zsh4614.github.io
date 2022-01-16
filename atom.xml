@@ -6,7 +6,7 @@
   <link href="https://zsh4614.cn/atom.xml" rel="self"/>
   
   <link href="https://zsh4614.cn/"/>
-  <updated>2022-01-16T08:28:07.984Z</updated>
+  <updated>2022-01-16T09:58:47.743Z</updated>
   <id>https://zsh4614.cn/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>LeetCode第一百四十二题：环形链表二</title>
+    <link href="https://zsh4614.cn/LeetCode%E7%AC%AC%E4%B8%80%E7%99%BE%E5%9B%9B%E5%8D%81%E4%BA%8C%E9%A2%98%EF%BC%9A%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8%E4%BA%8C/"/>
+    <id>https://zsh4614.cn/LeetCode%E7%AC%AC%E4%B8%80%E7%99%BE%E5%9B%9B%E5%8D%81%E4%BA%8C%E9%A2%98%EF%BC%9A%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8%E4%BA%8C/</id>
+    <published>2022-01-16T08:40:10.000Z</published>
+    <updated>2022-01-16T09:58:47.743Z</updated>
+    
+    <content type="html"><![CDATA[<p>引言：本文主要分析LeetCode第一百四十二题，判断一个链表是否有环，有环的话找到入环的结点，用佛洛依德判圈算法实现。</p><span id="more"></span><h3 id="题目：">题目：</h3><p>给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。</p><p>如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，评测系统内部使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。</p><p>不允许修改链表。</p><h3 id="示例">示例</h3><p><strong>示例一</strong></p><p><img src="https://s2.loli.net/2022/01/16/p4XMYle9k8yqxwm.png" alt="image.png">、】</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：head &#x3D; [3,2,0,-4], pos &#x3D; 1</span><br><span class="line">输出：返回索引为 1 的链表节点</span><br><span class="line">解释：链表中有一个环，其尾部连接到第二个节点。</span><br></pre></td></tr></table></figure><p><strong>示例二</strong></p><p><img src="https://s2.loli.net/2022/01/16/v8whclNoCksYBQT.png" alt="image.png"></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：head &#x3D; [1,2], pos &#x3D; 0</span><br><span class="line">输出：返回索引为 0 的链表节点</span><br><span class="line">解释：链表中有一个环，其尾部连接到第一个节点。</span><br></pre></td></tr></table></figure><p><strong>示例三</strong></p><p><img src="https://s2.loli.net/2022/01/16/2PmvFTZqnyrhkap.png" alt="image.png"></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：head &#x3D; [1], pos &#x3D; -1</span><br><span class="line">输出：返回 null</span><br><span class="line">解释：链表中没有环。</span><br></pre></td></tr></table></figure><p><strong>提示：</strong></p><ul><li>链表中节点的数目范围在范围 [0, 10^4] 内</li><li>-10^5 &lt;= Node.val &lt;= 10^5</li><li>pos 的值为 -1 或者链表中的一个有效索引</li></ul><h3 id="分析">分析</h3><p>本题可使用佛洛依德判圈算法求解。</p><h3 id="实现">实现</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ListNode *<span class="title">detectCycle</span><span class="params">(ListNode *head)</span> </span>&#123;</span><br><span class="line">    ListNode* dummy1 = <span class="keyword">new</span> <span class="built_in">ListNode</span>(<span class="number">0</span>);</span><br><span class="line">    ListNode* slow = dummy1;</span><br><span class="line">    ListNode* dummy2 = <span class="keyword">new</span> <span class="built_in">ListNode</span>(<span class="number">0</span>);</span><br><span class="line">    ListNode* fast = dummy2;</span><br><span class="line">    slow-&gt;next = head;</span><br><span class="line">    fast-&gt;next = head;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (fast != <span class="literal">nullptr</span> &amp;&amp; fast-&gt;next != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (fast == slow) &#123;</span><br><span class="line">            fast = head;</span><br><span class="line">            <span class="keyword">while</span> (fast != slow-&gt;next) &#123;</span><br><span class="line">                fast = fast-&gt;next;</span><br><span class="line">                slow = slow-&gt;next;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">delete</span> dummy1, dummy2;</span><br><span class="line">            <span class="keyword">return</span> fast;</span><br><span class="line">        &#125;</span><br><span class="line">        slow = slow-&gt;next;</span><br><span class="line">        fast = fast-&gt;next-&gt;next;</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">delete</span> dummy1, dummy2;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>注意：这里虚拟了一个dummy结点，这样可以将头结点当作一般结点看待，否则可能需要判断头结点为空的情况，这样做就不用单独判断了。另外<strong>新开辟的无用内存，在返回前一定要释放，否则会内存泄漏</strong>，这里的slow和fast相当于工作结点。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;引言：本文主要分析LeetCode第一百四十二题，判断一个链表是否有环，有环的话找到入环的结点，用佛洛依德判圈算法实现。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="LeetCode" scheme="https://zsh4614.cn/categories/LeetCode/"/>
+    
+    
+    <category term="链表" scheme="https://zsh4614.cn/tags/%E9%93%BE%E8%A1%A8/"/>
+    
+    <category term="判圈算法" scheme="https://zsh4614.cn/tags/%E5%88%A4%E5%9C%88%E7%AE%97%E6%B3%95/"/>
+    
+  </entry>
   
   <entry>
     <title>经典算法：Floyd判圈算法</title>
@@ -104,9 +127,9 @@
     <category term="C++" scheme="https://zsh4614.cn/categories/C/"/>
     
     
-    <category term="STL" scheme="https://zsh4614.cn/tags/STL/"/>
-    
     <category term="set" scheme="https://zsh4614.cn/tags/set/"/>
+    
+    <category term="STL" scheme="https://zsh4614.cn/tags/STL/"/>
     
   </entry>
   
@@ -448,29 +471,6 @@
     <category term="基础环境" scheme="https://zsh4614.cn/tags/%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83/"/>
     
     <category term="显卡驱动" scheme="https://zsh4614.cn/tags/%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Ubuntu挂载磁盘</title>
-    <link href="https://zsh4614.cn/Ubuntu%E6%8C%82%E8%BD%BD%E7%A3%81%E7%9B%98/"/>
-    <id>https://zsh4614.cn/Ubuntu%E6%8C%82%E8%BD%BD%E7%A3%81%E7%9B%98/</id>
-    <published>2021-11-03T08:28:21.000Z</published>
-    <updated>2021-12-01T17:30:30.014Z</updated>
-    
-    <content type="html"><![CDATA[<p>引言：本文主要介绍ubuntu系统（包含desktop和server版本）挂载磁盘的方法，包括临时挂载和永久挂载。</p><span id="more"></span><h3 id="格式化磁盘">格式化磁盘</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mkfs -t ext4 /dev/sdb</span><br></pre></td></tr></table></figure><p>-t ext4是将硬盘格式化为ext4文件系统类型。</p><h3 id="临时挂载">临时挂载</h3><p>一般情况下,我们想挂载一个分区的办法就是用mount命令,如我想把/dev/sda3挂载到/data下，使用以下命令即可：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mount /dev/sda3 /data</span><br></pre></td></tr></table></figure><p>但这种方法有个不好的都方是机器<strong>重启后变又得手工重新挂载。</strong></p><h3 id="永久挂载">永久挂载</h3><p>永久性挂载分区的办法是修改分区文件/etc/fstab</p><p>常用磁盘命令：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1.查看所有的磁盘：</span><br><span class="line">sudo fdisk -l</span><br><span class="line">2.查看某个磁盘的UUID和类型：</span><br><span class="line">sudo blkid &#x2F;dev&#x2F;sda3</span><br></pre></td></tr></table></figure><p><code>vim /etc/fstab</code>文件如下</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">UUID=cec82a6a-c594-4bbd-b07a-af079cc670f2 /sdb ext4 defaults 0 0</span><br><span class="line">UUID=79abd6b3-c462-4fb3-9fc2-6b71eb0a8659 /sdc ext4 defaults 0 0</span><br><span class="line">UUID=bc28f3b0-bdbd-448f-b0d0-50cc499302d1 /sdd ext4 defaults 0 0</span><br><span class="line">UUID=63259855-0d99-4475-8b9d-6f19f93872b5 /sdf ext4 defaults 0 0</span><br></pre></td></tr></table></figure><p>各个字段含义如下：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UUID 挂载点 文件系统类型 挂载参数 是否备份 是否检测</span><br></pre></td></tr></table></figure><p>保存后，需要重启或者执行：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mount -a</span><br></pre></td></tr></table></figure><p>才能生效。</p>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;引言：本文主要介绍ubuntu系统（包含desktop和server版本）挂载磁盘的方法，包括临时挂载和永久挂载。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="Deploy" scheme="https://zsh4614.cn/categories/Deploy/"/>
-    
-    
-    <category term="基础环境" scheme="https://zsh4614.cn/tags/%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83/"/>
-    
-    <category term="磁盘挂载" scheme="https://zsh4614.cn/tags/%E7%A3%81%E7%9B%98%E6%8C%82%E8%BD%BD/"/>
     
   </entry>
   
