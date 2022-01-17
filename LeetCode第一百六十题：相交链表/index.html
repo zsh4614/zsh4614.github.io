@@ -20,21 +20,25 @@
     var CONFIG = {"hostname":"zsh4614.cn","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="引言：本文主要介绍ubuntu系统（包含desktop和server版本）挂载磁盘的方法，包括临时挂载和永久挂载。">
+  <meta name="description" content="引言：本文主要介绍LeetCode第一百六十题，判断两个链表是否相交，并找出相交的结点。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Ubuntu挂载磁盘">
-<meta property="og:url" content="https://zsh4614.cn/Ubuntu%E6%8C%82%E8%BD%BD%E7%A3%81%E7%9B%98/index.html">
+<meta property="og:title" content="LeetCode第一百六十题：相交链表">
+<meta property="og:url" content="https://zsh4614.cn/LeetCode%E7%AC%AC%E4%B8%80%E7%99%BE%E5%85%AD%E5%8D%81%E9%A2%98%EF%BC%9A%E7%9B%B8%E4%BA%A4%E9%93%BE%E8%A1%A8/index.html">
 <meta property="og:site_name" content="欢迎来到我的主页!">
-<meta property="og:description" content="引言：本文主要介绍ubuntu系统（包含desktop和server版本）挂载磁盘的方法，包括临时挂载和永久挂载。">
+<meta property="og:description" content="引言：本文主要介绍LeetCode第一百六十题，判断两个链表是否相交，并找出相交的结点。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-11-03T08:28:21.000Z">
-<meta property="article:modified_time" content="2021-12-01T17:30:30.014Z">
+<meta property="og:image" content="https://s2.loli.net/2022/01/17/xf6UjXkD2TeWI3F.png">
+<meta property="og:image" content="https://s2.loli.net/2022/01/17/deKrCEjBOtQgmWI.png">
+<meta property="og:image" content="https://s2.loli.net/2022/01/17/pec9sSCqiohBu5r.png">
+<meta property="og:image" content="https://s2.loli.net/2022/01/17/hEXnDypY7I56LfO.png">
+<meta property="article:published_time" content="2022-01-17T15:01:11.000Z">
+<meta property="article:modified_time" content="2022-01-17T16:07:13.096Z">
 <meta property="article:author" content="zsh">
-<meta property="article:tag" content="基础环境">
-<meta property="article:tag" content="磁盘挂载">
+<meta property="article:tag" content="链表">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/01/17/xf6UjXkD2TeWI3F.png">
 
-<link rel="canonical" href="https://zsh4614.cn/Ubuntu%E6%8C%82%E8%BD%BD%E7%A3%81%E7%9B%98/">
+<link rel="canonical" href="https://zsh4614.cn/LeetCode%E7%AC%AC%E4%B8%80%E7%99%BE%E5%85%AD%E5%8D%81%E9%A2%98%EF%BC%9A%E7%9B%B8%E4%BA%A4%E9%93%BE%E8%A1%A8/">
 
 
 <script id="page-configurations">
@@ -47,7 +51,7 @@
   };
 </script>
 
-  <title>Ubuntu挂载磁盘 | 欢迎来到我的主页!</title>
+  <title>LeetCode第一百六十题：相交链表 | 欢迎来到我的主页!</title>
   
 
 
@@ -201,7 +205,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://zsh4614.cn/Ubuntu%E6%8C%82%E8%BD%BD%E7%A3%81%E7%9B%98/">
+    <link itemprop="mainEntityOfPage" href="https://zsh4614.cn/LeetCode%E7%AC%AC%E4%B8%80%E7%99%BE%E5%85%AD%E5%8D%81%E9%A2%98%EF%BC%9A%E7%9B%B8%E4%BA%A4%E9%93%BE%E8%A1%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/header2.jpg">
@@ -214,7 +218,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Ubuntu挂载磁盘
+          LeetCode第一百六十题：相交链表
         </h1>
 
         <div class="post-meta">
@@ -224,14 +228,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2021-11-03 16:28:21" itemprop="dateCreated datePublished" datetime="2021-11-03T16:28:21+08:00">2021-11-03</time>
+              <time title="创建时间：2022-01-17 23:01:11" itemprop="dateCreated datePublished" datetime="2022-01-17T23:01:11+08:00">2022-01-17</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-12-02 01:30:30" itemprop="dateModified" datetime="2021-12-02T01:30:30+08:00">2021-12-02</time>
+                <time title="修改时间：2022-01-18 00:07:13" itemprop="dateModified" datetime="2022-01-18T00:07:13+08:00">2022-01-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -239,7 +243,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Deploy/" itemprop="url" rel="index"><span itemprop="name">Deploy</span></a>
+                  <a href="/categories/Leetcode/" itemprop="url" rel="index"><span itemprop="name">Leetcode</span></a>
                 </span>
             </span>
 
@@ -256,14 +260,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>657</span>
+              <span>2.5k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>2 分钟</span>
             </span>
 
         </div>
@@ -275,26 +279,45 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>引言：本文主要介绍ubuntu系统（包含desktop和server版本）挂载磁盘的方法，包括临时挂载和永久挂载。</p>
+        <p>引言：本文主要介绍LeetCode第一百六十题，判断两个链表是否相交，并找出相交的结点。</p>
 <span id="more"></span>
-<h3 id="格式化磁盘">格式化磁盘</h3>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mkfs -t ext4 /dev/sdb</span><br></pre></td></tr></table></figure>
-<p>-t ext4是将硬盘格式化为ext4文件系统类型。</p>
-<h3 id="临时挂载">临时挂载</h3>
-<p>一般情况下,我们想挂载一个分区的办法就是用mount命令,如我想把/dev/sda3挂载到/data下，使用以下命令即可：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mount /dev/sda3 /data</span><br></pre></td></tr></table></figure>
-<p>但这种方法有个不好的都方是机器<strong>重启后变又得手工重新挂载。</strong></p>
-<h3 id="永久挂载">永久挂载</h3>
-<p>永久性挂载分区的办法是修改分区文件/etc/fstab</p>
-<p>常用磁盘命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1.查看所有的磁盘：</span><br><span class="line">sudo fdisk -l</span><br><span class="line">2.查看某个磁盘的UUID和类型：</span><br><span class="line">sudo blkid &#x2F;dev&#x2F;sda3</span><br></pre></td></tr></table></figure>
-<p><code>vim /etc/fstab</code>文件如下</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">UUID=cec82a6a-c594-4bbd-b07a-af079cc670f2 /sdb ext4 defaults 0 0</span><br><span class="line">UUID=79abd6b3-c462-4fb3-9fc2-6b71eb0a8659 /sdc ext4 defaults 0 0</span><br><span class="line">UUID=bc28f3b0-bdbd-448f-b0d0-50cc499302d1 /sdd ext4 defaults 0 0</span><br><span class="line">UUID=63259855-0d99-4475-8b9d-6f19f93872b5 /sdf ext4 defaults 0 0</span><br></pre></td></tr></table></figure>
-<p>各个字段含义如下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UUID 	挂载点 	文件系统类型 		挂载参数 	是否备份 	是否检测</span><br></pre></td></tr></table></figure>
-<p>保存后，需要重启或者执行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mount -a</span><br></pre></td></tr></table></figure>
-<p>才能生效。</p>
+<h3 id="题目">题目</h3>
+<p>给你两个单链表的头节点 headA 和 headB ，请你找出并返回两个单链表相交的起始节点。如果两个链表不存在相交节点，返回 null 。</p>
+<p>图示两个链表在节点 c1 开始相交：</p>
+<p><img src="https://s2.loli.net/2022/01/17/xf6UjXkD2TeWI3F.png" alt="image.png"></p>
+<p>题目数据 保证 整个链式结构中不存在环。</p>
+<p>注意，函数返回结果后，链表必须 保持其原始结构 。</p>
+<h3 id="示例">示例</h3>
+<p><strong>示例1</strong></p>
+<p><img src="https://s2.loli.net/2022/01/17/deKrCEjBOtQgmWI.png" alt="image.png"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">输入：intersectVal &#x3D; 8, listA &#x3D; [4,1,8,4,5], listB &#x3D; [5,6,1,8,4,5], skipA &#x3D; 2, skipB &#x3D; 3</span><br><span class="line">输出：Intersected at &#39;8&#39;</span><br><span class="line">解释：相交节点的值为 8 （注意，如果两个链表相交则不能为 0）。</span><br><span class="line">从各自的表头开始算起，链表 A 为 [4,1,8,4,5]，链表 B 为 [5,6,1,8,4,5]。</span><br><span class="line">在 A 中，相交节点前有 2 个节点；在 B 中，相交节点前有 3 个节点。</span><br></pre></td></tr></table></figure>
+<p><strong>示例2</strong></p>
+<p><img src="https://s2.loli.net/2022/01/17/pec9sSCqiohBu5r.png" alt="image.png"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">输入：intersectVal &#x3D; 2, listA &#x3D; [1,9,1,2,4], listB &#x3D; [3,2,4], skipA &#x3D; 3, skipB &#x3D; 1</span><br><span class="line">输出：Intersected at &#39;2&#39;</span><br><span class="line">解释：相交节点的值为 2 （注意，如果两个链表相交则不能为 0）。</span><br><span class="line">从各自的表头开始算起，链表 A 为 [1,9,1,2,4]，链表 B 为 [3,2,4]。</span><br><span class="line">在 A 中，相交节点前有 3 个节点；在 B 中，相交节点前有 1 个节点。</span><br></pre></td></tr></table></figure>
+<p><strong>示例3</strong></p>
+<p><img src="https://s2.loli.net/2022/01/17/hEXnDypY7I56LfO.png" alt="image.png"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">输入：intersectVal &#x3D; 0, listA &#x3D; [2,6,4], listB &#x3D; [1,5], skipA &#x3D; 3, skipB &#x3D; 2</span><br><span class="line">输出：null</span><br><span class="line">解释：从各自的表头开始算起，链表 A 为 [2,6,4]，链表 B 为 [1,5]。</span><br><span class="line">由于这两个链表不相交，所以 intersectVal 必须为 0，而 skipA 和 skipB 可以是任意值。</span><br><span class="line">这两个链表不相交，因此返回 null 。</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong></p>
+<ul>
+<li>listA 中节点数目为 m</li>
+<li>listB 中节点数目为 n</li>
+<li>1 &lt;= m, n &lt;= 3 * 104</li>
+<li>1 &lt;= Node.val &lt;= 105</li>
+<li>0 &lt;= skipA &lt;= m</li>
+<li>0 &lt;= skipB &lt;= n</li>
+<li>如果 listA 和 listB 没有交点，intersectVal 为 0</li>
+<li>如果 listA 和 listB 有交点，intersectVal == listA[skipA] == listB[skipB]</li>
+</ul>
+<h3 id="分析">分析</h3>
+<p>如果只是判断两个链表是否相交，那么就很简单了，只需要判断最后一个结点是否是同一个结点。但是本题要返回相交的那个结点，一个最直接的思路是使用哈希表，先将一个链表的每个结点地址存储起来，然后在遍历第二个链表的时候去查表，这样时间复杂度是O(m+n)，空间复杂度为O(m)。另一种常用的思路是用双指针，同时遍历两个链表，当遍历到尾结点的时候，指向另一个链表的头结点，这样如果有相交的话，那么一定会指到同一个结点上；如果不相交的话，那么最后他们一定同时指向nullptr。</p>
+<h3 id="实现">实现</h3>
+<p><strong>方法一：哈希</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ListNode *<span class="title">getIntersectionNode</span><span class="params">(ListNode *headA, ListNode *headB)</span> </span>&#123;</span><br><span class="line">    unordered_set&lt;ListNode*&gt; hashset;</span><br><span class="line">    <span class="keyword">while</span> (headA != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        hashset.<span class="built_in">emplace</span>(headA);</span><br><span class="line">        headA = headA-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (headB != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (hashset.<span class="built_in">find</span>(headB) != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> headB;</span><br><span class="line">        &#125;</span><br><span class="line">        headB = headB-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>方法二：双指针</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) &#123;</span><br><span class="line">    ListNode* workA &#x3D; headA;</span><br><span class="line">    ListNode* workB &#x3D; headB;</span><br><span class="line">    while (true) &#123;</span><br><span class="line">        </span><br><span class="line">        if (workA &#x3D;&#x3D; workB) &#123;</span><br><span class="line">            return workB;</span><br><span class="line">        &#125;</span><br><span class="line">        workA &#x3D; workA-&gt;next;</span><br><span class="line">        workB &#x3D; workB-&gt;next;</span><br><span class="line">        if (workA &#x3D;&#x3D; workB) &#123;</span><br><span class="line">            if (workB &#x3D;&#x3D; nullptr) &#123;</span><br><span class="line">                return nullptr;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if (workA &#x3D;&#x3D; nullptr) &#123;</span><br><span class="line">            workA &#x3D; headB;</span><br><span class="line">        &#125;</span><br><span class="line">        if (workB &#x3D;&#x3D; nullptr) &#123;</span><br><span class="line">            workB &#x3D; headA;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>类似的思路，看一下大神写的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) &#123;</span><br><span class="line">        if (headA &#x3D;&#x3D; nullptr || headB &#x3D;&#x3D; nullptr) &#123;</span><br><span class="line">            return nullptr;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode *pA &#x3D; headA, *pB &#x3D; headB;</span><br><span class="line">        while (pA !&#x3D; pB) &#123;</span><br><span class="line">            pA &#x3D; pA &#x3D;&#x3D; nullptr ? headB : pA-&gt;next;</span><br><span class="line">            pB &#x3D; pB &#x3D;&#x3D; nullptr ? headA : pB-&gt;next;</span><br><span class="line">        &#125;</span><br><span class="line">        return pA;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>NB!!!</p>
 
     </div>
 
@@ -304,8 +327,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83/" rel="tag"># 基础环境</a>
-              <a href="/tags/%E7%A3%81%E7%9B%98%E6%8C%82%E8%BD%BD/" rel="tag"># 磁盘挂载</a>
+              <a href="/tags/%E9%93%BE%E8%A1%A8/" rel="tag"># 链表</a>
           </div>
 
         
@@ -314,13 +336,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/Ubuntu%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="prev" title="Ubuntu server基础环境搭建">
-      <i class="fa fa-chevron-left"></i> Ubuntu server基础环境搭建
+    <a href="/LeetCode%E7%AC%AC%E4%B8%80%E7%99%BE%E5%9B%9B%E5%8D%81%E4%BA%8C%E9%A2%98%EF%BC%9A%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8%E4%BA%8C/" rel="prev" title="LeetCode第一百四十二题：环形链表二">
+      <i class="fa fa-chevron-left"></i> LeetCode第一百四十二题：环形链表二
     </a></div>
-      <div class="post-nav-item">
-    <a href="/Ubuntu%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/" rel="next" title="Ubuntu安装nvidia显卡驱动">
-      Ubuntu安装nvidia显卡驱动 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -379,7 +398,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%BC%E5%BC%8F%E5%8C%96%E7%A3%81%E7%9B%98"><span class="nav-number">1.</span> <span class="nav-text">格式化磁盘</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%B4%E6%97%B6%E6%8C%82%E8%BD%BD"><span class="nav-number">2.</span> <span class="nav-text">临时挂载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B0%B8%E4%B9%85%E6%8C%82%E8%BD%BD"><span class="nav-number">3.</span> <span class="nav-text">永久挂载</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.</span> <span class="nav-text">示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">3.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.</span> <span class="nav-text">实现</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
