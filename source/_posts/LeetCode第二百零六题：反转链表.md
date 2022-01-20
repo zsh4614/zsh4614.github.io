@@ -90,6 +90,6 @@ ListNode* reverseList(ListNode* head) {
 
 空间复杂度：O(n)
 
-注意：在递归的写法中，前面两个判断条件可以写成同一个，都返回head；另外`head != nullptr`可以写成`!head`；需要注意递归方法的时间复杂度。
+注意：在递归的写法中，前面两个判断条件可以写成同一个，都返回head；另外`head == nullptr`可以写成`!head`；需要注意递归方法的时间复杂度。
 
 
