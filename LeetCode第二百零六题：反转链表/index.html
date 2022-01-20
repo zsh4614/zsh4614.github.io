@@ -20,18 +20,24 @@
     var CONFIG = {"hostname":"zsh4614.cn","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="怕什么真理无穷进一寸有一寸的欢喜">
-<meta property="og:type" content="website">
-<meta property="og:title" content="欢迎来到我的主页!">
-<meta property="og:url" content="https://zsh4614.cn/tags/%E9%9D%99%E6%80%81%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F/index.html">
+  <meta name="description" content="引言：本文主要介绍LeetCode第二百零六题，将一个链表进行反转。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode第二百零六题：反转链表">
+<meta property="og:url" content="https://zsh4614.cn/LeetCode%E7%AC%AC%E4%BA%8C%E7%99%BE%E9%9B%B6%E5%85%AD%E9%A2%98%EF%BC%9A%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/index.html">
 <meta property="og:site_name" content="欢迎来到我的主页!">
-<meta property="og:description" content="怕什么真理无穷进一寸有一寸的欢喜">
+<meta property="og:description" content="引言：本文主要介绍LeetCode第二百零六题，将一个链表进行反转。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2022/01/20/h8WBedLgsJ6qRYw.png">
+<meta property="og:image" content="https://s2.loli.net/2022/01/20/8IV4ybzfQXGHJxi.png">
+<meta property="article:published_time" content="2022-01-20T14:32:30.000Z">
+<meta property="article:modified_time" content="2022-01-20T15:27:09.598Z">
 <meta property="article:author" content="zsh">
-<meta property="article:tag" content="程序员">
+<meta property="article:tag" content="链表">
+<meta property="article:tag" content="递归">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/01/20/h8WBedLgsJ6qRYw.png">
 
-<link rel="canonical" href="https://zsh4614.cn/tags/%E9%9D%99%E6%80%81%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F/">
+<link rel="canonical" href="https://zsh4614.cn/LeetCode%E7%AC%AC%E4%BA%8C%E7%99%BE%E9%9B%B6%E5%85%AD%E9%A2%98%EF%BC%9A%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/">
 
 
 <script id="page-configurations">
@@ -39,12 +45,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>标签: 静态局部变量 | 欢迎来到我的主页!</title>
+  <title>LeetCode第二百零六题：反转链表 | 欢迎来到我的主页!</title>
   
 
 
@@ -191,71 +197,139 @@
         <div class="content-wrap">
           
 
-          <div class="content tag">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">静态局部变量
-          <small>标签</small>
-        </h2>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zsh4614.cn/LeetCode%E7%AC%AC%E4%BA%8C%E7%99%BE%E9%9B%B6%E5%85%AD%E9%A2%98%EF%BC%9A%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header2.jpg">
+      <meta itemprop="name" content="zsh">
+      <meta itemprop="description" content="怕什么真理无穷<br>进一寸有一寸的欢喜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欢迎来到我的主页!">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LeetCode第二百零六题：反转链表
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-01-20 22:32:30 / 修改时间：23:27:09" itemprop="dateCreated datePublished" datetime="2022-01-20T22:32:30+08:00">2022-01-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/LeetCode/" itemprop="url" rel="index"><span itemprop="name">LeetCode</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>940</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2021</span>
-    </div>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-11-16T16:16:09+08:00"
-              content="2021-11-16">
-          11-16
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%EF%BC%9A%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" itemprop="url">
-            <span itemprop="name">设计模式：单例模式</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-04-18T23:55:34+08:00"
-              content="2021-04-18">
-          04-18
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/C-%E4%B8%AD%E7%9A%84static%E5%85%B3%E9%94%AE%E5%AD%97%E6%80%BB%E7%BB%93/" itemprop="url">
-            <span itemprop="name">C++中的static关键字总结</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
+        <p>引言：本文主要介绍LeetCode第二百零六题，将一个链表进行反转。</p>
+<span id="more"></span>
+<h3 id="题目">题目</h3>
+<p>给你单链表的头节点 head ，请你反转链表，并返回反转后的链表。<br>
+<strong>示例1</strong></p>
+<p><img src="https://s2.loli.net/2022/01/20/h8WBedLgsJ6qRYw.png" alt="image.png"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head &#x3D; [1,2,3,4,5]</span><br><span class="line">输出：[5,4,3,2,1]</span><br></pre></td></tr></table></figure>
+<p><strong>示例2</strong></p>
+<p><img src="https://s2.loli.net/2022/01/20/8IV4ybzfQXGHJxi.png" alt="image.png"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head &#x3D; [1,2]</span><br><span class="line">输出：[2,1]</span><br></pre></td></tr></table></figure>
+<p><strong>示例3</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head &#x3D; []</span><br><span class="line">输出：[]</span><br></pre></td></tr></table></figure>
+<p><strong>提示</strong></p>
+<ul>
+<li>链表中节点的数目范围是 [0, 5000]</li>
+<li>-5000 &lt;= Node.val &lt;= 5000</li>
+</ul>
+<h3 id="分析">分析</h3>
+<p><strong>要深刻理解链表的结构，每个结点在存储上并不连续，他们之间的关系就是指针的指向，所以反转一个链表就是将每个结点的指针域由指向后一个结点变成指向前一个结点即可</strong>；另一种思路是递归，这种思路比较好想到，但是实现起来需要一定的功底。</p>
+<h3 id="实现">实现</h3>
+<p><strong>迭代</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ListNode* <span class="title">reverseList</span><span class="params">(ListNode* head)</span> </span>&#123;</span><br><span class="line">    ListNode* pre = <span class="literal">nullptr</span>;</span><br><span class="line">    ListNode* cur = head; </span><br><span class="line">    <span class="keyword">while</span> (cur != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        ListNode* next = cur-&gt;next;</span><br><span class="line">        cur-&gt;next = pre;</span><br><span class="line">        pre = cur;</span><br><span class="line">        cur = next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> pre;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>时间复杂度：O(n)</p>
+<p>空间复杂度：O(1)</p>
+<p><strong>递归</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ListNode* <span class="title">reverseList</span><span class="params">(ListNode* head)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (head == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">if</span> (head-&gt;next == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> head;</span><br><span class="line">    &#125;</span><br><span class="line">    ListNode* end = head-&gt;next;</span><br><span class="line">    ListNode* new_head = <span class="built_in">reverseList</span>(head-&gt;next);</span><br><span class="line">    end-&gt;next = head;</span><br><span class="line">    end-&gt;next-&gt;next = <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="keyword">return</span> new_head;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>时间复杂度：O(n)</p>
+<p>空间复杂度：O(n)</p>
+<p>注意：在递归的写法中，前面两个判断条件可以写成同一个，都返回head；另外<code>head != nullptr</code>可以写成<code>!head</code>；需要注意递归方法的时间复杂度。</p>
 
     </div>
-  </div>
-  
-  
-  
 
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%93%BE%E8%A1%A8/" rel="tag"># 链表</a>
+              <a href="/tags/%E9%80%92%E5%BD%92/" rel="tag"># 递归</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/LeetCode%E7%AC%AC%E4%B8%80%E7%99%BE%E5%85%AD%E5%8D%81%E9%A2%98%EF%BC%9A%E7%9B%B8%E4%BA%A4%E9%93%BE%E8%A1%A8/" rel="prev" title="LeetCode第一百六十题：相交链表">
+      <i class="fa fa-chevron-left"></i> LeetCode第一百六十题：相交链表
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
   
 
 
@@ -308,6 +382,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">实现</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

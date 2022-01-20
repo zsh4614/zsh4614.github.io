@@ -6,7 +6,7 @@
   <link href="https://zsh4614.cn/atom.xml" rel="self"/>
   
   <link href="https://zsh4614.cn/"/>
-  <updated>2022-01-17T16:12:48.798Z</updated>
+  <updated>2022-01-20T15:27:09.598Z</updated>
   <id>https://zsh4614.cn/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>LeetCode第二百零六题：反转链表</title>
+    <link href="https://zsh4614.cn/LeetCode%E7%AC%AC%E4%BA%8C%E7%99%BE%E9%9B%B6%E5%85%AD%E9%A2%98%EF%BC%9A%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/"/>
+    <id>https://zsh4614.cn/LeetCode%E7%AC%AC%E4%BA%8C%E7%99%BE%E9%9B%B6%E5%85%AD%E9%A2%98%EF%BC%9A%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/</id>
+    <published>2022-01-20T14:32:30.000Z</published>
+    <updated>2022-01-20T15:27:09.598Z</updated>
+    
+    <content type="html"><![CDATA[<p>引言：本文主要介绍LeetCode第二百零六题，将一个链表进行反转。</p><span id="more"></span><h3 id="题目">题目</h3><p>给你单链表的头节点 head ，请你反转链表，并返回反转后的链表。<br><strong>示例1</strong></p><p><img src="https://s2.loli.net/2022/01/20/h8WBedLgsJ6qRYw.png" alt="image.png"></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head &#x3D; [1,2,3,4,5]</span><br><span class="line">输出：[5,4,3,2,1]</span><br></pre></td></tr></table></figure><p><strong>示例2</strong></p><p><img src="https://s2.loli.net/2022/01/20/8IV4ybzfQXGHJxi.png" alt="image.png"></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head &#x3D; [1,2]</span><br><span class="line">输出：[2,1]</span><br></pre></td></tr></table></figure><p><strong>示例3</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head &#x3D; []</span><br><span class="line">输出：[]</span><br></pre></td></tr></table></figure><p><strong>提示</strong></p><ul><li>链表中节点的数目范围是 [0, 5000]</li><li>-5000 &lt;= Node.val &lt;= 5000</li></ul><h3 id="分析">分析</h3><p><strong>要深刻理解链表的结构，每个结点在存储上并不连续，他们之间的关系就是指针的指向，所以反转一个链表就是将每个结点的指针域由指向后一个结点变成指向前一个结点即可</strong>；另一种思路是递归，这种思路比较好想到，但是实现起来需要一定的功底。</p><h3 id="实现">实现</h3><p><strong>迭代</strong></p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ListNode* <span class="title">reverseList</span><span class="params">(ListNode* head)</span> </span>&#123;</span><br><span class="line">    ListNode* pre = <span class="literal">nullptr</span>;</span><br><span class="line">    ListNode* cur = head; </span><br><span class="line">    <span class="keyword">while</span> (cur != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        ListNode* next = cur-&gt;next;</span><br><span class="line">        cur-&gt;next = pre;</span><br><span class="line">        pre = cur;</span><br><span class="line">        cur = next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> pre;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>时间复杂度：O(n)</p><p>空间复杂度：O(1)</p><p><strong>递归</strong></p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ListNode* <span class="title">reverseList</span><span class="params">(ListNode* head)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (head == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">if</span> (head-&gt;next == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> head;</span><br><span class="line">    &#125;</span><br><span class="line">    ListNode* end = head-&gt;next;</span><br><span class="line">    ListNode* new_head = <span class="built_in">reverseList</span>(head-&gt;next);</span><br><span class="line">    end-&gt;next = head;</span><br><span class="line">    end-&gt;next-&gt;next = <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="keyword">return</span> new_head;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>时间复杂度：O(n)</p><p>空间复杂度：O(n)</p><p>注意：在递归的写法中，前面两个判断条件可以写成同一个，都返回head；另外<code>head != nullptr</code>可以写成<code>!head</code>；需要注意递归方法的时间复杂度。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;引言：本文主要介绍LeetCode第二百零六题，将一个链表进行反转。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="LeetCode" scheme="https://zsh4614.cn/categories/LeetCode/"/>
+    
+    
+    <category term="链表" scheme="https://zsh4614.cn/tags/%E9%93%BE%E8%A1%A8/"/>
+    
+    <category term="递归" scheme="https://zsh4614.cn/tags/%E9%80%92%E5%BD%92/"/>
+    
+  </entry>
   
   <entry>
     <title>LeetCode第一百六十题：相交链表</title>
@@ -221,9 +244,9 @@
     <category term="C++" scheme="https://zsh4614.cn/categories/C/"/>
     
     
-    <category term="虚函数" scheme="https://zsh4614.cn/tags/%E8%99%9A%E5%87%BD%E6%95%B0/"/>
-    
     <category term="动态多态" scheme="https://zsh4614.cn/tags/%E5%8A%A8%E6%80%81%E5%A4%9A%E6%80%81/"/>
+    
+    <category term="虚函数" scheme="https://zsh4614.cn/tags/%E8%99%9A%E5%87%BD%E6%95%B0/"/>
     
     <category term="纯虚函数" scheme="https://zsh4614.cn/tags/%E7%BA%AF%E8%99%9A%E5%87%BD%E6%95%B0/"/>
     
@@ -448,29 +471,6 @@
     
     
     <category term="OpenPAI" scheme="https://zsh4614.cn/tags/OpenPAI/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Ubuntu安装docker</title>
-    <link href="https://zsh4614.cn/Ubuntu%E5%AE%89%E8%A3%85docker/"/>
-    <id>https://zsh4614.cn/Ubuntu%E5%AE%89%E8%A3%85docker/</id>
-    <published>2021-11-03T09:46:14.000Z</published>
-    <updated>2021-12-01T17:30:30.014Z</updated>
-    
-    <content type="html"><![CDATA[<p>引言：本文主要介绍在ubuntu上安装docker的方法。</p><span id="more"></span><h3 id="docker安装">docker安装</h3><p>1.（可选）更换国内镜像源，推荐清华源或中科大源</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak</span><br><span class="line">sudo sed -i &#x27;s/cn.archive.ubuntu.com/mirrors.ustc.edu.cn/g&#x27; /etc/apt/sources.list</span><br><span class="line">sudo apt update</span><br></pre></td></tr></table></figure><p>2.安装需要的依赖包</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install apt-transport-https ca-certificates software-properties-common curl</span><br></pre></td></tr></table></figure><p>3.添加GPG密钥，需指定源（采用中科大源，采用默认的源下载速度慢，经常失败）</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://mirrors.ustc.edu.cn/docker-ce/linux/ubuntu/gpg | sudo apt-key add -</span><br><span class="line">sudo add-apt-repository &quot;deb [arch=amd64] https://mirrors.ustc.edu.cn/docker-ce/linux/ubuntu $(lsb_release -cs) stable&quot;</span><br></pre></td></tr></table></figure><p>4.更新软件包</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br></pre></td></tr></table></figure><p>5.安装docker-ce</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install docker-ce</span><br></pre></td></tr></table></figure><p>6.测试docker安装成功</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run hello-world</span><br></pre></td></tr></table></figure><h3 id="nvidia-container-runtime安装">nvidia-container-runtime安装</h3><p>docker19.03之后建议使用nvidia-container-runtime取代nvidia-docker2。</p><p>1.添加GPG密钥</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s -L https:&#x2F;&#x2F;nvidia.github.io&#x2F;nvidia-container-runtime&#x2F;gpgkey | sudo apt-key add -</span><br></pre></td></tr></table></figure><p>2.添加源</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">distribution=$(. /etc/os-release;echo $ID$VERSION_ID)</span><br><span class="line">curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list | sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list</span><br></pre></td></tr></table></figure><p>3.更新软件包</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure><p>4.安装nvidia-container-runtime</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install nvidia-container-runtime</span><br></pre></td></tr></table></figure><p>5.设置默认运行时</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">在/etc/docker/daemon.json中写入以下内容:</span><br><span class="line">&#123;</span><br><span class="line">&quot;default-runtime&quot;: &quot;nvidia&quot;,</span><br><span class="line">    &quot;runtimes&quot;: &#123;</span><br><span class="line">        &quot;nvidia&quot;: &#123;</span><br><span class="line">            &quot;path&quot;: &quot;/usr/bin/nvidia-container-runtime&quot;,</span><br><span class="line">            &quot;runtimeArgs&quot;: []</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>6.重启docker服务</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure><p>7.验证安装成功（出现显卡信息）</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run --rm nvidia/cuda:10.0-base nvidia-smi</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;引言：本文主要介绍在ubuntu上安装docker的方法。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="Deploy" scheme="https://zsh4614.cn/categories/Deploy/"/>
-    
-    
-    <category term="基础环境" scheme="https://zsh4614.cn/tags/%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83/"/>
-    
-    <category term="docker" scheme="https://zsh4614.cn/tags/docker/"/>
     
   </entry>
   
