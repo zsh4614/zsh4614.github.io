@@ -5,6 +5,7 @@ date: 2022-01-20 22:32:30
 tags:
 - 链表
 - 递归
+- stack
 categories:
 - LeetCode
 ---
@@ -45,7 +46,7 @@ categories:
 
 ### 分析
 
-**要深刻理解链表的结构，每个结点在存储上并不连续，他们之间的关系就是指针的指向，所以反转一个链表就是将每个结点的指针域由指向后一个结点变成指向前一个结点即可**；另一种思路是递归，这种思路比较好想到，但是实现起来需要一定的功底。
+**要深刻理解链表的结构，每个结点在存储上并不连续，他们之间的关系就是指针的指向，所以反转一个链表就是将每个结点的指针域由指向后一个结点变成指向前一个结点即可**；另一种思路是递归，这种思路比较好想到，但是实现起来需要一定的功底；工程中应尽量避免递归，基本上所有的递归都能改成用stack和dfs实现，这个也不例外，而且stack是先进后出，很适合这种反转操作。
 
 ### 实现
 
@@ -91,5 +92,37 @@ ListNode* reverseList(ListNode* head) {
 空间复杂度：O(n)
 
 注意：在递归的写法中，前面两个判断条件可以写成同一个，都返回head；另外`head == nullptr`可以写成`!head`；需要注意递归方法的时间复杂度。
+
+**stack**
+
+```c++
+ListNode* reverseList(ListNode* head) {
+    if (!head) {
+        return nullptr;
+    }
+    std::stack<ListNode*> stack;
+    while (head != nullptr) {
+        stack.push(head);
+        head = head->next;
+    }
+    ListNode* res = stack.top();
+    while (!stack.empty()) {
+        ListNode* top = stack.top();
+        stack.pop();
+        if (!stack.empty()) {
+            top->next = stack.top();
+        } else {
+            top->next = nullptr;
+        }
+    }
+    return res;
+}
+```
+
+时间复杂度：O(n)
+
+空间复杂度：O(n)
+
+
 
 
