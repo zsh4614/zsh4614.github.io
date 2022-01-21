@@ -40,11 +40,38 @@
   </entry>
   
   <entry>
+    <title>C++中的栈对象和堆对象</title>
+    <link href="https://zsh4614.cn/C-%E4%B8%AD%E7%9A%84%E6%A0%88%E5%AF%B9%E8%B1%A1%E5%92%8C%E5%A0%86%E5%AF%B9%E8%B1%A1/"/>
+    <id>https://zsh4614.cn/C-%E4%B8%AD%E7%9A%84%E6%A0%88%E5%AF%B9%E8%B1%A1%E5%92%8C%E5%A0%86%E5%AF%B9%E8%B1%A1/</id>
+    <published>2022-01-21T07:18:26.000Z</published>
+    <updated>2022-01-21T16:10:33.766Z</updated>
+    
+    <content type="html"><![CDATA[<p>引言：本文主要介绍两种建立类对象的方式，在栈上和堆上建立，以及对它们的理解。</p><span id="more"></span><h3 id="背景">背景</h3><p>在C++中，类的对象建立分为两种，一种是静态建立，如A a；另一种是动态建立，如A* ptr=new A；这两种方式是有区别的。</p><ul><li><p><strong>静态建立类对象：是由编译器为对象在栈空间中分配内存，是通过直接移动栈顶指针，挪出适当的空间，然后在这片内存空间上调用构造函数形成一个栈对象。使用这种方法，直接调用类的构造函数。</strong></p></li><li><p><strong>动态建立类对象，是使用new运算符将对象建立在堆空间中。这个过程分为两步，第一步是执行operator new()函数，在堆空间中搜索合适的内存并进行分配；第二步是调用构造函数构造对象，初始化这片内存空间。这种方法，间接调用类的构造函数。</strong></p></li></ul><h3 id="区别">区别</h3><p>初始化两种方法：</p><p>第一种初始化方法：ClassName object(初始化参数)；</p><p>第二种初始化方法：ClassName* object=new ClassName(初始化参数);</p><p>两种初始化方法的区别：</p><p>第一种初始化方法：在stack栈里面分配空间，自动释放。</p><p>第二种初始化方法：在heap堆里面分配空间，要手动释放。</p><h3 id="选择">选择</h3><p>栈对象的优势是在适当的时候自动生成，又在适当的时候<strong>自动销毁</strong>，不需要程序员操心；而且<strong>栈对象的创建速度一般较堆对象快，因为分配堆对象时，会调用 operator new操作，operator new会采用某种内存空间搜索算法，而该搜索过程可能是很费时间的，产生栈对象则没有这么麻烦，它仅仅需要移动栈顶指针就可以了</strong>。但是要注意的是，通常<strong>栈空间容量比较小，一般是1MB～2MB，所以体积比较大的对象不适合在栈中分配</strong>。特别要注意<strong>递归函数中最好不要使用栈对象，因为随着递归调用深度的增加，所需的栈空间也会线性增加，当所需栈空间不够时，便会导致栈溢出，这样就会产生运行时错误</strong>。</p><p>堆对象，其产生时刻和销毁时刻都要程序员精确定义，也就是说，程序员对堆对象的生命具有完全的控制权。我们常常需要这样的对象，比如，我们需要创建一个对象，能够被多个函数所访问，但是又不想使其成为全局的，那么这个时候创建一个堆对象无疑是良好的选择，然后在各个函数之间传递这个堆对象的指针，便可以实现对该对象的共享。另外，<strong>相比于栈空间，堆的容量要大得多。实际上，当物理内存不够时，如果这时还需要生成新的堆对象，通常不会产生运行时错误，而是系统会使用虚拟内存来扩展实际的物理内存。</strong></p><h3 id="限制">限制</h3><p>如何限制类对象只能在堆或者栈上建立呢？下面分别进行讨论。</p><p><strong>1、只能在堆上分配类对象，就是不能静态建立类对象，即不能直接调用类的构造函数。</strong></p><p>容易想到将构造函数设为私有。在构造函数私有之后，无法在类外部调用构造函数来构造类对象，只能使用new运算符来建立对象。然而，前面已经说过，new运算符的执行过程分为两步，C++提供new运算符的重载，其实是只允许重载operator new()函数，而operatornew()函数只用于分配内存，无法提供构造功能。因此，<strong>这种方法不可以。</strong></p><p>当对象建立在栈上面时，是由编译器分配内存空间的，调用构造函数来构造栈对象。当对象使用完后，编译器会调用析构函数来释放栈对象所占的空间。编译器管理了对象的整个生命周期。如果编译器无法调用类的析构函数，情况会是怎样的呢？比如，类的析构函数是私有的，编译器无法调用析构函数来释放内存。所以，<strong>编译器在为类对象分配栈空间时，会先检查类的析构函数的访问性，其实不光是析构函数，只要是非静态的函数，编译器都会进行检查。如果类的析构函数是私有的，则编译器不会在栈空间上为类对象分配内存。因此，将析构函数设为私有，类对象就无法建立在栈上了</strong>。代码如下：（这种方法不好）</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span>  &#123;</span>  </span><br><span class="line"><span class="keyword">public</span>:  </span><br><span class="line">    <span class="built_in">A</span>()&#123;&#125;  </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">destory</span><span class="params">()</span></span>&#123;<span class="keyword">delete</span> <span class="keyword">this</span>;&#125;  </span><br><span class="line"><span class="keyword">private</span>:  </span><br><span class="line">    ~<span class="built_in">A</span>()&#123;&#125;  </span><br><span class="line">&#125;;  </span><br></pre></td></tr></table></figure><p>试着使用<code>A a</code>;来建立对象，编译报错，提示析构函数无法访问。这样就只能使用new操作符来建立对象，构造函数是公有的，可以直接调用。<strong>类中必须提供一个destory函数，来进行内存空间的释放。类对象使用完成后，必须调用destory函数。</strong></p><p>上述方法的缺点：</p><ul><li><p><strong>无法解决继承问题</strong>。如果A作为其它类的基类，则析构函数通常要设为virtual，然后在子类重写，以实现多态。因此析构函数不能设为private。还好C++提供了第三种访问控制，protected。<strong>将析构函数设为protected可以有效解决这个问题，类外无法访问protected成员，子类则可以访问。</strong></p></li><li><p><strong>类的使用很不方便，使用new建立对象，却使用destory函数释放对象，而不是使用delete。</strong>（使用delete会报错，因为delete对象的指针，会调用对象的析构函数，而析构函数类外不可访问）这种使用方式比较怪异。</p></li></ul><p>为了统一，可以将构造函数设为protected，然后提供一个public的static函数来完成构造，这样不使用new，而是使用一个函数来构造，使用一个函数来析构。代码如下，类似于<strong>单例模式</strong>：（这种方法比较可取）</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span>  </span></span><br><span class="line"><span class="class">&#123;</span>  </span><br><span class="line"><span class="keyword">protected</span>:  </span><br><span class="line">    <span class="built_in">A</span>()&#123;&#125;  </span><br><span class="line">    ~<span class="built_in">A</span>()&#123;&#125;  </span><br><span class="line"><span class="keyword">public</span>:  </span><br><span class="line">    <span class="function"><span class="keyword">static</span> A* <span class="title">create</span><span class="params">()</span>  </span></span><br><span class="line"><span class="function">    </span>&#123;  </span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">A</span>();  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">destory</span><span class="params">()</span>  </span></span><br><span class="line"><span class="function">    </span>&#123;  </span><br><span class="line">        <span class="keyword">delete</span> <span class="keyword">this</span>;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;;  </span><br></pre></td></tr></table></figure><p>这样，调用create()函数在堆上创建类A对象，调用destory()函数释放内存。</p><p><strong>2、只能在栈上分配类对象</strong></p><p>只有使用new运算符，对象才会建立在堆上，因此，**只要禁用new运算符就可以实现类对象只能建立在栈上。**虽然你不能影响new operator的能力（因为那是C++语言内建的），但是你可以利用一个事实：new operator 总是先调用 operator new,而后者我们是可以自行声明重写的。因此，<strong>将operator new()设为私有即可禁止对象被new在堆上</strong>。代码如下：</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span>  </span></span><br><span class="line"><span class="class">&#123;</span>  </span><br><span class="line"><span class="keyword">private</span>:  </span><br><span class="line">    <span class="function"><span class="keyword">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="keyword">size_t</span> t)</span></span>&#123;&#125;     <span class="comment">// 注意函数的第一个参数和返回值都是固定的  </span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="keyword">operator</span> <span class="title">delete</span><span class="params">(<span class="keyword">void</span>* ptr)</span></span>&#123;&#125; <span class="comment">// 重载了new就需要重载delete  </span></span><br><span class="line"><span class="keyword">public</span>:  </span><br><span class="line">    <span class="built_in">A</span>()&#123;&#125;  </span><br><span class="line">    ~<span class="built_in">A</span>()&#123;&#125;  </span><br><span class="line">&#125;;  </span><br></pre></td></tr></table></figure><blockquote><p>转载自：<a href="http://blog.csdn.net/sdnu111111111/article/details/38707923">http://blog.csdn.net/sdnu111111111/article/details/38707923</a></p></blockquote>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;引言：本文主要介绍两种建立类对象的方式，在栈上和堆上建立，以及对它们的理解。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="C++" scheme="https://zsh4614.cn/categories/C/"/>
+    
+    
+    <category term="堆" scheme="https://zsh4614.cn/tags/%E5%A0%86/"/>
+    
+    <category term="栈" scheme="https://zsh4614.cn/tags/%E6%A0%88/"/>
+    
+    <category term="new" scheme="https://zsh4614.cn/tags/new/"/>
+    
+    <category term="delete" scheme="https://zsh4614.cn/tags/delete/"/>
+    
+  </entry>
+  
+  <entry>
     <title>LeetCode第二百零六题：反转链表</title>
     <link href="https://zsh4614.cn/LeetCode%E7%AC%AC%E4%BA%8C%E7%99%BE%E9%9B%B6%E5%85%AD%E9%A2%98%EF%BC%9A%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/"/>
     <id>https://zsh4614.cn/LeetCode%E7%AC%AC%E4%BA%8C%E7%99%BE%E9%9B%B6%E5%85%AD%E9%A2%98%EF%BC%9A%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/</id>
     <published>2022-01-20T14:32:30.000Z</published>
-    <updated>2022-01-21T15:54:55.015Z</updated>
+    <updated>2022-01-21T16:12:22.478Z</updated>
     
     <content type="html"><![CDATA[<p>引言：本文主要介绍LeetCode第二百零六题，将一个链表进行反转。</p><span id="more"></span><h3 id="题目">题目</h3><p>给你单链表的头节点 head ，请你反转链表，并返回反转后的链表。<br><strong>示例1</strong></p><p><img src="https://s2.loli.net/2022/01/20/h8WBedLgsJ6qRYw.png" alt="image.png"></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head &#x3D; [1,2,3,4,5]</span><br><span class="line">输出：[5,4,3,2,1]</span><br></pre></td></tr></table></figure><p><strong>示例2</strong></p><p><img src="https://s2.loli.net/2022/01/20/8IV4ybzfQXGHJxi.png" alt="image.png"></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head &#x3D; [1,2]</span><br><span class="line">输出：[2,1]</span><br></pre></td></tr></table></figure><p><strong>示例3</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head &#x3D; []</span><br><span class="line">输出：[]</span><br></pre></td></tr></table></figure><p><strong>提示</strong></p><ul><li>链表中节点的数目范围是 [0, 5000]</li><li>-5000 &lt;= Node.val &lt;= 5000</li></ul><h3 id="分析">分析</h3><p><strong>要深刻理解链表的结构，每个结点在存储上并不连续，他们之间的关系就是指针的指向，所以反转一个链表就是将每个结点的指针域由指向后一个结点变成指向前一个结点即可</strong>；另一种思路是递归，这种思路比较好想到，但是实现起来需要一定的功底；工程中应尽量避免递归，基本上所有的递归都能改成用stack和dfs实现，这个也不例外，而且stack是先进后出，很适合这种反转操作。</p><h3 id="实现">实现</h3><p><strong>迭代</strong></p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ListNode* <span class="title">reverseList</span><span class="params">(ListNode* head)</span> </span>&#123;</span><br><span class="line">    ListNode* pre = <span class="literal">nullptr</span>;</span><br><span class="line">    ListNode* cur = head; </span><br><span class="line">    <span class="keyword">while</span> (cur != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        ListNode* next = cur-&gt;next;</span><br><span class="line">        cur-&gt;next = pre;</span><br><span class="line">        pre = cur;</span><br><span class="line">        cur = next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> pre;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>时间复杂度：O(n)</p><p>空间复杂度：O(1)</p><p><strong>递归</strong></p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ListNode* <span class="title">reverseList</span><span class="params">(ListNode* head)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (head == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">if</span> (head-&gt;next == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> head;</span><br><span class="line">    &#125;</span><br><span class="line">    ListNode* end = head-&gt;next;</span><br><span class="line">    ListNode* new_head = <span class="built_in">reverseList</span>(head-&gt;next);</span><br><span class="line">    end-&gt;next = head;</span><br><span class="line">    end-&gt;next-&gt;next = <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="keyword">return</span> new_head;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>时间复杂度：O(n)</p><p>空间复杂度：O(n)</p><p>注意：在递归的写法中，前面两个判断条件可以写成同一个，都返回head；另外<code>head == nullptr</code>可以写成<code>!head</code>；需要注意递归方法的时间复杂度。</p><p><strong>stack</strong></p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ListNode* <span class="title">reverseList</span><span class="params">(ListNode* head)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!head) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    std::stack&lt;ListNode*&gt; stack;</span><br><span class="line">    <span class="keyword">while</span> (head != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        stack.<span class="built_in">push</span>(head);</span><br><span class="line">        head = head-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    ListNode* res = stack.<span class="built_in">top</span>();</span><br><span class="line">    <span class="keyword">while</span> (!stack.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">        ListNode* top = stack.<span class="built_in">top</span>();</span><br><span class="line">        stack.<span class="built_in">pop</span>();</span><br><span class="line">        <span class="keyword">if</span> (!stack.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">            top-&gt;next = stack.<span class="built_in">top</span>();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            top-&gt;next = <span class="literal">nullptr</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>时间复杂度：O(n)</p><p>空间复杂度：O(n)</p>]]></content>
     
@@ -81,9 +108,9 @@
     <category term="Leetcode" scheme="https://zsh4614.cn/categories/Leetcode/"/>
     
     
-    <category term="哈希" scheme="https://zsh4614.cn/tags/%E5%93%88%E5%B8%8C/"/>
-    
     <category term="链表" scheme="https://zsh4614.cn/tags/%E9%93%BE%E8%A1%A8/"/>
+    
+    <category term="哈希" scheme="https://zsh4614.cn/tags/%E5%93%88%E5%B8%8C/"/>
     
   </entry>
   
@@ -221,11 +248,11 @@
     <category term="LeetCode" scheme="https://zsh4614.cn/categories/LeetCode/"/>
     
     
-    <category term="哈希" scheme="https://zsh4614.cn/tags/%E5%93%88%E5%B8%8C/"/>
-    
     <category term="链表" scheme="https://zsh4614.cn/tags/%E9%93%BE%E8%A1%A8/"/>
     
     <category term="判圈算法" scheme="https://zsh4614.cn/tags/%E5%88%A4%E5%9C%88%E7%AE%97%E6%B3%95/"/>
+    
+    <category term="哈希" scheme="https://zsh4614.cn/tags/%E5%93%88%E5%B8%8C/"/>
     
   </entry>
   
@@ -269,9 +296,9 @@
     <category term="C++" scheme="https://zsh4614.cn/categories/C/"/>
     
     
-    <category term="动态多态" scheme="https://zsh4614.cn/tags/%E5%8A%A8%E6%80%81%E5%A4%9A%E6%80%81/"/>
-    
     <category term="虚函数" scheme="https://zsh4614.cn/tags/%E8%99%9A%E5%87%BD%E6%95%B0/"/>
+    
+    <category term="动态多态" scheme="https://zsh4614.cn/tags/%E5%8A%A8%E6%80%81%E5%A4%9A%E6%80%81/"/>
     
     <category term="纯虚函数" scheme="https://zsh4614.cn/tags/%E7%BA%AF%E8%99%9A%E5%87%BD%E6%95%B0/"/>
     
@@ -454,27 +481,6 @@
     
     
     <category term="docker" scheme="https://zsh4614.cn/tags/docker/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Ubuntu ssh</title>
-    <link href="https://zsh4614.cn/Ubuntu-ssh/"/>
-    <id>https://zsh4614.cn/Ubuntu-ssh/</id>
-    <published>2021-11-04T02:56:44.000Z</published>
-    <updated>2021-12-01T17:30:30.013Z</updated>
-    
-    <content type="html"><![CDATA[<p>引言：本文主要介绍Ubuntu的ssh相关服务。</p><span id="more"></span><h3 id="设置ssh免密登录">设置ssh免密登录</h3><p>ssh-copy-id &lt;username&gt;@&lt;target_host_ip&gt;</p><p>解决按照上述操作之后还不能免密登录的方法：将<code>/etc/ssh/sshd_config</code>中的<code>StrictModes yes</code>改成no。</p>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;引言：本文主要介绍Ubuntu的ssh相关服务。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="Deploy" scheme="https://zsh4614.cn/categories/Deploy/"/>
-    
-    
-    <category term="ssh" scheme="https://zsh4614.cn/tags/ssh/"/>
     
   </entry>
   
