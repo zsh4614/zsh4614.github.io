@@ -6,7 +6,7 @@
   <link href="https://zsh4614.cn/atom.xml" rel="self"/>
   
   <link href="https://zsh4614.cn/"/>
-  <updated>2022-01-21T16:13:24.418Z</updated>
+  <updated>2022-01-23T17:16:24.171Z</updated>
   <id>https://zsh4614.cn/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>LeetCode第十九题：删除链表的倒数第 N 个结点</title>
+    <link href="https://zsh4614.cn/LeetCode%E7%AC%AC%E5%8D%81%E4%B9%9D%E9%A2%98%EF%BC%9A%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E7%9A%84%E5%80%92%E6%95%B0%E7%AC%AC-N-%E4%B8%AA%E7%BB%93%E7%82%B9/"/>
+    <id>https://zsh4614.cn/LeetCode%E7%AC%AC%E5%8D%81%E4%B9%9D%E9%A2%98%EF%BC%9A%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E7%9A%84%E5%80%92%E6%95%B0%E7%AC%AC-N-%E4%B8%AA%E7%BB%93%E7%82%B9/</id>
+    <published>2022-01-22T16:42:00.000Z</published>
+    <updated>2022-01-23T17:16:24.171Z</updated>
+    
+    <content type="html"><![CDATA[<p>引言：本文主要介绍LeetCode第十九题，删除链表的倒数第N个结点，并给出c++实现。</p><span id="more"></span><h3 id="题目">题目</h3><p>给你一个链表，删除链表的倒数第 n 个结点，并且返回链表的头结点。</p><p><strong>示例1</strong></p><p><img src="https://s2.loli.net/2022/01/24/Nyuo2cVLTt3iQ8z.png" alt="image.png"></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head &#x3D; [1,2,3,4,5], n &#x3D; 2</span><br><span class="line">输出：[1,2,3,5]</span><br></pre></td></tr></table></figure><p><strong>示例2</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head &#x3D; [1], n &#x3D; 1</span><br><span class="line">输出：[]</span><br></pre></td></tr></table></figure><p><strong>示例3</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head &#x3D; [1,2], n &#x3D; 1</span><br><span class="line">输出：[1]</span><br></pre></td></tr></table></figure><p><strong>提示：</strong></p><ul><li>链表中结点的数目为 sz</li><li>1 &lt;= sz &lt;= 30</li><li>0 &lt;= Node.val &lt;= 100</li><li>1 &lt;= n &lt;= sz</li></ul><h3 id="分析">分析</h3><p>因为只有遍历才能求链表的长度，所以最常想到的方法就是遍历链表求长度l，删除倒数第n个结点，也就知道了删除正数第几个结点，这种方法效率较低，这里就不实现了；第二种方法就是用双指针，让第一个指针始终领先第二个指针n个结点，这样当第一个结点在链表尾结点上时，第二个结点正好在倒数第n个结点的前一个结点；第三种方法是使用stack实现。</p><h3 id="实现">实现</h3><p><strong>双指针</strong></p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ListNode* <span class="title">removeNthFromEnd</span><span class="params">(ListNode* head, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    ListNode* dummy = <span class="keyword">new</span> <span class="built_in">ListNode</span>(<span class="number">0</span>, head);</span><br><span class="line">      ListNode* first = head;</span><br><span class="line">      ListNode* second = dummy;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">      first = first-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (first) &#123;</span><br><span class="line">        first = first-&gt;next;</span><br><span class="line">        second = second-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    second-&gt;next = second-&gt;next-&gt;next;</span><br><span class="line">    ListNode* ans = dummy-&gt;next;</span><br><span class="line">    <span class="keyword">delete</span> dummy;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>注意：用到node-&gt;next  一定要保证node不为空结点，避免为空的一个好方法是使用哨兵结点。</p><p><strong>stack</strong></p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ListNode* <span class="title">removeNthFromEnd</span><span class="params">(ListNode* head, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    ListNode* work = head;</span><br><span class="line">    ListNode* dummy = <span class="keyword">new</span> <span class="built_in">ListNode</span>(<span class="number">0</span>, head);</span><br><span class="line">    std::stack&lt;ListNode*&gt; stack;</span><br><span class="line">    stack.<span class="built_in">push</span>(dummy);</span><br><span class="line">    <span class="keyword">while</span> (work) &#123;</span><br><span class="line">        stack.<span class="built_in">push</span>(work);</span><br><span class="line">        work = work-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">        stack.<span class="built_in">pop</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    stack.<span class="built_in">top</span>()-&gt;next = stack.<span class="built_in">top</span>()-&gt;next-&gt;next;</span><br><span class="line">    ListNode* res = dummy-&gt;next;</span><br><span class="line">    <span class="keyword">delete</span> dummy;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;引言：本文主要介绍LeetCode第十九题，删除链表的倒数第N个结点，并给出c++实现。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="LeetCode" scheme="https://zsh4614.cn/categories/LeetCode/"/>
+    
+    
+    <category term="链表" scheme="https://zsh4614.cn/tags/%E9%93%BE%E8%A1%A8/"/>
+    
+    <category term="stack" scheme="https://zsh4614.cn/tags/stack/"/>
+    
+    <category term="双指针" scheme="https://zsh4614.cn/tags/%E5%8F%8C%E6%8C%87%E9%92%88/"/>
+    
+  </entry>
   
   <entry>
     <title>Leetcode第二百三十四题：回文链表</title>
@@ -460,27 +485,6 @@
     
     <category term="OpenCV" scheme="https://zsh4614.cn/categories/OpenCV/"/>
     
-    
-  </entry>
-  
-  <entry>
-    <title>Ubuntu私有仓库UI服务部署</title>
-    <link href="https://zsh4614.cn/Ubuntu%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93UI%E6%9C%8D%E5%8A%A1%E9%83%A8%E7%BD%B2/"/>
-    <id>https://zsh4614.cn/Ubuntu%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93UI%E6%9C%8D%E5%8A%A1%E9%83%A8%E7%BD%B2/</id>
-    <published>2021-11-04T03:25:15.000Z</published>
-    <updated>2021-12-01T17:30:30.014Z</updated>
-    
-    <content type="html"><![CDATA[<p>引言：本文主要介绍利用第三方镜像部署docker私有仓库可视化界面服务的方法。</p><span id="more"></span><h3 id="方法一">方法一</h3><p>1.从官方仓库拉取第三方镜像</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker pull joxit/docker-registry-ui:2.0</span><br></pre></td></tr></table></figure><p>2.启动UI服务</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run -itd -p 60022:80 --restart=always --name=docker-registry-ui -e SINGLE_REGISTRY=true -e REGISTRY_TITLE=&quot;xxxxxxxx registry&quot; -e SHOW_CONTENT_DIGEST=true -e DELETE_IMAGES=true -e NGINX_PROXY_PASS_URL=&quot;http://10.10.8.185:5000&quot; joxit/docker-registry-ui:2.0</span><br></pre></td></tr></table></figure><p><strong>注意：这些环境变量一个也不能错</strong></p><p>3.访问http://10.10.8.185:60022可以登录UI界面。</p>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;引言：本文主要介绍利用第三方镜像部署docker私有仓库可视化界面服务的方法。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="Deploy" scheme="https://zsh4614.cn/categories/Deploy/"/>
-    
-    
-    <category term="docker" scheme="https://zsh4614.cn/tags/docker/"/>
     
   </entry>
   

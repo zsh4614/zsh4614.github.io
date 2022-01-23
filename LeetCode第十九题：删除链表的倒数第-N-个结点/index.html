@@ -20,20 +20,24 @@
     var CONFIG = {"hostname":"zsh4614.cn","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="引言：本文主要介绍Ubuntu的ssh相关服务。">
+  <meta name="description" content="引言：本文主要介绍LeetCode第十九题，删除链表的倒数第N个结点，并给出c++实现。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Ubuntu ssh">
-<meta property="og:url" content="https://zsh4614.cn/Ubuntu-ssh/index.html">
+<meta property="og:title" content="LeetCode第十九题：删除链表的倒数第 N 个结点">
+<meta property="og:url" content="https://zsh4614.cn/LeetCode%E7%AC%AC%E5%8D%81%E4%B9%9D%E9%A2%98%EF%BC%9A%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E7%9A%84%E5%80%92%E6%95%B0%E7%AC%AC-N-%E4%B8%AA%E7%BB%93%E7%82%B9/index.html">
 <meta property="og:site_name" content="欢迎来到我的主页!">
-<meta property="og:description" content="引言：本文主要介绍Ubuntu的ssh相关服务。">
+<meta property="og:description" content="引言：本文主要介绍LeetCode第十九题，删除链表的倒数第N个结点，并给出c++实现。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-11-04T02:56:44.000Z">
-<meta property="article:modified_time" content="2021-12-01T17:30:30.013Z">
+<meta property="og:image" content="https://s2.loli.net/2022/01/24/Nyuo2cVLTt3iQ8z.png">
+<meta property="article:published_time" content="2022-01-22T16:42:00.000Z">
+<meta property="article:modified_time" content="2022-01-23T17:16:24.171Z">
 <meta property="article:author" content="zsh">
-<meta property="article:tag" content="ssh">
+<meta property="article:tag" content="链表">
+<meta property="article:tag" content="stack">
+<meta property="article:tag" content="双指针">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/01/24/Nyuo2cVLTt3iQ8z.png">
 
-<link rel="canonical" href="https://zsh4614.cn/Ubuntu-ssh/">
+<link rel="canonical" href="https://zsh4614.cn/LeetCode%E7%AC%AC%E5%8D%81%E4%B9%9D%E9%A2%98%EF%BC%9A%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E7%9A%84%E5%80%92%E6%95%B0%E7%AC%AC-N-%E4%B8%AA%E7%BB%93%E7%82%B9/">
 
 
 <script id="page-configurations">
@@ -46,7 +50,7 @@
   };
 </script>
 
-  <title>Ubuntu ssh | 欢迎来到我的主页!</title>
+  <title>LeetCode第十九题：删除链表的倒数第 N 个结点 | 欢迎来到我的主页!</title>
   
 
 
@@ -200,7 +204,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://zsh4614.cn/Ubuntu-ssh/">
+    <link itemprop="mainEntityOfPage" href="https://zsh4614.cn/LeetCode%E7%AC%AC%E5%8D%81%E4%B9%9D%E9%A2%98%EF%BC%9A%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E7%9A%84%E5%80%92%E6%95%B0%E7%AC%AC-N-%E4%B8%AA%E7%BB%93%E7%82%B9/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/header2.jpg">
@@ -213,7 +217,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Ubuntu ssh
+          LeetCode第十九题：删除链表的倒数第 N 个结点
         </h1>
 
         <div class="post-meta">
@@ -223,14 +227,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2021-11-04 10:56:44" itemprop="dateCreated datePublished" datetime="2021-11-04T10:56:44+08:00">2021-11-04</time>
+              <time title="创建时间：2022-01-23 00:42:00" itemprop="dateCreated datePublished" datetime="2022-01-23T00:42:00+08:00">2022-01-23</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-12-02 01:30:30" itemprop="dateModified" datetime="2021-12-02T01:30:30+08:00">2021-12-02</time>
+                <time title="修改时间：2022-01-24 01:16:24" itemprop="dateModified" datetime="2022-01-24T01:16:24+08:00">2022-01-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -238,7 +242,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Deploy/" itemprop="url" rel="index"><span itemprop="name">Deploy</span></a>
+                  <a href="/categories/LeetCode/" itemprop="url" rel="index"><span itemprop="name">LeetCode</span></a>
                 </span>
             </span>
 
@@ -255,7 +259,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>146</span>
+              <span>1.2k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -274,11 +278,32 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>引言：本文主要介绍Ubuntu的ssh相关服务。</p>
+        <p>引言：本文主要介绍LeetCode第十九题，删除链表的倒数第N个结点，并给出c++实现。</p>
 <span id="more"></span>
-<h3 id="设置ssh免密登录">设置ssh免密登录</h3>
-<p>ssh-copy-id &lt;username&gt;@&lt;target_host_ip&gt;</p>
-<p>解决按照上述操作之后还不能免密登录的方法：将<code>/etc/ssh/sshd_config</code>中的<code>StrictModes yes</code>改成no。</p>
+<h3 id="题目">题目</h3>
+<p>给你一个链表，删除链表的倒数第 n 个结点，并且返回链表的头结点。</p>
+<p><strong>示例1</strong></p>
+<p><img src="https://s2.loli.net/2022/01/24/Nyuo2cVLTt3iQ8z.png" alt="image.png"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head &#x3D; [1,2,3,4,5], n &#x3D; 2</span><br><span class="line">输出：[1,2,3,5]</span><br></pre></td></tr></table></figure>
+<p><strong>示例2</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head &#x3D; [1], n &#x3D; 1</span><br><span class="line">输出：[]</span><br></pre></td></tr></table></figure>
+<p><strong>示例3</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head &#x3D; [1,2], n &#x3D; 1</span><br><span class="line">输出：[1]</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong></p>
+<ul>
+<li>链表中结点的数目为 sz</li>
+<li>1 &lt;= sz &lt;= 30</li>
+<li>0 &lt;= Node.val &lt;= 100</li>
+<li>1 &lt;= n &lt;= sz</li>
+</ul>
+<h3 id="分析">分析</h3>
+<p>因为只有遍历才能求链表的长度，所以最常想到的方法就是遍历链表求长度l，删除倒数第n个结点，也就知道了删除正数第几个结点，这种方法效率较低，这里就不实现了；第二种方法就是用双指针，让第一个指针始终领先第二个指针n个结点，这样当第一个结点在链表尾结点上时，第二个结点正好在倒数第n个结点的前一个结点；第三种方法是使用stack实现。</p>
+<h3 id="实现">实现</h3>
+<p><strong>双指针</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ListNode* <span class="title">removeNthFromEnd</span><span class="params">(ListNode* head, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    ListNode* dummy = <span class="keyword">new</span> <span class="built_in">ListNode</span>(<span class="number">0</span>, head);</span><br><span class="line">      ListNode* first = head;</span><br><span class="line">      ListNode* second = dummy;</span><br><span class="line">    	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">      		first = first-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (first) &#123;</span><br><span class="line">        first = first-&gt;next;</span><br><span class="line">        second = second-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    second-&gt;next = second-&gt;next-&gt;next;</span><br><span class="line">    ListNode* ans = dummy-&gt;next;</span><br><span class="line">    <span class="keyword">delete</span> dummy;</span><br><span class="line">    <span class="keyword">return</span> ans;	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意：用到node-&gt;next  一定要保证node不为空结点，避免为空的一个好方法是使用哨兵结点。</p>
+<p><strong>stack</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ListNode* <span class="title">removeNthFromEnd</span><span class="params">(ListNode* head, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    ListNode* work = head;</span><br><span class="line">    ListNode* dummy = <span class="keyword">new</span> <span class="built_in">ListNode</span>(<span class="number">0</span>, head);</span><br><span class="line">    std::stack&lt;ListNode*&gt; stack;</span><br><span class="line">    stack.<span class="built_in">push</span>(dummy);</span><br><span class="line">    <span class="keyword">while</span> (work) &#123;</span><br><span class="line">        stack.<span class="built_in">push</span>(work);</span><br><span class="line">        work = work-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">        stack.<span class="built_in">pop</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    stack.<span class="built_in">top</span>()-&gt;next = stack.<span class="built_in">top</span>()-&gt;next-&gt;next;</span><br><span class="line">    ListNode* res = dummy-&gt;next;</span><br><span class="line">    <span class="keyword">delete</span> dummy;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -288,7 +313,9 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/ssh/" rel="tag"># ssh</a>
+              <a href="/tags/%E9%93%BE%E8%A1%A8/" rel="tag"># 链表</a>
+              <a href="/tags/stack/" rel="tag"># stack</a>
+              <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag"># 双指针</a>
           </div>
 
         
@@ -297,13 +324,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/Ubuntu18-04-Server%E5%AE%89%E8%A3%85OpenPAI-v1-8-0/" rel="prev" title="Ubuntu18.04 Server安装OpenPAI v1.8.0">
-      <i class="fa fa-chevron-left"></i> Ubuntu18.04 Server安装OpenPAI v1.8.0
+    <a href="/Leetcode%E7%AC%AC%E4%BA%8C%E7%99%BE%E4%B8%89%E5%8D%81%E5%9B%9B%E9%A2%98%EF%BC%9A%E5%9B%9E%E6%96%87%E9%93%BE%E8%A1%A8/" rel="prev" title="Leetcode第二百三十四题：回文链表">
+      <i class="fa fa-chevron-left"></i> Leetcode第二百三十四题：回文链表
     </a></div>
-      <div class="post-nav-item">
-    <a href="/Ubuntu%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93UI%E6%9C%8D%E5%8A%A1%E9%83%A8%E7%BD%B2/" rel="next" title="Ubuntu私有仓库UI服务部署">
-      Ubuntu私有仓库UI服务部署 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -362,7 +386,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AEssh%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95"><span class="nav-number">1.</span> <span class="nav-text">设置ssh免密登录</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">实现</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
