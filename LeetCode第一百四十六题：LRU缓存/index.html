@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+<meta name="google-site-verification" content="1aOZ-Mqx4wpQNb6_FZv6-oqB1p4VGmQ0nlu-EuBSzgU" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/header2.jpg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/header2.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/header2.jpg">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zsh4614.cn","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="引言：本文主要介绍LeetCode第一百四十六题，设计一个LRU缓存，并给出c++实现">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode第一百四十六题：LRU缓存">
+<meta property="og:url" content="https://zsh4614.cn/LeetCode%E7%AC%AC%E4%B8%80%E7%99%BE%E5%9B%9B%E5%8D%81%E5%85%AD%E9%A2%98%EF%BC%9ALRU%E7%BC%93%E5%AD%98/index.html">
+<meta property="og:site_name" content="欢迎来到我的主页!">
+<meta property="og:description" content="引言：本文主要介绍LeetCode第一百四十六题，设计一个LRU缓存，并给出c++实现">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-01-24T15:24:38.000Z">
+<meta property="article:modified_time" content="2022-01-24T15:47:05.583Z">
+<meta property="article:author" content="zsh">
+<meta property="article:tag" content="哈希">
+<meta property="article:tag" content="链表">
+<meta property="article:tag" content="双向链表">
+<meta property="article:tag" content="list">
+<meta property="article:tag" content="缓存">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://zsh4614.cn/LeetCode%E7%AC%AC%E4%B8%80%E7%99%BE%E5%9B%9B%E5%8D%81%E5%85%AD%E9%A2%98%EF%BC%9ALRU%E7%BC%93%E5%AD%98/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>LeetCode第一百四十六题：LRU缓存 | 欢迎来到我的主页!</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="欢迎来到我的主页!" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">欢迎来到我的主页!</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-resource">
+
+    <a href="/categories/%E5%A4%96%E9%83%A8%E8%B5%84%E6%BA%90/" rel="section"><i class="fa fa-server fa-fw"></i>资源</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zsh4614.cn/LeetCode%E7%AC%AC%E4%B8%80%E7%99%BE%E5%9B%9B%E5%8D%81%E5%85%AD%E9%A2%98%EF%BC%9ALRU%E7%BC%93%E5%AD%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header2.jpg">
+      <meta itemprop="name" content="zsh">
+      <meta itemprop="description" content="怕什么真理无穷<br>进一寸有一寸的欢喜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欢迎来到我的主页!">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LeetCode第一百四十六题：LRU缓存
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-01-24 23:24:38 / 修改时间：23:47:05" itemprop="dateCreated datePublished" datetime="2022-01-24T23:24:38+08:00">2022-01-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/LeetCode/" itemprop="url" rel="index"><span itemprop="name">LeetCode</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>引言：本文主要介绍LeetCode第一百四十六题，设计一个LRU缓存，并给出c++实现</p>
+<span id="more"></span>
+<h3 id="题目">题目</h3>
+<p>请你设计并实现一个满足<code>LRU (最近最少使用) 缓存</code>约束的数据结构。<br>
+实现 LRUCache 类：</p>
+<ul>
+<li>LRUCache(int capacity) 以 正整数 作为容量 capacity 初始化 LRU 缓存</li>
+<li>int get(int key) 如果关键字 key 存在于缓存中，则返回关键字的值，否则返回 -1 。</li>
+<li>void put(int key, int value) 如果关键字 key 已经存在，则变更其数据值 value ；如果不存在，则向缓存中插入该组 key-value 。如果插入操作导致关键字数量超过 capacity ，则应该 逐出 最久未使用的关键字。</li>
+<li>函数 get 和 put 必须以 O(1) 的平均时间复杂度运行。</li>
+</ul>
+<p><strong>示例</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">输入</span><br><span class="line">[&quot;LRUCache&quot;, &quot;put&quot;, &quot;put&quot;, &quot;get&quot;, &quot;put&quot;, &quot;get&quot;, &quot;put&quot;, &quot;get&quot;, &quot;get&quot;, &quot;get&quot;]</span><br><span class="line">[[2], [1, 1], [2, 2], [1], [3, 3], [2], [4, 4], [1], [3], [4]]</span><br><span class="line">输出</span><br><span class="line">[null, null, null, 1, null, -1, null, -1, 3, 4]</span><br><span class="line"></span><br><span class="line">解释</span><br><span class="line">LRUCache lRUCache &#x3D; new LRUCache(2);</span><br><span class="line">lRUCache.put(1, 1); &#x2F;&#x2F; 缓存是 &#123;1&#x3D;1&#125;</span><br><span class="line">lRUCache.put(2, 2); &#x2F;&#x2F; 缓存是 &#123;1&#x3D;1, 2&#x3D;2&#125;</span><br><span class="line">lRUCache.get(1);    &#x2F;&#x2F; 返回 1</span><br><span class="line">lRUCache.put(3, 3); &#x2F;&#x2F; 该操作会使得关键字 2 作废，缓存是 &#123;1&#x3D;1, 3&#x3D;3&#125;</span><br><span class="line">lRUCache.get(2);    &#x2F;&#x2F; 返回 -1 (未找到)</span><br><span class="line">lRUCache.put(4, 4); &#x2F;&#x2F; 该操作会使得关键字 1 作废，缓存是 &#123;4&#x3D;4, 3&#x3D;3&#125;</span><br><span class="line">lRUCache.get(1);    &#x2F;&#x2F; 返回 -1 (未找到)</span><br><span class="line">lRUCache.get(3);    &#x2F;&#x2F; 返回 3</span><br><span class="line">lRUCache.get(4);    &#x2F;&#x2F; 返回 4</span><br></pre></td></tr></table></figure>
+<p>提示：</p>
+<ul>
+<li>1 &lt;= capacity &lt;= 3000</li>
+<li>0 &lt;= key &lt;= 10000</li>
+<li>0 &lt;= value &lt;= 105</li>
+<li>最多调用 2 * 105 次 get 和 put</li>
+</ul>
+<h3 id="分析">分析</h3>
+<p>LRU缓存用哈希表+双向链表实现，双向链表一般都会用到虚拟的头结点和尾结点，用来防止处理边界，在c++中，unordered_map是用哈希表实现的，list是用双向链表实现的，所以如果不用自己实现底层的话，直接用这两个容器就行，双向链表的实现比较简单，而哈希映射的实现就复杂了，所以这里只给出双向链表自己实现的写法。</p>
+<h3 id="实现">实现</h3>
+<p><strong>双向链表+哈希</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DoubleLinkedListNode</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">DoubleLinkedListNode</span>() : <span class="built_in">key</span>(<span class="number">0</span>), <span class="built_in">val</span>(<span class="number">0</span>), <span class="built_in">pre</span>(<span class="literal">nullptr</span>), <span class="built_in">next</span>(<span class="literal">nullptr</span>) &#123;&#125;</span><br><span class="line">    <span class="built_in">DoubleLinkedListNode</span>(<span class="keyword">int</span> key_, <span class="keyword">int</span> val_) : <span class="built_in">key</span>(key_), <span class="built_in">val</span>(val_), <span class="built_in">pre</span>(<span class="literal">nullptr</span>), <span class="built_in">next</span>(<span class="literal">nullptr</span>) &#123;&#125;</span><br><span class="line">    <span class="built_in">DoubleLinkedListNode</span>(<span class="keyword">int</span> key_, <span class="keyword">int</span> val_, DoubleLinkedListNode* pre_, DoubleLinkedListNode* next_) : <span class="built_in">key</span>(key_), <span class="built_in">val</span>(val_), <span class="built_in">pre</span>(pre_), <span class="built_in">next</span>(next_) &#123;&#125;</span><br><span class="line">    <span class="keyword">int</span> key;</span><br><span class="line">    <span class="keyword">int</span> val;</span><br><span class="line">    DoubleLinkedListNode* pre;</span><br><span class="line">    DoubleLinkedListNode* next;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LRUCache</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">LRUCache</span>(<span class="keyword">int</span> capacity) : <span class="built_in">m_capacity</span>(capacity), <span class="built_in">m_size</span>(<span class="number">0</span>) &#123;</span><br><span class="line">        head = <span class="keyword">new</span> <span class="built_in">DoubleLinkedListNode</span>();</span><br><span class="line">        tail = <span class="keyword">new</span> <span class="built_in">DoubleLinkedListNode</span>();</span><br><span class="line">        head-&gt;next = tail;</span><br><span class="line">        tail-&gt;pre = head;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">get</span><span class="params">(<span class="keyword">int</span> key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (hashmap.<span class="built_in">find</span>(key) == hashmap.<span class="built_in">end</span>()) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 将查找到的结点放到第一个位置</span></span><br><span class="line">            hashmap[key]-&gt;pre-&gt;next = hashmap[key]-&gt;next;</span><br><span class="line">            hashmap[key]-&gt;next-&gt;pre = hashmap[key]-&gt;pre;</span><br><span class="line">            hashmap[key]-&gt;pre = head;</span><br><span class="line">            hashmap[key]-&gt;next = head-&gt;next;</span><br><span class="line">            head-&gt;next-&gt;pre = hashmap[key];</span><br><span class="line">            head-&gt;next = hashmap[key];</span><br><span class="line">            <span class="keyword">return</span> hashmap[key]-&gt;val;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">put</span><span class="params">(<span class="keyword">int</span> key, <span class="keyword">int</span> value)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (hashmap.<span class="built_in">find</span>(key) == hashmap.<span class="built_in">end</span>()) &#123;</span><br><span class="line">            <span class="comment">// 不存在，则添加到双链表的第一个位置</span></span><br><span class="line">            hashmap[key] = <span class="keyword">new</span> <span class="built_in">DoubleLinkedListNode</span>(key, value);</span><br><span class="line">            hashmap[key]-&gt;pre = head;</span><br><span class="line">            hashmap[key]-&gt;next = head-&gt;next;</span><br><span class="line">            head-&gt;next-&gt;pre = hashmap[key];</span><br><span class="line">            head-&gt;next = hashmap[key];</span><br><span class="line">            <span class="comment">// 如果超过长度，则删除最后一个节点，同时删除哈希表中的值</span></span><br><span class="line">            <span class="keyword">if</span> ((++m_size) &gt; m_capacity) &#123;</span><br><span class="line">                DoubleLinkedListNode* last = tail-&gt;pre;</span><br><span class="line">                tail-&gt;pre-&gt;pre-&gt;next = tail;</span><br><span class="line">                tail-&gt;pre = tail-&gt;pre-&gt;pre;</span><br><span class="line">                m_size--;</span><br><span class="line">                hashmap.<span class="built_in">erase</span>(last-&gt;key);</span><br><span class="line">                <span class="keyword">delete</span> last;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 存在, 更新值，并移动到第一个位置</span></span><br><span class="line">            hashmap[key]-&gt;val = value;</span><br><span class="line">            hashmap[key]-&gt;pre-&gt;next = hashmap[key]-&gt;next;</span><br><span class="line">            hashmap[key]-&gt;next-&gt;pre = hashmap[key]-&gt;pre;</span><br><span class="line">            hashmap[key]-&gt;pre = head;</span><br><span class="line">            hashmap[key]-&gt;next = head-&gt;next;</span><br><span class="line">            head-&gt;next-&gt;pre = hashmap[key];</span><br><span class="line">            head-&gt;next = hashmap[key];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> m_size;</span><br><span class="line">    <span class="keyword">int</span> m_capacity;</span><br><span class="line">    std::unordered_map&lt;<span class="keyword">int</span>, DoubleLinkedListNode*&gt; hashmap;</span><br><span class="line">    DoubleLinkedListNode* head;</span><br><span class="line">    DoubleLinkedListNode* tail;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>注意：删除某个结点的时候，一定要同步删除哈希表中对应的元素，而这个元素，也就是键，必须通过双向链表中要删除的结点获取，所以双向链表中不能只存储值。</p>
+<p><strong>list+unordered_map</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LRUCache</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">LRUCache</span>(<span class="keyword">int</span> capacity) : <span class="built_in">cap</span>(capacity) &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">get</span><span class="params">(<span class="keyword">int</span> key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (map.<span class="built_in">find</span>(key) == map.<span class="built_in">end</span>()) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">auto</span> key_value = *map[key];</span><br><span class="line">        cache.<span class="built_in">erase</span>(map[key]);</span><br><span class="line">        cache.<span class="built_in">push_front</span>(key_value);</span><br><span class="line">        map[key] = cache.<span class="built_in">begin</span>();</span><br><span class="line">        <span class="keyword">return</span> key_value.second;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">put</span><span class="params">(<span class="keyword">int</span> key, <span class="keyword">int</span> value)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (map.<span class="built_in">find</span>(key) == map.<span class="built_in">end</span>()) &#123;</span><br><span class="line">            <span class="keyword">if</span> (map.<span class="built_in">size</span>() == cap) &#123;</span><br><span class="line">                map.<span class="built_in">erase</span>(cache.<span class="built_in">back</span>().first);</span><br><span class="line">                cache.<span class="built_in">pop_back</span>();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            cache.<span class="built_in">erase</span>(map[key]);</span><br><span class="line">        &#125;</span><br><span class="line">        cache.<span class="built_in">push_front</span>(&#123;key, value&#125;);</span><br><span class="line">        map[key] = cache.<span class="built_in">begin</span>();</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> cap;</span><br><span class="line">    list&lt;pair&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&gt; cache;</span><br><span class="line">    unordered_map&lt;<span class="keyword">int</span>, list&lt;pair&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&gt;::iterator&gt; map;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>注意：list容器有一个特别的地方就是它的size()接口的时间复杂度并不是像其他容器一样复杂度为1，而是O(n)，n是list的长度，这样设计有其他的考量，具体可以参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/zhwenx3/article/details/89163574">这里</a>。</p>
+<h3 id="拓展">拓展</h3>
+<p>缓存是一种广义的概念，在计算机存储层次结构中，低一层的存储器都可以看做是高一层的缓存。比如Cache是内存的缓存，内存是硬盘的缓存，硬盘是网络的缓存等等。</p>
+<p>缓存可以有效地解决存储器性能与容量的这对矛盾，但绝非看上去那么简单。如果缓存算法设计不当，非但不能提高访问速度，反而会使系统变得更慢。</p>
+<p>从本质上来说，缓存之所以有效是因为程序和数据的局部性（locality）。程序会按固定的顺序执行，数据会存放在连续的内存空间并反复读写。这些特点使得我们可以缓存那些经常用到的数据，从而提高读写速度。</p>
+<p>缓存的大小是固定的，它应该只保存最常被访问的那些数据。然而未来不可预知，我们只能从过去的访问序列做预测，于是就有了各种各样的缓存替换策略。</p>
+<p>我们以内存访问为例解释缓存的工作原理。假设缓存的大小固定，初始状态为空。每发生一次读内存操作，首先查找待读取的数据是否存在于缓存中，若是，则缓存命中，返回数据；若否，则缓存未命中，从内存中读取数据，并把该数据添加到缓存中。向缓存添加数据时，如果缓存已满，则需要删除访问时间最早的那条数据，这种更新缓存的方法就叫做LRU。</p>
+<p>实现LRU时，我们需要关注它的读性能和写性能，理想的LRU应该可以在O(1)的时间内读取一条数据或更新一条数据，也就是说读写的时间复杂度都是O(1)。</p>
+<p>此时很容易想到使用HashMap，根据数据的键访问数据可以达到O(1)的速度。但是更新缓存的速度却无法达到O(1)，因为需要确定哪一条数据的访问时间最早，这需要遍历所有缓存才能找到。</p>
+<p>因此，我们需要一种既按访问时间排序，又能在常数时间内随机访问的数据结构。</p>
+<p>这可以通过HashMap+双向链表实现。HashMap保证通过key访问数据的时间为O(1)，双向链表则按照访问时间的顺序依次穿过每个数据。之所以选择双向链表而不是单链表，是为了可以从中间任意结点修改链表结构，而不必从头结点开始遍历。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%93%88%E5%B8%8C/" rel="tag"># 哈希</a>
+              <a href="/tags/%E9%93%BE%E8%A1%A8/" rel="tag"># 链表</a>
+              <a href="/tags/%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8/" rel="tag"># 双向链表</a>
+              <a href="/tags/list/" rel="tag"># list</a>
+              <a href="/tags/%E7%BC%93%E5%AD%98/" rel="tag"># 缓存</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/LeetCode%E7%AC%AC%E5%8D%81%E4%B9%9D%E9%A2%98%EF%BC%9A%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E7%9A%84%E5%80%92%E6%95%B0%E7%AC%AC-N-%E4%B8%AA%E7%BB%93%E7%82%B9/" rel="prev" title="LeetCode第十九题：删除链表的倒数第 N 个结点">
+      <i class="fa fa-chevron-left"></i> LeetCode第十九题：删除链表的倒数第 N 个结点
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%93%E5%B1%95"><span class="nav-number">4.</span> <span class="nav-text">拓展</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zsh"
+      src="/images/header2.jpg">
+  <p class="site-author-name" itemprop="name">zsh</p>
+  <div class="site-description" itemprop="description">怕什么真理无穷<br>进一寸有一寸的欢喜</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">94</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zsh4614" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zsh4614" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.jianshu.com/u/f513362c9d79" title="简书 → https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;f513362c9d79" rel="noopener" target="_blank"><i class="fas fa-book fa-fw"></i>简书</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zsh4614@gmail.com" title="E-Mail → mailto:zsh4614@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/cjhfhb" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;cjhfhb" rel="noopener" target="_blank"><i class="fa fa-globe-americas fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="powered-by">
+    水滴石穿，绳锯木断。
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      已有<span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人访问
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      总访问<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clickloves.js"></script>
