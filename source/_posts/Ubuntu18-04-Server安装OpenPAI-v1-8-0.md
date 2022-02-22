@@ -14,7 +14,7 @@ categories:
 
 ### 环境要求
 
-OpenPAI的部署要求您至少有2台独立的机器：一台dev-box机器、一台master机器和一台worker机器。master，worker必须为物理机器，dev-box可以是硬盘空间不少于40GB的虚拟机，毕竟他只有安装和维护系统的时候才用到，用物理机器太浪费了。
+OpenPAI的部署要求您至少有2台独立的机器：一台dev-box机器、一台master机器和一台worker机器。master，worker必须为物理机器，dev-box可以是硬盘空间不少于40GB的虚拟机（但是不能是docker容器，资源充足的情况下，最好使用独立的物理机器），~~毕竟他只有安装和维护系统的时候才用到，用物理机器太浪费了~~。
 
 #### 硬件要求
 
@@ -57,39 +57,43 @@ OpenPAI的部署要求您至少有2台独立的机器：一台dev-box机器、�
 
 1.master和所有worker安装Ubuntu18.04系统。
 
-参考这里
+[参考这里](http://zsh4614.cn/Ubuntu%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/)
 
 2.master和所有worker进行磁盘挂载。
 
-参考这里
+[参考这里](http://zsh4614.cn/Ubuntu%E6%8C%82%E8%BD%BD%E7%A3%81%E7%9B%98/)
 
 3.所有worker安装nvidia显卡驱动，并设置持久模式。
 
-参考这里
+[参考这里](http://zsh4614.cn/Ubuntu%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/)
 
 4.master和所有worker安装docker。
 
-参考这里
+[参考这里](http://zsh4614.cn/Ubuntu%E5%AE%89%E8%A3%85docker/#docker%E5%AE%89%E8%A3%85)
 
 5.所有worker安装nvidia-container-runtime。
 
-参考这里
+[参考这里](http://zsh4614.cn/Ubuntu%E5%AE%89%E8%A3%85docker/#nvidia-container-runtime%E5%AE%89%E8%A3%85)
 
-6.master开启ntp服务。
+6.master安装ntp。
 
 7.dev-box设置免密登录master和所有worker。
 
-参考这里
+[参考这里](http://zsh4614.cn/Ubuntu-ssh/)
 
-8.master部署docker私有仓库和UI服务。
+8.master部署docker私有仓库。
 
-参考这里
+[参考这里](http://zsh4614.cn/Ubuntu%E5%AE%89%E8%A3%85docker/#%E9%83%A8%E7%BD%B2%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93)
+
+9.master部署私有仓库的UI服务。
+
+[参考这里](http://zsh4614.cn/Ubuntu%E5%AE%89%E8%A3%85docker/#%E9%83%A8%E7%BD%B2%E4%BB%93%E5%BA%93UI%E6%9C%8D%E5%8A%A1)
 
 9.master和所有worker都安装unzip
 
 ### K8s安装OpenPAI
 
-该步骤的所有操作都在dev-box机器上。
+**该步骤的所有操作都在dev-box机器上进行。**
 
 #### 准备项目
 
@@ -99,81 +103,67 @@ cd pai
 git checkout v1.8.0
 ```
 
-#### 准备离线相关文件
+#### 部署提供国外镜像的容器服务
 
-由于网络限制，部分镜像和服务需要离线下载安装。
+由于GFW的存在，k8s部署过程中需要下载的部分国外镜像在下载时会出现网络问题，所以对于国内用户很不友好，也有许多人针对中国用户提供了不同的解决方案，这里采用一种我在部署过程中成功部署的方案，由[siaimes](https://blog.siaimes.me/)提供：
 
-1.下载离线文件并解压
+1.下载提供国外镜像的容器镜像。
 
-```shell
-git clone git@github.com:zsh4614/pai-offline.git
-cd pai-offline
-unzip pai-offline-deploy-distribute.zip
+```
+sudo docker pull siaimes/k8s-share:v1.8.0
 ```
 
-2.将`offline-deploy-files-distribute.yml`复制到`<pai-code-dir>/contrib/kubespray`。
+2.启动容器服务，假设dev-box的ip为10.10.10.10。
 
-```shell
-cd pai-offline-deploy-distribute
-cp offline-deploy-files-distribute.yml <pai-code-dir>/contrib/kubespray
+```
+sudo docker run -itd -p 0.0.0.0:10000:80 --restart always --name k8s_share siaimes/k8s-share:v1.8.0
 ```
 
-3.将`roles/offline-deploy-files-distribute`复制到`<pai-code-dir>/contrib/kubespray/roles`。
+3.修改`/contrib/kubespray/config/config.yaml`文件。
 
-```shell
-cp -r roles/offline-deploy-files-distribute <pai-code-dir>/contrib/kubespray/roles
+```yaml
+user: username
+password: password
+docker_image_tag: v1.8.0
+
+openpai_kubespray_extra_var:
+  kube_image_repo: "siaimes"
+  gcr_image_repo: "siaimes"
+  pod_infra_image_repo: "siaimes/pause-{{ image_arch }}"
+  dnsautoscaler_image_repo: "siaimes/cluster-proportional-autoscaler-{{ image_arch }}"
+  kubeadm_download_url: "http://10.10.10.10:10000/k8s-share/kubernetes-release/release/{{ kubeadm_version }}/bin/linux/{{ image_arch }}/kubeadm"
+  hyperkube_download_url: "http://10.10.10.10:10000/k8s-share/kubernetes-release/release/{{ kube_version }}/bin/linux/{{ image_arch }}/hyperkube"
+  cni_download_url: "http://10.10.10.10:10000/k8s-share/containernetworking/plugins/releases/download/{{ cni_version }}/cni-plugins-linux-{{ image_arch }}-{{ cni_version }}.tgz"
+  calicoctl_download_url: "http://10.10.10.10:10000/k8s-share/projectcalico/calicoctl/releases/download/{{ calico_ctl_version }}/calicoctl-linux-{{ image_arch }}"
 ```
-
-由[这一行](https://github.com/kubernetes-sigs/kubespray/blob/b0fcc1ad1d78a373a12c109491914b877fc2d56d/roles/download/defaults/main.yml#L2)可知，安装的时候下载的文件会存放在`/tmp/releases/`文件夹，故可提前下载好相关文件以避免网络问题。
-
-由[这一行](https://github.com/kubernetes-sigs/kubespray/blob/daed3e5b6a085ac99e076b51d314fcf76e4127b4/roles/kubernetes/node/tasks/install.yml#L11)可知，如果使用了`skip_downloads: true`参数，kubeadm默认不会在master节点安装，所以手动安装kubeadm。
 
 #### 修改安装脚本
 
-1.在`/contrib/kubespray/quick-start-kubespray.sh`中添加如下一行，在安装过程中安装上述离线文件。
+1.将`/contrib/kubespray/docker-cache-config-distribute.yml`中的`docker_cache_host`的端口改成master节点的docker私有仓库端口。
 
 ```shell
-...
-echo "Performing docker-cache config distribution..."
-ansible-playbook -i ${HOME}/pai-deploy/cluster-cfg/hosts.yml docker-cache-config-distribute.yml -e "@${CLUSTER_CONFIG}" || exit $?
-
-echo "Performing offline deploy file distribution..."
-ansible-playbook -i ${HOME}/pai-deploy/cluster-cfg/hosts.yml offline-deploy-files-distribute.yml || exit $?
-
-echo "Starting kubernetes..."
-/bin/bash script/kubernetes-boot.sh || exit $?
+docker_cache_host: "{{ hostvars[groups['kube-master'][0]]['ip'] }}:[master私有仓库端口]"
 ```
 
-2.将`/contrib/kubespray/docker-cache-config-distribute.yml`中的`docker_cache_host`的端口改成master节点的docker私有仓库端口。
+2.修改device-plugin service配置文件`src/device-plugin/deploy/start.sh.template`，否则这个服务启动很慢或者超时。
 
-```shell
-docker_cache_host: "{{ hostvars[groups['kube-master'][0]]['ip'] }}:5000"
+将
+
+```
+svn cat https://github.com/NVIDIA/k8s-device-plugin.git/tags/1.0.0-beta4/nvidia-device-plugin.yml \
+```
+
+修改为
+
+```
+curl "http://10.10.10.10:10000/k8s-share/NVIDIA/k8s-device-plugin/1.0.0-beta4/nvidia-device-plugin.yml" \
 ```
 
 #### 编写参数文件
 
-1.修改`/contrib/kubespray/config/config.yaml`文件
+1.修改`/contrib/kubespray/config/config.yaml`文件如上
 
-```shell
-user: <your-ssh-username>
-password: <your-ssh-password>
-docker_image_tag: v1.8.0
-
-enable_docker_cache: false
-docker_cache_storage_backend: "filesystem"
-docker_cache_fs_mount_path: "/sda/pai/registry"
-enable_marketplace: "true"
-
-docker_data_root: /sda/pai/data
-
-openpai_kubespray_extra_var:
-  download_container: false
-  skip_downloads: true
-```
-
-2.修改`/contrib/kubespray/config/layout.yaml`文件
-
-仿照官方用例即可
+2.修改`/contrib/kubespray/config/layout.yaml`文件，仿照官方用例即可
 
 #### 安装K8s
 
@@ -184,9 +174,24 @@ bash quick-start-kubespray.sh
 
 #### 安装OpenPAI
 
+执行如下命令：
+
 ```shell
 bash quick-start-service.sh
 ```
+
+有些服务的启动过程时间特别长，请耐心等待。
+
+#### 常见问题解答
+
+1.中途部署出现问题，想要清空所有节点上已经部署的环境和配置文件，可以执行如下操作，修改后重新部署。
+
+```
+cd cd ~/pai-deploy/kubespray
+ansible-playbook -i inventory/pai/hosts.yml reset.yml --become --become-user=root -e "@inventory/pai/openpai.yml"
+```
+
+2.注意不要在`/etc/docker/daemon.json`中写入多余的参数，否则在部署过程中可能出现冲突。
 
 
 

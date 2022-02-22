@@ -1,5 +1,5 @@
 ---
-title: Ubuntu安装docker
+title: Ubuntu安装docker及相关服务
 notshow: false
 date: 2021-11-03 17:46:14
 tags:
@@ -9,7 +9,7 @@ categories:
 - Deploy
 ---
 
-引言：本文主要介绍在ubuntu上安装docker的方法。
+引言：本文主要介绍在ubuntu上安装docker，nvidia-docker，以及如何部署私有仓库以及仓库的UI服务。
 
 <!--more-->
 
@@ -110,3 +110,71 @@ sudo systemctl restart docker
 sudo docker run --rm nvidia/cuda:10.0-base nvidia-smi
 ```
 
+### 部署私有仓库
+
+1.拉取官方镜像
+
+```shell
+sudo docker pull registry:latest
+```
+
+2.启动一个容器
+
+```shell
+sudo docker run -d -p 5000:5000 -v 挂载目录:/var/lib/registry --privileged=true --restart=always -e REGISTRY_STORAGE_DELETE_ENABLED=true --name registry registry:latest
+```
+
+**挂载目录选择一个较大的空间，用于存放仓库中的所有镜像**
+
+**`-e REGISTRY_STORAGE_DELETE_ENABLED=true`允许删除仓库中的镜像**
+
+3.验证服务开启成功
+
+访问http://10.10.8.185:5000/v2会出现一个{}
+
+4.向私有仓库上传一个镜像
+
+```shell
+sudo docker pull busybox // 从官方仓库拉取一个测试镜像
+sudo docker tag busybox:latest 10.10.8.185:5000/busybox:latest //打标签
+sudo docker push 10.10.8.185:5000/busybox:latest //上传到私有registry
+```
+
+5.会出现上传失败
+
+Get https://10.10.8.185:5000/v2/: http: server gave HTTP response to HTTPS client
+
+这是因为Docker与Docker Registry交互默认使用https，然而此处搭建的Docker Registry只提供http服务，所以当和Registry私有仓库交互时会失败，为了解决这个问题需要在启动Docker时配置Registry不安全选项。
+
+```shell
+sudo vim /etc/docker/daemon.json
+{
+    "insecure-registries":["10.10.8.185:5000"]
+}
+```
+
+6.重启docker服务（一定别忘记）
+
+```
+sudo systemctl restart docker
+```
+
+7.再次上传成功
+
+### 部署仓库UI服务
+
+1.从官方仓库拉取第三方镜像
+
+```shell
+sudo docker pull joxit/docker-registry-ui:2.0
+```
+
+2.启动UI服务
+
+```shell
+sudo docker run -itd -p 60022:80 --restart=always --name=docker-registry-ui -e SINGLE_REGISTRY=true -e REGISTRY_TITLE="xxxxxxxx registry" -e SHOW_CONTENT_DIGEST=true -e DELETE_IMAGES=true -e NGINX_PROXY_PASS_URL="http://10.10.8.185:5000" joxit/docker-registry-ui:2.0
+```
+
+**注意：这些环境变量一个也不能错**
+
+3.访问http://10.10.8.185:60022可以登录UI界面。
