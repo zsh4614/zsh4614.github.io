@@ -1,5 +1,10 @@
 User-agent: *
 Allow: /
+Disallow: /archives/
+Disallow: /categories/
+Disallow: /tags/
+Disallow: /about/
+Disallow: /categories/外部资源/
 Disallow: /vendors/
 Disallow: /js/
 Disallow: /css/
