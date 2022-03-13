@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+<meta name="google-site-verification" content="1aOZ-Mqx4wpQNb6_FZv6-oqB1p4VGmQ0nlu-EuBSzgU" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/header2.jpg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/header2.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/header2.jpg">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zsh4614.cn","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="引言：本文主要介绍ICLR2021论文《AN IMAGE IS WORTH 16X16 WORDS: TRANSFORMERS FOR IMAGE RECOGNITION AT SCALE》。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PaperReading之Vision Transformer(ViT)">
+<meta property="og:url" content="https://zsh4614.cn/posts/82bd8a8f/index.html">
+<meta property="og:site_name" content="欢迎来到我的主页!">
+<meta property="og:description" content="引言：本文主要介绍ICLR2021论文《AN IMAGE IS WORTH 16X16 WORDS: TRANSFORMERS FOR IMAGE RECOGNITION AT SCALE》。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2022/01/30/Rz271Qcp4aEMfBT.png">
+<meta property="og:image" content="https://s2.loli.net/2022/01/30/zl42HWZNvSYnj6b.png">
+<meta property="og:image" content="https://s2.loli.net/2022/01/30/9etDSmUHnabWCuV.png">
+<meta property="article:published_time" content="2022-01-30T03:44:55.000Z">
+<meta property="article:modified_time" content="2022-02-14T13:33:14.993Z">
+<meta property="article:author" content="zsh">
+<meta property="article:tag" content="transformer">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/01/30/Rz271Qcp4aEMfBT.png">
+
+<link rel="canonical" href="https://zsh4614.cn/posts/82bd8a8f/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>PaperReading之Vision Transformer(ViT) | 欢迎来到我的主页!</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="欢迎来到我的主页!" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">欢迎来到我的主页!</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-resource">
+
+    <a href="/categories/%E5%A4%96%E9%83%A8%E8%B5%84%E6%BA%90/" rel="section"><i class="fa fa-server fa-fw"></i>资源</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zsh4614.cn/posts/82bd8a8f/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header2.jpg">
+      <meta itemprop="name" content="zsh">
+      <meta itemprop="description" content="怕什么真理无穷<br>进一寸有一寸的欢喜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欢迎来到我的主页!">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PaperReading之Vision Transformer(ViT)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-01-30 11:44:55" itemprop="dateCreated datePublished" datetime="2022-01-30T11:44:55+08:00">2022-01-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-14 21:33:14" itemprop="dateModified" datetime="2022-02-14T21:33:14+08:00">2022-02-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PaperReading/" itemprop="url" rel="index"><span itemprop="name">PaperReading</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>引言：本文主要介绍ICLR2021论文《AN IMAGE IS WORTH 16X16 WORDS: TRANSFORMERS FOR IMAGE RECOGNITION AT SCALE》。</p>
+<span id="more"></span>
+<h3 id="概述">概述</h3>
+<p>这篇文章，也就是大名鼎鼎的ViT，是把在NLP领域中炙手可热的transformer引入CV领域的开篇之作，也是经典的挖坑之作，值得精读。</p>
+<h3 id="综述">综述</h3>
+<p>作者开篇介绍了CNN在视觉领域的统治地位，启发于transformer在NLP领域的卓越表现，有人将自注意力机制嵌入CNN中，也有人用自注意力完全取代卷积，但是这些都经过了个性化的修改，目前还没有对应的加速算子。作者自己完全把transformer搬过来，不作任何修改，而是修改输入，他们把图像分成一个一个的patch平铺开，然后经过一个linear embedding，这样来模仿一个token，作为transformer的输入，并用监督方式训练了图像分类任务。</p>
+<p>作者在小数据集上训练效果较差，他们认为主要是transformer没有了CNN的归纳偏置：局部相关性和平移等变性。这里的归纳偏置（inductive biases）其实就是人类的先验，在CNN的设计中很多地方体现了这种先验，比如卷积核，就是认为图像具有局部性，离得越近的像素相关性越强。transformer没有利用这种性质，所以在小数据集上学习不够充分，所以效果不好。</p>
+<p>最后在大数据集ImageNet-21k和JFT-300M上预训练之后，然后在许多数据集上finetune都取得了超越CNN的效果。</p>
+<h3 id="相关工作">相关工作</h3>
+<p>先介绍了transformer在NLP领域的成果，GPT，BERT等。但是在CV领域自注意力复杂度与图像尺寸的平方成正比，计算量非常大，之前有人采用了只在局部进行自注意力的方法，也有采用稀疏自注意力的方法，也有在一个block内部采用自注意力的方法，虽然效果不错，但是这些方法的工程实现非常复杂，而且硬件加速很不友好。然后介绍了一篇与自己的工作非常相似的文章，但是那篇文章只是在尺寸较小的图像上进行了实验，不适用大尺寸图像，而且作者对预训练进行了更加深入的论证。</p>
+<h3 id="方法">方法</h3>
+<p>作者说他们的方法基本上没有对原始的transformer进行改动，可以拿过来开箱即用。</p>
+<p><img src="https://s2.loli.net/2022/01/30/Rz271Qcp4aEMfBT.png" alt="image.png"></p>
+<p>这张图画的非常好，可以从这张图清晰的看出作者的整个设计思路。先将图像分成一个个patch，这样每个patch的通道数量就是PxPx3，这里的P是每个patch的边长，然后把这个patch经过一个linear embedding层也就是一个全连接层，这样通道数量就变成了D。经过上述操作之后，每个输入就变成了一个1D的token，和NLP中的输入类似。</p>
+<p>参照BERT的做法，额外增加了一个可学习的类别token，用来作最终的分类，因为transformer的自注意力是全局的，所以这个类别token具有全局信息，这样是合理的，消融实验证明采用全局平均池化的方式代替这个额外的类别token效果也是差不多的，但是还是那一点，为了保持一致。</p>
+<p>因为transformer不想卷积一样具有位置信息，所以在输入上额外增加了一个位置编码，这里作者采用的是一个1D的位置编码，消融实验证明用2D位置编码效果并没有什么提升。</p>
+<p>transformer编码器采用的是多头自注意力+MLP，而且每个块之前都用了LayerNorm，同时采用了残差连接的方式，MLP采用的是GELU激活函数。</p>
+<p>在这里，作者又详细说明了他们所设计的网络结构并没有太多图像相关的归纳偏置，只有MLP是局部和平移等变的，像自注意力是全局的，而且每个patch被平铺开，并没有携带2D信息，所以这些patch的空间相关性需要从头学习。</p>
+<p>基于上述问题，作者给出了一种变体实现方法，就是不把原始图像打成patch，而是用一个普通的CNN，最后得到的特征图和处理成patch是一样大小的，然后在经过一个linear embedding丢给transformer，后面其他操作是一样的，这样就携带了空间信息。</p>
+<p>最后作者提到预训练时在更大的图像上效果会更好，保持patch尺寸不变，这样patch数量就会增加，之前的位置编码可能会没用，这里作者采用的是直接插值的方式，但是这其实是一种临时的解决策略，因为当尺寸变得很大时，这种直接插值的方式会掉点。这里的分辨率调整和抽图像块是ViT唯一使用到的2D信息的归纳偏置。</p>
+<h3 id="实验">实验</h3>
+<p>作者在三个数据上进行了预训练：分别是ImageNet-1K，ImageNet-221K和JFT，数量分别是130万，1400万和3亿，并且在许多流行的数据集上进行了评测。他们的模型一共有三种变体：Base，Large和Huge，主要是层数，D，MLP尺寸，多头自注意力的头数不同。然后从表现和训练成本进行了对比说明，表现效果略好，但是训练相较于其他的要快不少。</p>
+<p><img src="https://s2.loli.net/2022/01/30/zl42HWZNvSYnj6b.png" alt="image.png"></p>
+<p>这张图可以说是这篇文章的精髓了，当在较小的数据集上训练时，transformer的效果明显不如CNN，当在数据量适中的数据集上训练时，效果基本上就和CNN持平了，当在更大的数据集上训练时，效果就会优于CNN，而且没有收敛的迹象。</p>
+<p>之后进行了可视化分析，linear embedding类似与CNN，提取到的都是类似于Gabor滤波器提取到的特征，比如颜色纹理等，位置编码用1D位置编码，却已经学到了2D的特征，这也就解释了为什么用1D就够了。</p>
+<p><img src="https://s2.loli.net/2022/01/30/9etDSmUHnabWCuV.png" alt="image.png"></p>
+<p>最后，作者着重说明了自监督训练，这也是transformer能这么火的原因，作者采用masked patch方法进行自监督，效果并没有达到预期。</p>
+<h3 id="结论">结论</h3>
+<p>作者对自己的工作作了总结，并指明了几个可以进一步研究的方向，比如下游任务如检测分割等，比如自监督预训练，又比如架构和目标函数等等。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/transformer/" rel="tag"># transformer</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/2568988d/" rel="prev" title="LeetCode第一百四十四题：二叉树的前序遍历">
+      <i class="fa fa-chevron-left"></i> LeetCode第一百四十四题：二叉树的前序遍历
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/ad9b8c50/" rel="next" title="PaperReading之数据对DL的影响">
+      PaperReading之数据对DL的影响 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%BC%E8%BF%B0"><span class="nav-number">2.</span> <span class="nav-text">综述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="nav-number">3.</span> <span class="nav-text">相关工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C"><span class="nav-number">5.</span> <span class="nav-text">实验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">6.</span> <span class="nav-text">结论</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zsh"
+      src="/images/header2.jpg">
+  <p class="site-author-name" itemprop="name">zsh</p>
+  <div class="site-description" itemprop="description">怕什么真理无穷<br>进一寸有一寸的欢喜</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">69</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">103</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zsh4614" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zsh4614" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.jianshu.com/u/f513362c9d79" title="简书 → https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;f513362c9d79" rel="noopener" target="_blank"><i class="fas fa-book fa-fw"></i>简书</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zsh4614@gmail.com" title="E-Mail → mailto:zsh4614@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/cjhfhb" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;cjhfhb" rel="noopener" target="_blank"><i class="fa fa-globe-americas fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="powered-by">
+    水滴石穿，绳锯木断。
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      已有<span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人访问
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      总访问<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clickloves.js"></script>

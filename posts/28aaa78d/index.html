@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+<meta name="google-site-verification" content="1aOZ-Mqx4wpQNb6_FZv6-oqB1p4VGmQ0nlu-EuBSzgU" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/header2.jpg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/header2.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/header2.jpg">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zsh4614.cn","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="引言：本文介绍一种用于二值图像或者占空图的聚类算法，并给出c++实现。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="经典算法：基于行程的连通域标记算法">
+<meta property="og:url" content="https://zsh4614.cn/posts/28aaa78d/index.html">
+<meta property="og:site_name" content="欢迎来到我的主页!">
+<meta property="og:description" content="引言：本文介绍一种用于二值图像或者占空图的聚类算法，并给出c++实现。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-10-30T09:08:18.000Z">
+<meta property="article:modified_time" content="2021-12-01T17:30:30.017Z">
+<meta property="article:author" content="zsh">
+<meta property="article:tag" content="dfs">
+<meta property="article:tag" content="聚类">
+<meta property="article:tag" content="连通域标记">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://zsh4614.cn/posts/28aaa78d/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>经典算法：基于行程的连通域标记算法 | 欢迎来到我的主页!</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="欢迎来到我的主页!" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">欢迎来到我的主页!</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-resource">
+
+    <a href="/categories/%E5%A4%96%E9%83%A8%E8%B5%84%E6%BA%90/" rel="section"><i class="fa fa-server fa-fw"></i>资源</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zsh4614.cn/posts/28aaa78d/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header2.jpg">
+      <meta itemprop="name" content="zsh">
+      <meta itemprop="description" content="怕什么真理无穷<br>进一寸有一寸的欢喜">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欢迎来到我的主页!">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          经典算法：基于行程的连通域标记算法
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-10-30 17:08:18" itemprop="dateCreated datePublished" datetime="2021-10-30T17:08:18+08:00">2021-10-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-12-02 01:30:30" itemprop="dateModified" datetime="2021-12-02T01:30:30+08:00">2021-12-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">经典算法</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>引言：本文介绍一种用于二值图像或者占空图的聚类算法，并给出c++实现。</p>
+<span id="more"></span>
+<h3 id="介绍">介绍</h3>
+<p>Two-Pass算法是一种基于行程的二值图像连通域标记算法，matlab中连通区域标记函数bwlabel中使用的就是该算法，其算法流程如下：</p>
+<blockquote>
+<p>1，逐行扫描图像，我们把每一行中连续的白色像素组成一个序列称为一个团(run)，并记下它的起点start、它的终点end以及它所在的行号。</p>
+<p>2，对于除了第一行外的所有行里的团，如果它与前一行中的所有团都没有重合区域，则给它一个新的标号；如果它仅与上一行中一个团有重合区域，则将上一行的那个团的标号赋给它；如果它与上一行的2个以上的团有重叠区域，则给当前团赋一个相连团的最小标号，并将上一行的这几个团的标记写入等价对，说明它们属于一类。</p>
+<p>3，将等价对转换为等价序列，每一个序列需要给一相同的标号，因为它们都是等价的。从1开始，给每个等价序列一个标号。</p>
+<p>4，遍历开始团的标记，查找等价序列，给予它们新的标记。</p>
+<p>5，将每个团的标号填入标记图像中。</p>
+<p>6，结束。</p>
+</blockquote>
+<h3 id="实现">实现</h3>
+<p>下面给出其c++实现，主要分四步进行：</p>
+<p>第一步：查找所有团并记录，需要记录团所在的行号、团开始的位置、结束的位置，当然还有一个表征团总数的变量。需要注意的就是团开始位置和结束位置在行首和行末的情况要单独拿出来考虑。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fillRunVectors</span><span class="params">(<span class="keyword">const</span> std::vector&lt;std::vector&lt;<span class="keyword">int</span>&gt;&gt;&amp; bimage, <span class="keyword">int</span>&amp; NumberOfRuns, std::vector&lt;<span class="keyword">int</span>&gt;&amp; stRun, std::vector&lt;<span class="keyword">int</span>&gt;&amp; enRun, std::vector&lt;<span class="keyword">int</span>&gt;&amp; rowRun, <span class="keyword">const</span> <span class="keyword">int</span>&amp; rows, <span class="keyword">const</span> <span class="keyword">int</span>&amp; cols, std::vector&lt;<span class="keyword">int</span>&gt;&amp; label_map)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; rows; ++i) &#123;</span><br><span class="line">        <span class="keyword">auto</span>&amp; rowData = bimage[i];</span><br><span class="line">        <span class="keyword">if</span> (rowData[<span class="number">0</span>] == <span class="number">1</span>) &#123;</span><br><span class="line">            NumberOfRuns++;</span><br><span class="line">            stRun.<span class="built_in">emplace_back</span>(<span class="number">0</span>);</span><br><span class="line">            rowRun.<span class="built_in">emplace_back</span>(i);</span><br><span class="line">            label_map[i * cols] = NumberOfRuns;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt; cols; ++j) &#123;</span><br><span class="line">            <span class="keyword">int</span> cur_idx = i * cols + j;</span><br><span class="line">            <span class="keyword">if</span> (rowData[j<span class="number">-1</span>] == <span class="number">0</span> &amp;&amp; rowData[j] == <span class="number">1</span>) &#123;</span><br><span class="line">                NumberOfRuns++;</span><br><span class="line">                stRun.<span class="built_in">emplace_back</span>(j);</span><br><span class="line">                rowRun.<span class="built_in">emplace_back</span>(i);</span><br><span class="line">                label_map[cur_idx] = NumberOfRuns;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (rowData[j<span class="number">-1</span>] == <span class="number">1</span> &amp;&amp; rowData[j] == <span class="number">0</span>) &#123;</span><br><span class="line">                enRun.<span class="built_in">emplace_back</span>(j<span class="number">-1</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (rowData[j] == <span class="number">1</span>) &#123;</span><br><span class="line">                label_map[cur_idx] = NumberOfRuns;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (rowData[cols - <span class="number">1</span>] == <span class="number">1</span>) &#123;</span><br><span class="line">            enRun.<span class="built_in">emplace_back</span>(cols - <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第二步：遍历所有的团，完成团的标记与等价对列表的生成。这里判断团是否相邻的关键条件是：一个团的开始位置小于另一个团的结束位置，且结束位置大于另一个团的开始位置。 这里的equivalences 用于存储等价对，offset：0对应四连通，1对应八连通。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">markArea</span><span class="params">(vector&lt;<span class="keyword">int</span>&gt;&amp; stRun, vector&lt;<span class="keyword">int</span>&gt;&amp; enRun, vector&lt;<span class="keyword">int</span>&gt;&amp; rowRun, <span class="keyword">int</span> NumberOfRuns, vector&lt;<span class="keyword">int</span>&gt;&amp; runLabels, vector&lt;pair&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&gt;&amp; equivalences, <span class="keyword">int</span> offset)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> idxLabel = <span class="number">1</span>;    <span class="comment">// 标记编号</span></span><br><span class="line">    <span class="keyword">int</span> curRowIdx = <span class="number">0</span>;    <span class="comment">// 当前所在行   </span></span><br><span class="line">    <span class="keyword">int</span> firstRunOnCur = <span class="number">0</span>;    <span class="comment">// 当前行的第一个团索引</span></span><br><span class="line">    <span class="keyword">int</span> firstRunOnPre = <span class="number">0</span>;    <span class="comment">// 前一行的第一个团索引</span></span><br><span class="line">    <span class="keyword">int</span> lastRunOnPre = <span class="number">-1</span>;    <span class="comment">// 前一行的最后一个团索引</span></span><br><span class="line">    <span class="comment">// 初始化每个团的标签都为0</span></span><br><span class="line">    runLabels.<span class="built_in">assign</span>(NumberOfRuns, <span class="number">0</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; NumberOfRuns; ++i) &#123;</span><br><span class="line">        <span class="keyword">if</span> (rowRun[i] != curRowIdx) &#123;</span><br><span class="line">            <span class="comment">// 换行后更新状态变量</span></span><br><span class="line">            curRowIdx = rowRun[i];</span><br><span class="line">            firstRunOnPre = firstRunOnCur;</span><br><span class="line">            lastRunOnPre = i - <span class="number">1</span>;</span><br><span class="line">            firstRunOnCur = i;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 相邻行不存在团</span></span><br><span class="line">        <span class="keyword">if</span>（curRowIdx != rowRun[lastRunOnPre] + <span class="number">1</span>） &#123;</span><br><span class="line">            runLabels[i] = idxLabel++;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 对前一行进行遍历，检查是否有相邻的团</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = firstRunOnPre; j &lt;= lastRunOnPre; ++j) &#123;</span><br><span class="line">            <span class="keyword">if</span> (stRun[i] &lt;= enRun[j] + offset &amp;&amp; enRun[i] &gt;= stRun[j] - offset) &#123;</span><br><span class="line">                <span class="comment">// 之前没有被标记过，即j是上一行第一个与当前团相邻的</span></span><br><span class="line">                <span class="keyword">if</span> (runLabels[i] == <span class="number">0</span>) &#123;</span><br><span class="line">                    runLabels[i] = runLabels[j];</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (runLabels[i] != runLabels[j]) &#123;</span><br><span class="line">                    equalLabels.<span class="built_in">emplace_back</span>(std::<span class="built_in">make_pair</span>(runLabels[i], runLabels[j]));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 没有与前一列如何run重合</span></span><br><span class="line">        <span class="keyword">if</span> (runLabels[i] == <span class="number">0</span>) &#123;</span><br><span class="line">            runLabels[i] = idxLabel++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第三步：将等价对处理成等价序列，比如有如下等价对：(1,2),(1,6),(3,7),(9-3),(8,1),(8,10),(11,5),(11,8),(11,12),(11,13),(11,14),(15,11)，得到的最终序列是：</p>
+<p>list1：1-2-5-6-8-10-11-12-13-14-15</p>
+<p>list2：3-7-9</p>
+<p>list3：4</p>
+<p>这里还是采用DFS思想，c++实现如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">replaceSameLabel</span><span class="params">(std::vector&lt;<span class="keyword">int</span>&gt; runLabels, std::vector&lt;pair&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&gt;&amp; equivalence)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> maxLabel = *std::<span class="built_in">max_element</span>(runLabels.<span class="built_in">begin</span>(), runLabels.<span class="built_in">end</span>());</span><br><span class="line">    <span class="comment">// 等价标签矩阵，值为true表示这两个标签等价</span></span><br><span class="line">    std::vector&lt;std::vector&lt;<span class="keyword">bool</span>&gt;&gt; <span class="built_in">eqTab</span>(maxLabel, std::vector&lt;<span class="keyword">bool</span>&gt;(maxLabel, <span class="literal">false</span>));</span><br><span class="line">    <span class="comment">// 将等价对信息转移到矩阵上</span></span><br><span class="line">    std::vector&lt;pair&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&gt;::iterator vecPairIt = equivalence.<span class="built_in">begin</span>();</span><br><span class="line">    <span class="keyword">while</span> (vecPairIt != equivalence.<span class="built_in">end</span>()) &#123;</span><br><span class="line">        eqTab[vecPairIt-&gt;first - <span class="number">1</span>][vecPairIt-&gt;second - <span class="number">1</span>] = <span class="literal">true</span>;</span><br><span class="line">        eqTab[vecPairIt-&gt;second - <span class="number">1</span>][vecPairIt-&gt;first - <span class="number">1</span>] = <span class="literal">true</span>;</span><br><span class="line">        vecPairIt++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 标签映射，会将上一步团的标号映射到序列的标号，也是这一步的关键结果。</span></span><br><span class="line">    <span class="function">std::vector&lt;<span class="keyword">int</span>&gt; <span class="title">labelFlag</span><span class="params">(maxLabel, <span class="number">0</span>)</span></span>;</span><br><span class="line">    <span class="comment">// 等价标签队列</span></span><br><span class="line">    std::vector&lt;<span class="keyword">int</span>&gt; tempList;</span><br><span class="line">    <span class="comment">// 当前使用的标签</span></span><br><span class="line">    <span class="keyword">int</span> curLabel = <span class="number">1</span>；</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= maxLabel; i++) &#123;</span><br><span class="line">        <span class="comment">// 如果该标签已被映射，直接跳过</span></span><br><span class="line">        <span class="keyword">if</span> (labelFlag[i - <span class="number">1</span>] != <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        labelFlag[i - <span class="number">1</span>] = curLabel;</span><br><span class="line">        tempList.<span class="built_in">emplace_back</span>(i);</span><br><span class="line">        <span class="comment">// 在所有标签中寻找与当前标签等价的标签(这里可以换成栈操作，和floodfill类似) </span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; tempList.<span class="built_in">size</span>(); ++j) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">1</span>; k &lt;= maxLabel; ++k) &#123;</span><br><span class="line">                <span class="comment">// 等价且未访问</span></span><br><span class="line">                <span class="keyword">if</span> (eqTab[tempList[j] - <span class="number">1</span>][k - <span class="number">1</span>] &amp;&amp; labelFlag[k] == <span class="number">0</span>) &#123;</span><br><span class="line">                   labelFlag[k - <span class="number">1</span>] = curLabel;</span><br><span class="line">                   tempList.<span class="built_in">emplace_back</span>(k);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        curLabel++;</span><br><span class="line">        tempList.<span class="built_in">clear</span>();</span><br><span class="line">    &#125;    </span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 根据映射修改标签</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> itr = runLabels.<span class="built_in">begin</span>(); itr != runLabels.<span class="built_in">end</span>(); ++iter) &#123;</span><br><span class="line">        *itr = labelFlag[*itr - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第四步：填充二值图中每个栅格的标签。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fillLabel</span><span class="params">(<span class="keyword">const</span> std::vector&lt;<span class="keyword">int</span>&gt;&amp; runLabels, std::vector&lt;<span class="keyword">int</span>&gt;&amp; label_map)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; label_map.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">        <span class="keyword">if</span> (label_map[i] == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        label_map[i] = runLabels[label_map[i]];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="总结">总结</h3>
+<p>该算法本质上和floodFill算法是一样的，区别在于floodFill是对每个栅格进行深度优先搜索，而这个是对团进行深度优先搜索。另外，在算法的第三步在对等价对进行合并时，可以用并查集进行优化，也可以用稀疏矩阵与Dulmage-Mendelsohn分解算法用来消除等价对（matlab中的做法），比较复杂。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/dfs/" rel="tag"># dfs</a>
+              <a href="/tags/%E8%81%9A%E7%B1%BB/" rel="tag"># 聚类</a>
+              <a href="/tags/%E8%BF%9E%E9%80%9A%E5%9F%9F%E6%A0%87%E8%AE%B0/" rel="tag"># 连通域标记</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/25b08361/" rel="prev" title="经典算法：简化的漫水填充算法">
+      <i class="fa fa-chevron-left"></i> 经典算法：简化的漫水填充算法
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/7aea1c76/" rel="next" title="C++中的非常量引用不能指向临时对象">
+      C++中的非常量引用不能指向临时对象 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.</span> <span class="nav-text">实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zsh"
+      src="/images/header2.jpg">
+  <p class="site-author-name" itemprop="name">zsh</p>
+  <div class="site-description" itemprop="description">怕什么真理无穷<br>进一寸有一寸的欢喜</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">69</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">103</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zsh4614" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zsh4614" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.jianshu.com/u/f513362c9d79" title="简书 → https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;f513362c9d79" rel="noopener" target="_blank"><i class="fas fa-book fa-fw"></i>简书</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zsh4614@gmail.com" title="E-Mail → mailto:zsh4614@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/cjhfhb" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;cjhfhb" rel="noopener" target="_blank"><i class="fa fa-globe-americas fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="powered-by">
+    水滴石穿，绳锯木断。
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      已有<span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人访问
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      总访问<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clickloves.js"></script>
