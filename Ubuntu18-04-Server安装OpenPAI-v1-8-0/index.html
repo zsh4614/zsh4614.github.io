@@ -28,7 +28,7 @@
 <meta property="og:description" content="引言：本文主要介绍如何在Ubuntu18.04上安装OpenPAI v1.8.0。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-11-04T02:25:57.000Z">
-<meta property="article:modified_time" content="2021-12-01T17:30:30.013Z">
+<meta property="article:modified_time" content="2022-03-13T14:57:48.457Z">
 <meta property="article:author" content="zsh">
 <meta property="article:tag" content="OpenPAI">
 <meta name="twitter:card" content="summary">
@@ -230,7 +230,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-12-02 01:30:30" itemprop="dateModified" datetime="2021-12-02T01:30:30+08:00">2021-12-02</time>
+                <time title="修改时间：2022-03-13 22:57:48" itemprop="dateModified" datetime="2022-03-13T22:57:48+08:00">2022-03-13</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -255,14 +255,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>3.3k</span>
+              <span>9.8k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
+              <span>9 分钟</span>
             </span>
 
         </div>
@@ -277,7 +277,7 @@
         <p>引言：本文主要介绍如何在Ubuntu18.04上安装OpenPAI v1.8.0。</p>
 <span id="more"></span>
 <h3 id="环境要求">环境要求</h3>
-<p>OpenPAI的部署要求您至少有2台独立的机器：一台dev-box机器、一台master机器和一台worker机器。master，worker必须为物理机器，dev-box可以是硬盘空间不少于40GB的虚拟机，毕竟他只有安装和维护系统的时候才用到，用物理机器太浪费了。</p>
+<p>OpenPAI的部署要求您至少有2台独立的机器：一台dev-box机器、一台master机器和一台worker机器。master，worker必须为物理机器，dev-box可以是硬盘空间不少于40GB的虚拟机（但是不能是docker容器，资源充足的情况下，最好使用独立的物理机器），<s>毕竟他只有安装和维护系统的时候才用到，用物理机器太浪费了</s>。</p>
 <h4 id="硬件要求">硬件要求</h4>
 <p><strong>master：</strong></p>
 <ul>
@@ -328,49 +328,109 @@
 </ul>
 <h3 id="依赖安装">依赖安装</h3>
 <p>1.master和所有worker安装Ubuntu18.04系统。</p>
-<p>参考这里</p>
+<p><a href="http://zsh4614.cn/Ubuntu%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">参考这里</a></p>
 <p>2.master和所有worker进行磁盘挂载。</p>
-<p>参考这里</p>
+<p><a href="http://zsh4614.cn/Ubuntu%E6%8C%82%E8%BD%BD%E7%A3%81%E7%9B%98/">参考这里</a></p>
 <p>3.所有worker安装nvidia显卡驱动，并设置持久模式。</p>
-<p>参考这里</p>
+<p><a href="http://zsh4614.cn/Ubuntu%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/">参考这里</a></p>
 <p>4.master和所有worker安装docker。</p>
-<p>参考这里</p>
+<p><a href="http://zsh4614.cn/Ubuntu%E5%AE%89%E8%A3%85docker/#docker%E5%AE%89%E8%A3%85">参考这里</a></p>
 <p>5.所有worker安装nvidia-container-runtime。</p>
-<p>参考这里</p>
-<p>6.master开启ntp服务。</p>
+<p><a href="http://zsh4614.cn/Ubuntu%E5%AE%89%E8%A3%85docker/#nvidia-container-runtime%E5%AE%89%E8%A3%85">参考这里</a></p>
+<p>6.master安装ntp。</p>
 <p>7.dev-box设置免密登录master和所有worker。</p>
-<p>参考这里</p>
-<p>8.master部署docker私有仓库和UI服务。</p>
-<p>参考这里</p>
+<p><a href="http://zsh4614.cn/Ubuntu-ssh/">参考这里</a></p>
+<p>8.master部署docker私有仓库。</p>
+<p><a href="http://zsh4614.cn/Ubuntu%E5%AE%89%E8%A3%85docker/#%E9%83%A8%E7%BD%B2%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93">参考这里</a></p>
+<p>9.master部署私有仓库的UI服务。</p>
+<p><a href="http://zsh4614.cn/Ubuntu%E5%AE%89%E8%A3%85docker/#%E9%83%A8%E7%BD%B2%E4%BB%93%E5%BA%93UI%E6%9C%8D%E5%8A%A1">参考这里</a></p>
 <p>9.master和所有worker都安装unzip</p>
 <h3 id="K8s安装OpenPAI">K8s安装OpenPAI</h3>
-<p>该步骤的所有操作都在dev-box机器上。</p>
+<p><strong>该步骤的所有操作都在dev-box机器上进行。</strong></p>
 <h4 id="准备项目">准备项目</h4>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;microsoft&#x2F;pai.git</span><br><span class="line">cd pai</span><br><span class="line">git checkout v1.8.0</span><br></pre></td></tr></table></figure>
-<h4 id="准备离线相关文件">准备离线相关文件</h4>
-<p>由于网络限制，部分镜像和服务需要离线下载安装。</p>
-<p>1.下载离线文件并解压</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git clone git@github.com:zsh4614/pai-offline.git</span><br><span class="line">cd pai-offline</span><br><span class="line">unzip pai-offline-deploy-distribute.zip</span><br></pre></td></tr></table></figure>
-<p>2.将<code>offline-deploy-files-distribute.yml</code>复制到<code>&lt;pai-code-dir&gt;/contrib/kubespray</code>。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd pai-offline-deploy-distribute</span><br><span class="line">cp offline-deploy-files-distribute.yml &lt;pai-code-dir&gt;/contrib/kubespray</span><br></pre></td></tr></table></figure>
-<p>3.将<code>roles/offline-deploy-files-distribute</code>复制到<code>&lt;pai-code-dir&gt;/contrib/kubespray/roles</code>。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -r roles/offline-deploy-files-distribute &lt;pai-code-dir&gt;/contrib/kubespray/roles</span><br></pre></td></tr></table></figure>
-<p>由<a target="_blank" rel="noopener" href="https://github.com/kubernetes-sigs/kubespray/blob/b0fcc1ad1d78a373a12c109491914b877fc2d56d/roles/download/defaults/main.yml#L2">这一行</a>可知，安装的时候下载的文件会存放在<code>/tmp/releases/</code>文件夹，故可提前下载好相关文件以避免网络问题。</p>
-<p>由<a target="_blank" rel="noopener" href="https://github.com/kubernetes-sigs/kubespray/blob/daed3e5b6a085ac99e076b51d314fcf76e4127b4/roles/kubernetes/node/tasks/install.yml#L11">这一行</a>可知，如果使用了<code>skip_downloads: true</code>参数，kubeadm默认不会在master节点安装，所以手动安装kubeadm。</p>
+<h4 id="部署提供国外镜像的容器服务">部署提供国外镜像的容器服务</h4>
+<p>由于GFW的存在，k8s部署过程中需要下载的部分国外镜像在下载时会出现网络问题，所以对于国内用户很不友好，也有许多人针对中国用户提供了不同的解决方案，这里采用一种我在部署过程中成功部署的方案，由<a target="_blank" rel="noopener" href="https://blog.siaimes.me/">siaimes</a>提供：</p>
+<p>1.下载提供国外镜像的容器镜像。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker pull siaimes&#x2F;k8s-share:v1.8.0</span><br></pre></td></tr></table></figure>
+<p>2.启动容器服务，假设dev-box的ip为10.10.10.10。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run -itd -p 0.0.0.0:10000:80 --restart always --name k8s_share siaimes&#x2F;k8s-share:v1.8.0</span><br></pre></td></tr></table></figure>
+<p>3.修改<code>/contrib/kubespray/config/config.yaml</code>文件。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">user:</span> <span class="string">username</span></span><br><span class="line"><span class="attr">password:</span> <span class="string">password</span></span><br><span class="line"><span class="attr">docker_image_tag:</span> <span class="string">v1.8.0</span></span><br><span class="line"></span><br><span class="line"><span class="attr">openpai_kubespray_extra_var:</span></span><br><span class="line">  <span class="attr">kube_image_repo:</span> <span class="string">&quot;siaimes&quot;</span></span><br><span class="line">  <span class="attr">gcr_image_repo:</span> <span class="string">&quot;siaimes&quot;</span></span><br><span class="line">  <span class="attr">pod_infra_image_repo:</span> <span class="string">&quot;siaimes/pause-<span class="template-variable">&#123;&#123; image_arch &#125;&#125;</span>&quot;</span></span><br><span class="line">  <span class="attr">dnsautoscaler_image_repo:</span> <span class="string">&quot;siaimes/cluster-proportional-autoscaler-<span class="template-variable">&#123;&#123; image_arch &#125;&#125;</span>&quot;</span></span><br><span class="line">  <span class="attr">kubeadm_download_url:</span> <span class="string">&quot;http://10.10.10.10:10000/k8s-share/kubernetes-release/release/<span class="template-variable">&#123;&#123; kubeadm_version &#125;&#125;</span>/bin/linux/<span class="template-variable">&#123;&#123; image_arch &#125;&#125;</span>/kubeadm&quot;</span></span><br><span class="line">  <span class="attr">hyperkube_download_url:</span> <span class="string">&quot;http://10.10.10.10:10000/k8s-share/kubernetes-release/release/<span class="template-variable">&#123;&#123; kube_version &#125;&#125;</span>/bin/linux/<span class="template-variable">&#123;&#123; image_arch &#125;&#125;</span>/hyperkube&quot;</span></span><br><span class="line">  <span class="attr">cni_download_url:</span> <span class="string">&quot;http://10.10.10.10:10000/k8s-share/containernetworking/plugins/releases/download/<span class="template-variable">&#123;&#123; cni_version &#125;&#125;</span>/cni-plugins-linux-<span class="template-variable">&#123;&#123; image_arch &#125;&#125;</span>-<span class="template-variable">&#123;&#123; cni_version &#125;&#125;</span>.tgz&quot;</span></span><br><span class="line">  <span class="attr">calicoctl_download_url:</span> <span class="string">&quot;http://10.10.10.10:10000/k8s-share/projectcalico/calicoctl/releases/download/<span class="template-variable">&#123;&#123; calico_ctl_version &#125;&#125;</span>/calicoctl-linux-<span class="template-variable">&#123;&#123; image_arch &#125;&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
 <h4 id="修改安装脚本">修改安装脚本</h4>
-<p>1.在<code>/contrib/kubespray/quick-start-kubespray.sh</code>中添加如下一行，在安装过程中安装上述离线文件。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">echo &quot;Performing docker-cache config distribution...&quot;</span><br><span class="line">ansible-playbook -i $&#123;HOME&#125;/pai-deploy/cluster-cfg/hosts.yml docker-cache-config-distribute.yml -e &quot;@$&#123;CLUSTER_CONFIG&#125;&quot; || exit $?</span><br><span class="line"></span><br><span class="line">echo &quot;Performing offline deploy file distribution...&quot;</span><br><span class="line">ansible-playbook -i $&#123;HOME&#125;/pai-deploy/cluster-cfg/hosts.yml offline-deploy-files-distribute.yml || exit $?</span><br><span class="line"></span><br><span class="line">echo &quot;Starting kubernetes...&quot;</span><br><span class="line">/bin/bash script/kubernetes-boot.sh || exit $?</span><br></pre></td></tr></table></figure>
-<p>2.将<code>/contrib/kubespray/docker-cache-config-distribute.yml</code>中的<code>docker_cache_host</code>的端口改成master节点的docker私有仓库端口。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker_cache_host: &quot;&#123;&#123; hostvars[groups[&#x27;kube-master&#x27;][0]][&#x27;ip&#x27;] &#125;&#125;:5000&quot;</span><br></pre></td></tr></table></figure>
+<p>1.将<code>/contrib/kubespray/docker-cache-config-distribute.yml</code>中的<code>docker_cache_host</code>的端口改成master节点的docker私有仓库端口。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker_cache_host: &quot;&#123;&#123; hostvars[groups[&#x27;kube-master&#x27;][0]][&#x27;ip&#x27;] &#125;&#125;:[master私有仓库端口]&quot;</span><br></pre></td></tr></table></figure>
+<p>2.修改device-plugin service配置文件<code>src/device-plugin/deploy/start.sh.template</code>，否则这个服务启动很慢或者超时。</p>
+<p>将</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn cat https:&#x2F;&#x2F;github.com&#x2F;NVIDIA&#x2F;k8s-device-plugin.git&#x2F;tags&#x2F;1.0.0-beta4&#x2F;nvidia-device-plugin.yml \</span><br></pre></td></tr></table></figure>
+<p>修改为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl &quot;http:&#x2F;&#x2F;10.10.10.10:10000&#x2F;k8s-share&#x2F;NVIDIA&#x2F;k8s-device-plugin&#x2F;1.0.0-beta4&#x2F;nvidia-device-plugin.yml&quot; \</span><br></pre></td></tr></table></figure>
 <h4 id="编写参数文件">编写参数文件</h4>
-<p>1.修改<code>/contrib/kubespray/config/config.yaml</code>文件</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">user: &lt;your-ssh-username&gt;</span><br><span class="line">password: &lt;your-ssh-password&gt;</span><br><span class="line">docker_image_tag: v1.8.0</span><br><span class="line"></span><br><span class="line">enable_docker_cache: false</span><br><span class="line">docker_cache_storage_backend: &quot;filesystem&quot;</span><br><span class="line">docker_cache_fs_mount_path: &quot;/sda/pai/registry&quot;</span><br><span class="line">enable_marketplace: &quot;true&quot;</span><br><span class="line"></span><br><span class="line">docker_data_root: /sda/pai/data</span><br><span class="line"></span><br><span class="line">openpai_kubespray_extra_var:</span><br><span class="line">  download_container: false</span><br><span class="line">  skip_downloads: true</span><br></pre></td></tr></table></figure>
-<p>2.修改<code>/contrib/kubespray/config/layout.yaml</code>文件</p>
-<p>仿照官方用例即可</p>
+<p>1.修改<code>/contrib/kubespray/config/config.yaml</code>文件如上</p>
+<p>2.修改<code>/contrib/kubespray/config/layout.yaml</code>文件，仿照官方用例即可</p>
 <h4 id="安装K8s">安装K8s</h4>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd contrib/kubespray</span><br><span class="line">bash quick-start-kubespray.sh</span><br></pre></td></tr></table></figure>
 <h4 id="安装OpenPAI">安装OpenPAI</h4>
+<p>执行如下命令：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash quick-start-service.sh</span><br></pre></td></tr></table></figure>
+<p>有些服务的启动过程时间特别长，请耐心等待。</p>
+<h4 id="备份集群配置文件">备份集群配置文件</h4>
+<p>部署完成后会在dev-box机器上自动生成集群配置文件，烈建议保留dev-box机器上的文件夹<code>~/pai-deploy</code>并进行备份，<code>~/pai deploy/kube/config</code>是K8s配置文件，<code>kubectl</code>使用它连接到k8s api服务器；而<code>~/pai-deploy/cluster-cfg</code>是一个包含所有机器信息、OpenPAI服务配置的文件夹，是管理服务的配置文件。有了<code>~/pai-deploy</code>文件夹，就可以在任何装有docker的机器上管理集群。</p>
+<h4 id="常见问题解答">常见问题解答</h4>
+<p>1.中途部署出现问题，想要清空所有节点上已经部署的环境和配置文件，可以执行如下操作，修改后重新部署。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd cd ~&#x2F;pai-deploy&#x2F;kubespray</span><br><span class="line">ansible-playbook -i inventory&#x2F;pai&#x2F;hosts.yml reset.yml --become --become-user&#x3D;root -e &quot;@inventory&#x2F;pai&#x2F;openpai.yml&quot;</span><br></pre></td></tr></table></figure>
+<p>2.注意不要在<code>/etc/docker/daemon.json</code>中写入多余的参数，否则在部署过程中可能出现冲突。</p>
+<p>3.服务器重启掉驱动。这是由于安装显卡驱动时的内核版本与当前的内核版本不一致造成的，可以用dkms（Dynamic Kernel Module Support）来安装适配当前内核的驱动相关模块。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install dkms</span><br><span class="line">sudo dkms install -m nvidia -v 418.87.00</span><br></pre></td></tr></table></figure>
+<p>注：输入whereis nvidia可以发现在/usr/src下有一个显卡驱动版本。</p>
+<h3 id="服务管理">服务管理</h3>
+<p>1.所有的服务管理都尽量在容器中进行，避免环境冲突。</p>
+<p>2.使用官方镜像启动一个dev-box容器（可以在dev-box机器上，也可以在master机器上，或者任意一台可以与集群通信的机器上），并将dev-box机器上备份的k8s的配置文件和服务配置文件（在安装时已经自动生成到~/pai-deploy路径下）挂载到容器中，另外，dev-box的部署代码也挂载到容器中，不要使用官方镜像自带的代码！</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run -itd \</span><br><span class="line">        -e COLUMNS&#x3D;$COLUMNS -e LINES&#x3D;$LINES -e TERM&#x3D;$TERM \</span><br><span class="line">        -v &#x2F;var&#x2F;run&#x2F;docker.sock:&#x2F;var&#x2F;run&#x2F;docker.sock \</span><br><span class="line">        -v ~&#x2F;pai-deploy&#x2F;cluster-cfg:&#x2F;cluster-configuration  \</span><br><span class="line">        -v ~&#x2F;pai-deploy&#x2F;kube:&#x2F;root&#x2F;.kube \</span><br><span class="line">        -v 部署pai的代码:&#x2F;mnt&#x2F;pai \</span><br><span class="line">        --pid&#x3D;host \</span><br><span class="line">        --privileged&#x3D;true \</span><br><span class="line">        --net&#x3D;host \</span><br><span class="line">        --name&#x3D;dev-box \            </span><br><span class="line">        openpai&#x2F;dev-box:v1.8.0  </span><br></pre></td></tr></table></figure>
+<p>3.进入容器的/mnt/pai下，不要使用镜像自带的pai代码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo docker exec -it dev-box bash</span><br><span class="line">cd &#x2F;mnt&#x2F;pai</span><br></pre></td></tr></table></figure>
+<p>4.如果要更改某些服务的配置，请按照<code>服务停止</code>、<code>上传配置</code>、<code>服务启动</code>的步骤进行，比如要自定义Webportal，则应修改<code>services-configuration.yaml</code>中的<code>webportal</code>部分。 然后使用以下命令来上传配置并重新启动<code>Webportal</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;paictl.py service stop -n webportal</span><br><span class="line">.&#x2F;paictl.py config push -p &#x2F;cluster-configuration -m service</span><br><span class="line">.&#x2F;paictl.py service start -n webportal</span><br></pre></td></tr></table></figure>
+<p>5.也可以重启所有服务：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;paictl.py service stop</span><br><span class="line">.&#x2F;paictl.py service start</span><br></pre></td></tr></table></figure>
+<h3 id="存储设置">存储设置</h3>
+<h4 id="集群添加存储">集群添加存储</h4>
+<p>1.openpai v1.8.0采用pv和pvc的方式持久化存储，一种比较常用的方式是nfs pv，所以要先有一台nfs服务器，或者openpai提供了storage-manager服务，可以将集群中的任意一台worker节点当做nfs服务器。首先，要在每个节点上都安装<code>nfs-common</code>软件包。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install nfs-common</span><br></pre></td></tr></table></figure>
+<p>2.所有存储设置都在dev-box容器中进行，避免环境冲突</p>
+<p>3.获取当前集群id和配置</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /mnt/pai</span><br><span class="line">./paictl.py config get-id</span><br><span class="line">./paictl.py config pull -o /cluster-configuration</span><br></pre></td></tr></table></figure>
+<p>4.选择集群中的一台机器作为存储服务器（必须是worker机器），打开<code>/cluster-configuration/layout.yaml</code>,选择一个worker机器，在其中添加一个<code>pai-storage: &quot;true&quot;</code>字段，如果想要初始化多台nfs服务器，可以在每个worker节点下添加该字段，如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">......</span><br><span class="line">- hostname: worker1</span><br><span class="line">  nodename: worker1</span><br><span class="line">  hostip: xx.xx.xx.xx</span><br><span class="line">  machine-type: GENERIC-WORKER</span><br><span class="line">  pai-worker: &quot;true&quot;</span><br><span class="line">  pai-storage: &quot;true&quot;  # this line is newly added</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+<p>5.在<code>/cluster-configuration/services-configuration.yaml</code>中找到<code>storage-manager</code>部分，取消注释</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">storage-manager:</span><br><span class="line">  localpath: /share</span><br><span class="line"><span class="meta">#</span><span class="bash">   security-type: AUTO</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   workgroup: WORKGROUP</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   smbuser: smbuser</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   smbpwd: smbpwd</span></span><br></pre></td></tr></table></figure>
+<p><code>localpath</code>表示NFS存储服务器上要共享的目录的绝对路径，应该是一个较大的挂载物理盘</p>
+<p>6.重新启动<code>cluster-configuration</code>和<code>storage-manager</code>服务，这样worker1就成为了一个nfs服务器。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./paictl.py service stop -n cluster-configuration storage-manager</span><br><span class="line">./paictl.py config push -p /cluster-configuration -m service</span><br><span class="line">./paictl.py service start -n cluster-configuration storage-manager</span><br></pre></td></tr></table></figure>
+<p>7.为存储创建PV和PVC，首先在dev-box容器中创建以下<code>nfs-storage.yaml</code>文件，然后运行<code>kubectl create -f nfs-storage.yaml</code>创建PV和PVC。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># NFS Persistent Volume</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">PersistentVolume</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nfs-storage-pv</span>   <span class="comment">### 自定义</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">nfs-storage</span>    <span class="comment">### 固定</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">capacity:</span></span><br><span class="line">    <span class="attr">storage:</span> <span class="string">10000Gi</span></span><br><span class="line">  <span class="attr">volumeMode:</span> <span class="string">Filesystem</span></span><br><span class="line">  <span class="attr">accessModes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">ReadWriteMany</span></span><br><span class="line">  <span class="attr">persistentVolumeReclaimPolicy:</span> <span class="string">Retain</span></span><br><span class="line">  <span class="attr">mountOptions:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">nfsvers=4.1</span></span><br><span class="line">  <span class="attr">nfs:</span></span><br><span class="line">    <span class="attr">path:</span> <span class="string">/data</span>         <span class="comment">### 自定义，将会在把/share/data目录创建为pv</span></span><br><span class="line">    <span class="attr">server:</span> <span class="string">xx.xx.xx.xx</span>   <span class="comment">### 自定义，nfs服务器ip</span></span><br><span class="line">    <span class="attr">readOnly:</span> <span class="literal">true</span>        <span class="comment">### true为只读存储，即在集群中只读。</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="comment"># NFS Persistent Volume Claim</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">PersistentVolumeClaim</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nfs-storage</span>    <span class="comment">### 自定义</span></span><br><span class="line"><span class="comment"># labels:</span></span><br><span class="line"><span class="comment">#   share: &quot;false&quot;</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">accessModes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">ReadWriteMany</span></span><br><span class="line">  <span class="attr">volumeMode:</span> <span class="string">Filesystem</span></span><br><span class="line">  <span class="attr">resources:</span></span><br><span class="line">    <span class="attr">requests:</span></span><br><span class="line">      <span class="attr">storage:</span> <span class="string">10000Gi</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">nfs-storage</span>    <span class="comment">### 固定</span></span><br></pre></td></tr></table></figure>
+<p>8.将存储授权给用户组，使PV在openpai中可用。首先到个人资料界面复制一个token，在OpenPAI中，存储的访问权限是绑定到用户组的，所以将存储分配给用户组，例如如果要将<code>nfs-storage</code> PVC分配给<code>default</code>组，应执行以下命令获取Group name</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X GET http://[master-ip]/rest-server/api/v2/groups/default -H &quot;authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InpoYWlzaGFvaHVhIiwiYXBwbGljYXRpb24iOmZhbHNlLCJqb2JTcGVjaWZpYyI6ZmFsc2UsImVuY29kZWRGcmFtZXdvcmtOYW1lIjoiIiwiaWF0IjoxNjI3OTA2NTk0LCJleHAiOjE2Mjg1MTEzOTR9.ZaqiJKytGR8jIhtT8Wf0oY07T7EQ3V5r3Wqi0mbVL3w&quot;</span><br></pre></td></tr></table></figure>
+<p>将返回</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;groupname&quot;</span>: <span class="string">&quot;default&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;description&quot;</span>: <span class="string">&quot;group for default vc&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;externalName&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;extension&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;acls&quot;</span>: &#123;</span><br><span class="line">      <span class="attr">&quot;storageConfigs&quot;</span>: [],</span><br><span class="line">      <span class="attr">&quot;admin&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">      <span class="attr">&quot;virtualClusters&quot;</span>: [<span class="string">&quot;default&quot;</span>]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>请求添加，使用Header <code>Authorization：Bearer &lt;token&gt;</code>进行授权</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X PUT http://[master-ip]/rest-server/api/v2/groups -H &quot;authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InpoYWlzaGFvaHVhIiwiYXBwbGljYXRpb24iOmZhbHNlLCJqb2JTcGVjaWZpYyI6ZmFsc2UsImVuY29kZWRGcmFtZXdvcmtOYW1lIjoiIiwiaWF0IjoxNjI3OTA2NTk0LCJleHAiOjE2Mjg1MTEzOTR9.ZaqiJKytGR8jIhtT8Wf0oY07T7EQ3V5r3Wqi0mbVL3w&quot; -H &quot;content-type: application/json&quot; -d &#x27;&#123;&quot;data&quot;: &#123;&quot;groupname&quot;: &quot;default&quot;,&quot;extension&quot;: &#123;&quot;acls&quot;: &#123;&quot;storageConfigs&quot;: [&quot;nfs-storage-1&quot;, &quot;nfs-storage-2&quot;], &quot;admin&quot;: false, &quot;virtualClusters&quot;: [&quot;default&quot;]&#125;&#125;&#125;,&quot;patch&quot;: true&#125;&#x27;</span><br></pre></td></tr></table></figure>
+<p>注意必须加上<code>-H &quot;content-type: application/json&quot;</code>，否则解析错误</p>
+<p>9.这样，default用户组就可以在创建任务时使用nfs-storage存储。</p>
+<h4 id="本地管理存储">本地管理存储</h4>
+<p>本地挂载nfs服务器进行数据管理。由于在集群中存储是只读的，在本地挂在nfs服务器进行数据上传和修改等写操作更加安全</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update &amp;&amp; sudo apt-get install -y nfs-common</span><br><span class="line">sudo mkdir -p /mnt/nfsData</span><br><span class="line">sudo mount xx.xx.xx.xx:/data /mnt/nfsData</span><br><span class="line">cp -r &lt;local_data_dir&gt; /mnt/nfsData/&lt;subPath&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="重新生成存储">重新生成存储</h4>
+<p>有时需要删除pv/pvc或修改pv/pvc的属性，操作如下：</p>
+<p>1.删除k8s中的记录</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl patch pvc nfs-storage-xx -p &#x27;&#123;&quot;metadata&quot;:&#123;&quot;finalizers&quot;:null&#125;&#125;&#x27;</span><br><span class="line">kubectl patch pv nfs-storage-pv-xx -p &#x27;&#123;&quot;metadata&quot;:&#123;&quot;finalizers&quot;:null&#125;&#125;&#x27;</span><br></pre></td></tr></table></figure>
+<p>2.使用文件删除（也可kubectl delete pv xxx &amp;&amp; kubectl delete pvc xxx）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl delete -f nfs-storage-xx.yaml</span><br></pre></td></tr></table></figure>
+<p>不执行1的话直接删除会一直停留在terminating状态,且删除不掉</p>
+<p>3.重新生成pv和pvc</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl create -f nfs-storage-xx.yaml</span><br></pre></td></tr></table></figure>
+<p>4.可以通过如下命令查看集群中所有pv和pvc的属性</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pv</span><br><span class="line">kubectl get pvc</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -389,8 +449,8 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/Ubuntu%E5%AE%89%E8%A3%85docker/" rel="prev" title="Ubuntu安装docker">
-      <i class="fa fa-chevron-left"></i> Ubuntu安装docker
+    <a href="/Ubuntu%E5%AE%89%E8%A3%85docker/" rel="prev" title="Ubuntu安装docker及相关服务">
+      <i class="fa fa-chevron-left"></i> Ubuntu安装docker及相关服务
     </a></div>
       <div class="post-nav-item">
     <a href="/Ubuntu-ssh/" rel="next" title="Ubuntu ssh">
@@ -454,7 +514,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E8%A6%81%E6%B1%82"><span class="nav-number">1.</span> <span class="nav-text">环境要求</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6%E8%A6%81%E6%B1%82"><span class="nav-number">1.1.</span> <span class="nav-text">硬件要求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E8%A6%81%E6%B1%82"><span class="nav-number">1.2.</span> <span class="nav-text">软件要求</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">依赖安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#K8s%E5%AE%89%E8%A3%85OpenPAI"><span class="nav-number">3.</span> <span class="nav-text">K8s安装OpenPAI</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E9%A1%B9%E7%9B%AE"><span class="nav-number">3.1.</span> <span class="nav-text">准备项目</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E7%A6%BB%E7%BA%BF%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6"><span class="nav-number">3.2.</span> <span class="nav-text">准备离线相关文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E5%AE%89%E8%A3%85%E8%84%9A%E6%9C%AC"><span class="nav-number">3.3.</span> <span class="nav-text">修改安装脚本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E5%8F%82%E6%95%B0%E6%96%87%E4%BB%B6"><span class="nav-number">3.4.</span> <span class="nav-text">编写参数文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E8%A3%85K8s"><span class="nav-number">3.5.</span> <span class="nav-text">安装K8s</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E8%A3%85OpenPAI"><span class="nav-number">3.6.</span> <span class="nav-text">安装OpenPAI</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E8%A6%81%E6%B1%82"><span class="nav-number">1.</span> <span class="nav-text">环境要求</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6%E8%A6%81%E6%B1%82"><span class="nav-number">1.1.</span> <span class="nav-text">硬件要求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E8%A6%81%E6%B1%82"><span class="nav-number">1.2.</span> <span class="nav-text">软件要求</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">依赖安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#K8s%E5%AE%89%E8%A3%85OpenPAI"><span class="nav-number">3.</span> <span class="nav-text">K8s安装OpenPAI</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E9%A1%B9%E7%9B%AE"><span class="nav-number">3.1.</span> <span class="nav-text">准备项目</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E6%8F%90%E4%BE%9B%E5%9B%BD%E5%A4%96%E9%95%9C%E5%83%8F%E7%9A%84%E5%AE%B9%E5%99%A8%E6%9C%8D%E5%8A%A1"><span class="nav-number">3.2.</span> <span class="nav-text">部署提供国外镜像的容器服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E5%AE%89%E8%A3%85%E8%84%9A%E6%9C%AC"><span class="nav-number">3.3.</span> <span class="nav-text">修改安装脚本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E5%8F%82%E6%95%B0%E6%96%87%E4%BB%B6"><span class="nav-number">3.4.</span> <span class="nav-text">编写参数文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E8%A3%85K8s"><span class="nav-number">3.5.</span> <span class="nav-text">安装K8s</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E8%A3%85OpenPAI"><span class="nav-number">3.6.</span> <span class="nav-text">安装OpenPAI</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%87%E4%BB%BD%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">3.7.</span> <span class="nav-text">备份集群配置文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E7%AD%94"><span class="nav-number">3.8.</span> <span class="nav-text">常见问题解答</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E7%AE%A1%E7%90%86"><span class="nav-number">4.</span> <span class="nav-text">服务管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E8%AE%BE%E7%BD%AE"><span class="nav-number">5.</span> <span class="nav-text">存储设置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E6%B7%BB%E5%8A%A0%E5%AD%98%E5%82%A8"><span class="nav-number">5.1.</span> <span class="nav-text">集群添加存储</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E7%AE%A1%E7%90%86%E5%AD%98%E5%82%A8"><span class="nav-number">5.2.</span> <span class="nav-text">本地管理存储</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%87%8D%E6%96%B0%E7%94%9F%E6%88%90%E5%AD%98%E5%82%A8"><span class="nav-number">5.3.</span> <span class="nav-text">重新生成存储</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -470,7 +530,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">69</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -483,7 +543,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">101</span>
+        <span class="site-state-item-count">103</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

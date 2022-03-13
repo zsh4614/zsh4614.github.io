@@ -1,7 +1,5 @@
 User-agent: *
 Allow: /
-Allow: /home/
-Allow: /resource/
 Allow: /archives/
 Allow: /categories/
 Allow: /tags/
@@ -11,5 +9,5 @@ Disallow: /js/
 Disallow: /css/
 Disallow: /fonts/
 Disallow: /fancybox/
+
 Sitemap: https://zsh4614.cn/sitemap.xml
-Sitemap: https://zsh4614.cn/baidusitemap.xml
