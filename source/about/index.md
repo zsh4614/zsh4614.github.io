@@ -1,6 +1,7 @@
 ---
 title: 关于我
 date: 2021-04-10 02:07:28
+disallow: true
 type: about
 ---
 

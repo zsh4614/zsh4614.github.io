@@ -1,12 +1,13 @@
 ---
 title: LeetCode第一百四十四题：二叉树的前序遍历
 notshow: false
-date: 2022-01-29 23:11:23
 tags:
-- 二叉树
-- 二叉树遍历
+  - 二叉树
+  - 二叉树遍历
 categories:
-- LeetCode
+  - LeetCode
+abbrlink: 2568988d
+date: 2022-01-29 23:11:23
 ---
 
 引言：本文主要介绍LeetCode第一百四十四题，对二叉树进行前序遍历，并给出c++实现。

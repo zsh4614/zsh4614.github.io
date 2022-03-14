@@ -1,11 +1,12 @@
 ---
 title: C++11之delete
-date: 2021-04-12 22:56:47
 categories:
-- C++
+  - C++
 tags:
-- C++11
-- delete关键字
+  - C++11
+  - delete关键字
+abbrlink: 100023d0
+date: 2021-04-12 22:56:47
 ---
 
 引言：delete关键字可以禁用某些函数，或者不期望转换和操作符。

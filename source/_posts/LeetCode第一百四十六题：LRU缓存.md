@@ -1,15 +1,16 @@
 ---
 title: LeetCode第一百四十六题：LRU缓存
 notshow: false
-date: 2022-01-24 23:24:38
 tags:
-- 链表
-- 双向链表
-- 哈希
-- list
-- 缓存
+  - 链表
+  - 双向链表
+  - 哈希
+  - list
+  - 缓存
 categories:
-- LeetCode
+  - LeetCode
+abbrlink: c8e0ab74
+date: 2022-01-24 23:24:38
 ---
 
 引言：本文主要介绍LeetCode第一百四十六题，设计一个LRU缓存，并给出c++实现

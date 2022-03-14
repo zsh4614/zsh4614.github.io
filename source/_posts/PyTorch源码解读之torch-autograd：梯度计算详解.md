@@ -1,12 +1,13 @@
 ---
 title: PyTorch源码解读之torch.autograd：梯度计算详解
 notshow: false
-date: 2021-04-24 22:09:20
 tags:
-- torch.autograd
-- 梯度
+  - torch.autograd
+  - 梯度
 categories:
-- PyTorch
+  - PyTorch
+abbrlink: a30cfce2
+date: 2021-04-24 22:09:20
 ---
 
 引言：本篇笔记以介绍 pytorch 中的 autograd 模块功能为主，主要涉及 torch/autograd 下代码，不涉及底层的 C++ 实现。

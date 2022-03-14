@@ -1,12 +1,13 @@
 ---
 title: Leetcode第二百三十四题：回文链表
 notshow: false
-date: 2022-01-21 23:53:46
 tags:
-- 链表
-- 双指针
+  - 链表
+  - 双指针
 categories:
-- LeetCode
+  - LeetCode
+abbrlink: fa133c22
+date: 2022-01-21 23:53:46
 ---
 
 引言：本文主要介绍LeetCode第二百三十四题，判断一个链表是否是回文链表，并给出c++实现。

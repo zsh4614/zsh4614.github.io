@@ -1,11 +1,12 @@
 ---
 title: PaperReading之Vision Transformer(ViT)
 notshow: false
-date: 2022-01-30 11:44:55
 tags:
-- transformer
+  - transformer
 categories:
-- PaperReading
+  - PaperReading
+abbrlink: 82bd8a8f
+date: 2022-01-30 11:44:55
 ---
 
 引言：本文主要介绍ICLR2021论文《AN IMAGE IS WORTH 16X16 WORDS: TRANSFORMERS FOR IMAGE RECOGNITION AT SCALE》。

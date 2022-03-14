@@ -1,12 +1,13 @@
 ---
 title: Ubuntu安装docker及相关服务
 notshow: false
-date: 2021-11-03 17:46:14
 tags:
-- 基础环境
-- docker
+  - 基础环境
+  - docker
 categories:
-- Deploy
+  - Deploy
+abbrlink: 1f09c4d8
+date: 2021-11-03 17:46:14
 ---
 
 引言：本文主要介绍在ubuntu上安装docker，nvidia-docker，以及如何部署私有仓库以及仓库的UI服务。

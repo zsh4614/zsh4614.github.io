@@ -1,12 +1,13 @@
 ---
 title: PyTorch中反卷积的理解
 notshow: false
-date: 2021-05-12 22:24:41
 tags:
-- 反卷积
-- 转置卷积
+  - 反卷积
+  - 转置卷积
 categories:
-- PyTorch
+  - PyTorch
+abbrlink: e994a47e
+date: 2021-05-12 22:24:41
 ---
 
 引言：本文主要介绍PyTorch中反卷积的参数意义

@@ -1,11 +1,12 @@
 ---
 title: Ubuntu server基础环境搭建
 notshow: false
-date: 2021-11-01 17:40:02
 tags:
-- ubuntu基础环境
+  - ubuntu基础环境
 categories:
-- Deploy
+  - Deploy
+abbrlink: 86b50057
+date: 2021-11-01 17:40:02
 ---
 
 引言：本文主要介绍如何在ubuntu电脑上制作ubuntu server 18.04的启动盘，并安装系统和基础环境。

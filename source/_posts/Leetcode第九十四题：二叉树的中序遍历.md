@@ -1,12 +1,13 @@
 ---
 title: Leetcode第九十四题：二叉树的中序遍历
 notshow: false
-date: 2022-01-29 21:48:59
 tags:
-- 二叉树
-- 二叉树遍历
+  - 二叉树
+  - 二叉树遍历
 categories:
-- LeetCode
+  - LeetCode
+abbrlink: b0b8a286
+date: 2022-01-29 21:48:59
 ---
 
 引言：本文主要介绍LeetCode第九十四题，对二叉树进行中序遍历，并给出c++实现。

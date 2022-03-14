@@ -1,13 +1,14 @@
 ---
 title: C++11之constexpr和const的区别
 notshow: false
-date: 2022-01-26 23:12:06
 tags:
-- C++11
-- const
-- constexpr
+  - C++11
+  - const
+  - constexpr
 categories:
-- C++
+  - C++
+abbrlink: de47c1bd
+date: 2022-01-26 23:12:06
 ---
 
 引言：本文主要介绍C++11的新关键字constexpr和const的区别。

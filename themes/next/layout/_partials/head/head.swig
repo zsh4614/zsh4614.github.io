@@ -59,3 +59,7 @@
 {%- endif %}
 
 {{ next_config() }}
+
+{%- if page.disallow %}
+  <meta name="robots" content="noindex,nofollow"/>
+{%- endif %}

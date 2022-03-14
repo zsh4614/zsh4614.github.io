@@ -1,12 +1,13 @@
 ---
 title: LeetCode第一百六十题：相交链表
 notshow: false
-date: 2022-01-17 23:01:11
 tags:
-- 链表
--  哈希
+  - 链表
+  - 哈希
 categories:
-- Leetcode
+  - Leetcode
+abbrlink: 874a6bc2
+date: 2022-01-17 23:01:11
 ---
 引言：本文主要介绍LeetCode第一百六十题，判断两个链表是否相交，并找出相交的结点。
 <!--more-->

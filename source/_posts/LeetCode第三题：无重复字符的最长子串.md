@@ -1,13 +1,14 @@
 ---
 title: LeetCode第三题：无重复字符的最长子串
 notshow: false
-date: 2021-05-20 01:35:56
 tags:
-- 桶优化
-- 哈希
-- 滑动窗口
+  - 桶优化
+  - 哈希
+  - 滑动窗口
 categories:
-- LeetCode
+  - LeetCode
+abbrlink: e92bc492
+date: 2021-05-20 01:35:56
 ---
 
 引言：本文主要分析LeetCode第三题，Python和C++实现；并进行了哈希优化和数组桶优化。

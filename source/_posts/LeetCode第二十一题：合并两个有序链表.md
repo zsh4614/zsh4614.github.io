@@ -1,12 +1,13 @@
 ---
 title: LeetCode第二十一题：合并两个有序链表
 notshow: false
-date: 2022-01-09 23:12:40
 tags:
-- 链表
-- 递归
+  - 链表
+  - 递归
 categories:
-- LeetCode
+  - LeetCode
+abbrlink: 3a318fa4
+date: 2022-01-09 23:12:40
 ---
 
 引言：本文主要分析LeetCode第二十一题，合并两个有序链表，用迭代和递归两种方法实现。

@@ -1,14 +1,15 @@
 ---
 title: C++之STL无序关联式容器unordered_map
 notshow: false
-date: 2022-01-15 16:55:38
 tags:
-- C++11
-- 哈希
--  STL
--  unordered_map
+  - C++11
+  - 哈希
+  - STL
+  - unordered_map
 categories:
-- C++
+  - C++
+abbrlink: '62362e03'
+date: 2022-01-15 16:55:38
 ---
 
 引言：本文主要介绍c++的STL中的关联式容器map，包括其接口，用法和注意事项。

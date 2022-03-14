@@ -1,11 +1,12 @@
 ---
 title: Hexo在多台电脑上维护github个人主页
 notshow: false
-date: 2021-10-30 15:27:04
 tags:
-- 个人主页
+  - 个人主页
 categories:
-- Deploy
+  - Deploy
+abbrlink: 38e1bb3a
+date: 2021-10-30 15:27:04
 ---
 
 引言：本文主要介绍如何在两台（多台）电脑上维护自己的github pages博客。

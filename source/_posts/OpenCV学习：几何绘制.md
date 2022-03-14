@@ -1,10 +1,11 @@
 ---
 title: OpenCV学习：几何绘制
 notshow: false
+categories:
+  - OpenCV
+abbrlink: bbf8a98b
 date: 2021-11-10 15:15:40
 tags:
-categories:
-- OpenCV
 ---
 
 引言：本文主要介绍OpenCV中的部分几何绘制函数的用法，包括：圆，椭圆，矩形，直线，填充多边形。

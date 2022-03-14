@@ -1,12 +1,13 @@
 ---
 title: C++之STL关联式容器set
 notshow: false
-date: 2022-01-10 23:01:04
 tags:
-- set
-- STL
+  - set
+  - STL
 categories:
-- C++
+  - C++
+abbrlink: 5577a3ca
+date: 2022-01-10 23:01:04
 ---
 
 引言：本文主要介绍c++的STL中的关联式容器set，包括其接口，用法和注意事项。

@@ -1,13 +1,14 @@
 ---
 title: C++动态多态
 notshow: false
-date: 2021-12-30 10:23:05
 tags:
-- 动态多态
-- 虚函数
-- 纯虚函数
+  - 动态多态
+  - 虚函数
+  - 纯虚函数
 categories:
-- C++
+  - C++
+abbrlink: cbf5ff3
+date: 2021-12-30 10:23:05
 ---
 
 引言：本文主要介绍c++动态多态（polymorphism），其核心机制为虚函数。

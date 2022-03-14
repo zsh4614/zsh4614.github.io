@@ -1,12 +1,13 @@
 ---
 title: C++之STL关联式容器map
 notshow: false
-date: 2022-01-11 23:09:31
 tags:
-- STL
-- map
+  - STL
+  - map
 categories:
-- C++
+  - C++
+abbrlink: 20ce2cad
+date: 2022-01-11 23:09:31
 ---
 引言：本文主要介绍c++的STL中的关联式容器map，包括其接口，用法和注意事项。
 

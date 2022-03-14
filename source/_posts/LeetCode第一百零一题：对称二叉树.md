@@ -1,12 +1,13 @@
 ---
 title: LeetCode第一百零一题：对称二叉树
 notshow: false
-date: 2022-02-09 18:23:54
 tags:
-- 二叉树
-- 队列
+  - 二叉树
+  - 队列
 categories:
-- LeetCode
+  - LeetCode
+abbrlink: dc905f90
+date: 2022-02-09 18:23:54
 ---
 
 引言：本文主要分析LeetCode第一百零一题，判断一颗二叉树是不是对称二叉树，并给出c++实现。

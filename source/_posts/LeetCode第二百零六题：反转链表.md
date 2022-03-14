@@ -1,13 +1,14 @@
 ---
 title: LeetCode第二百零六题：反转链表
 notshow: false
-date: 2022-01-20 22:32:30
 tags:
-- 链表
-- 递归
-- stack
+  - 链表
+  - 递归
+  - stack
 categories:
-- LeetCode
+  - LeetCode
+abbrlink: ccbd75e7
+date: 2022-01-20 22:32:30
 ---
 引言：本文主要介绍LeetCode第二百零六题，将一个链表进行反转。
 

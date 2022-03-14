@@ -1,12 +1,13 @@
 ---
 title: 详解roi-pooling和roi-align
 notshow: false
-date: 2021-05-12 21:12:53
 tags:
-- roi-pooling
-- roi-align
+  - roi-pooling
+  - roi-align
 categories:
-- 机器学习
+  - 机器学习
+abbrlink: 68201bc4
+date: 2021-05-12 21:12:53
 ---
 
 引言：roi pooling和roi align是二阶段方法中常用的操作，本文总结二者的具体操作和不同。

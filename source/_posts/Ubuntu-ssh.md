@@ -1,11 +1,12 @@
 ---
 title: Ubuntu ssh
 notshow: false
-date: 2021-11-04 10:56:44
 tags:
-- ssh
+  - ssh
 categories:
-- Deploy
+  - Deploy
+abbrlink: e164be14
+date: 2021-11-04 10:56:44
 ---
 
 引言：本文主要介绍Ubuntu的ssh相关服务。

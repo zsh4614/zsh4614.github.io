@@ -1,11 +1,12 @@
 ---
 title: C++智能指针weak_ptr
 notshow: false
-date: 2022-03-10 10:58:03
 tags:
-- C++11
+  - C++11
 categories:
-- C++
+  - C++
+abbrlink: 417e62ab
+date: 2022-03-10 10:58:03
 ---
 
 引言：本文主要介绍C++11的智能指针weak_ptr。

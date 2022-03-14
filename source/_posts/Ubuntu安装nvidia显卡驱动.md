@@ -1,12 +1,13 @@
 ---
 title: Ubuntu安装nvidia显卡驱动
 notshow: false
-date: 2021-11-03 17:34:19
 tags:
-- 基础环境
-- 显卡驱动
+  - 基础环境
+  - 显卡驱动
 categories:
-- Deploy
+  - Deploy
+abbrlink: e65aa483
+date: 2021-11-03 17:34:19
 ---
 
 引言：本文主要介绍在ubuntu系统上安装nvidia显卡驱动的方法，并优化驱动。

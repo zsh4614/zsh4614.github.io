@@ -1,12 +1,13 @@
 ---
 title: Ubuntu挂载磁盘
 notshow: false
-date: 2021-11-03 16:28:21
 tags:
-- 基础环境
-- 磁盘挂载
+  - 基础环境
+  - 磁盘挂载
 categories:
-- Deploy
+  - Deploy
+abbrlink: f28f0262
+date: 2021-11-03 16:28:21
 ---
 
 引言：本文主要介绍ubuntu系统（包含desktop和server版本）挂载磁盘的方法，包括临时挂载和永久挂载。

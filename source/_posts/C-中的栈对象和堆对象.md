@@ -1,14 +1,15 @@
 ---
 title: C++中的栈对象和堆对象
 notshow: false
-date: 2022-01-21 15:18:26
 tags:
-- 堆
-- 栈
-- new
-- delete
+  - 堆
+  - 栈
+  - new
+  - delete
 categories:
-- C++
+  - C++
+abbrlink: 859078db
+date: 2022-01-21 15:18:26
 ---
 
 引言：本文主要介绍两种建立类对象的方式，在栈上和堆上建立，以及对它们的理解。

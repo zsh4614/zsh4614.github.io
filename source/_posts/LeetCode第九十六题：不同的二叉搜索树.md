@@ -1,13 +1,14 @@
 ---
 title: LeetCode第九十六题：不同的二叉搜索树
 notshow: false
-date: 2022-02-14 21:35:49
 tags:
-- 二叉树
-- 动态规划
-- 二叉搜索树
+  - 二叉树
+  - 动态规划
+  - 二叉搜索树
 categories:
-- LeetCode
+  - LeetCode
+abbrlink: 6d10e558
+date: 2022-02-14 21:35:49
 ---
 引言：本文主要介绍LeetCode第九十六题，不同的二叉搜索树数量，并给出c++实现。
 

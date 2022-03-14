@@ -1,11 +1,12 @@
 ---
 title: LeetCode第二题：两数相加
 notshow: false
-date: 2021-05-18 23:19:13
 tags:
-- 链表
+  - 链表
 categories:
-- LeetCode
+  - LeetCode
+abbrlink: '22719e96'
+date: 2021-05-18 23:19:13
 ---
 
 引言：本文主要分析LeetCode第二题，Python和C++实现；并对链表做了简单说明。

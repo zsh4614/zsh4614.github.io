@@ -1,13 +1,14 @@
 ---
 title: LeetCode第十九题：删除链表的倒数第 N 个结点
 notshow: false
-date: 2022-01-23 00:42:00
 tags:
-- 链表
-- stack
-- 双指针
+  - 链表
+  - stack
+  - 双指针
 categories:
-- LeetCode
+  - LeetCode
+abbrlink: c46b6460
+date: 2022-01-23 00:42:00
 ---
 
 引言：本文主要介绍LeetCode第十九题，删除链表的倒数第N个结点，并给出c++实现。

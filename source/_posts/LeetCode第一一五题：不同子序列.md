@@ -1,13 +1,14 @@
 ---
 title: LeetCode第一一五题：不同子序列
 notshow: false
-date: 2021-10-23 17:04:46
 tags:
-- 动态规划
-- 算法优化
-- dfs
+  - 动态规划
+  - 算法优化
+  - dfs
 categories:
-- LeetCode
+  - LeetCode
+abbrlink: 5ff53701
+date: 2021-10-23 17:04:46
 ---
 
 引言：本文主要分析LeetCode第一一五题，利用C++实现；并进行了空间优化，另外还可以利用dfs进行时间优化。

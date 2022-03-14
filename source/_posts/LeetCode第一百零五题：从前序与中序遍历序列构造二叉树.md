@@ -1,12 +1,13 @@
 ---
 title: LeetCode第一百零五题：从前序与中序遍历序列构造二叉树
 notshow: false
-date: 2022-02-18 00:05:01
 tags:
-- 二叉树
-- 二叉树遍历
+  - 二叉树
+  - 二叉树遍历
 categories:
-- LeetCode
+  - LeetCode
+abbrlink: 1e9333ce
+date: 2022-02-18 00:05:01
 ---
 
 引言：本文主要介绍LeetCode第一百零五题，给定一个二叉树的前序遍历和中序遍历结果，构造出二叉树，并给出c++实现。

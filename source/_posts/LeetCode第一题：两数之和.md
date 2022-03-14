@@ -1,11 +1,12 @@
 ---
 title: LeetCode第一题：两数之和
 notshow: false
-date: 2021-05-17 23:54:17
 tags:
-- 哈希
+  - 哈希
 categories:
-- LeetCode
+  - LeetCode
+abbrlink: 67be5542
+date: 2021-05-17 23:54:17
 ---
 
 引言：本文主要分析LeetCode第一题，Python和C++实现；并对哈希做了简单说明。

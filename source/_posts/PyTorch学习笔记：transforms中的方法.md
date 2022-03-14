@@ -1,11 +1,12 @@
 ---
 title: PyTorch学习笔记：transforms中的方法
-date: 2021-04-19 00:04:56
 tags:
-- torchvision.transforms
-- 图像预处理函数
+  - torchvision.transforms
+  - 图像预处理函数
 categories:
-- PyTorch
+  - PyTorch
+abbrlink: 7f4fd48b
+date: 2021-04-19 00:04:56
 ---
 
 引言 ：torchvision.transforms是pytorch中的图像预处理包，包含了很多种对图像数据进行变换的函数，这些都是在我们进行图像数据读入步骤中必不可少的。

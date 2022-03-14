@@ -1,13 +1,14 @@
 ---
 title: LeetCode第一四一题：环形链表
 notshow: false
-date: 2022-01-09 23:19:12
 tags:
-- 链表
-- 判圈算法
-- 哈希
+  - 链表
+  - 判圈算法
+  - 哈希
 categories:
-- LeetCode
+  - LeetCode
+abbrlink: d66c7431
+date: 2022-01-09 23:19:12
 ---
 
 引言：本文主要介绍leetcode第一四一题，判断一个链表是否有环，并给出其实现。

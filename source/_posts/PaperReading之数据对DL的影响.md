@@ -1,11 +1,12 @@
 ---
 title: PaperReading之数据对DL的影响
 notshow: false
-date: 2022-02-07 10:08:03
 tags:
-- data
+  - data
 categories:
-- PaperReading
+  - PaperReading
+abbrlink: ad9b8c50
+date: 2022-02-07 10:08:03
 ---
 
 引言：本文主要介绍ICCV2017论文《Revisiting Unreasonable Effectiveness of Data in Deep Learning Era》。

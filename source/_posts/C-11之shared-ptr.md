@@ -1,11 +1,12 @@
 ---
 title: C++11之shared_ptr
 notshow: false
-date: 2021-06-13 16:55:10
 tags:
-- C++11
+  - C++11
 categories:
-- C++
+  - C++
+abbrlink: eac067c7
+date: 2021-06-13 16:55:10
 ---
 
 引言：本节介绍C++11新特性之 shared_ptr 智能指针。

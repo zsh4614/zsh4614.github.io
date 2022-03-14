@@ -1,14 +1,15 @@
 ---
 title: PyTorch源码解读之DP&DDP：数据并行和分布式训练详解
 notshow: false
-date: 2021-05-15 22:18:57
 tags:
-- DP
-- DDP
-- 源码解读
-- 分布式训练
+  - DP
+  - DDP
+  - 源码解读
+  - 分布式训练
 categories:
-- PyTorch
+  - PyTorch
+abbrlink: 89eb6e8b
+date: 2021-05-15 22:18:57
 ---
 
 引言：本文介绍 PyTorch 里的数据并行训练，涉及 nn.DataParallel (DP) 和 nn.parallel.DistributedDataParallel (DDP) 两个模块（基于 1.7 版本），涵盖分布式训练的原理以及源码解读。

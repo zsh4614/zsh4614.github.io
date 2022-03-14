@@ -1,11 +1,12 @@
 ---
 title: LeetCode第一九八题：打家劫舍
 notshow: false
-date: 2021-10-23 17:04:46
 tags:
-- 动态规划
+  - 动态规划
 categories:
-- LeetCode
+  - LeetCode
+abbrlink: 464a6b04
+date: 2021-10-23 17:04:46
 ---
 
 引言：本文主要分析LeetCode第一九八题，属于典型动态规划，最后C++实现。

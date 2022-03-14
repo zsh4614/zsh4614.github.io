@@ -1,12 +1,13 @@
 ---
 title: LeetCode第一百四十二题：环形链表二
 notshow: false
-date: 2022-01-16 16:40:10
 tags:
-- 链表
-- 判圈算法
+  - 链表
+  - 判圈算法
 categories:
-- LeetCode
+  - LeetCode
+abbrlink: a9601fb5
+date: 2022-01-16 16:40:10
 ---
 引言：本文主要分析LeetCode第一百四十二题，判断一个链表是否有环，有环的话找到入环的结点，用佛洛依德判圈算法实现。
 

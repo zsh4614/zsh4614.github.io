@@ -1,11 +1,12 @@
 ---
 title: Ubuntu18.04 Server安装OpenPAI v1.8.0
 notshow: false
-date: 2021-11-04 10:25:57
 tags:
-- OpenPAI
+  - OpenPAI
 categories:
-- Deploy
+  - Deploy
+abbrlink: 66d9ef5
+date: 2021-11-04 10:25:57
 ---
 
 引言：本文主要介绍如何在Ubuntu18.04上安装OpenPAI v1.8.0。

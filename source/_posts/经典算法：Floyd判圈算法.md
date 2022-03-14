@@ -1,11 +1,12 @@
 ---
 title: 经典算法：Floyd判圈算法
 notshow: false
-date: 2022-01-15 17:21:19
 tags:
-- 判圈算法
+  - 判圈算法
 categories:
-- 经典算法
+  - 经典算法
+abbrlink: fe9f58f0
+date: 2022-01-15 17:21:19
 ---
 引言：本文主要介绍一种常用的判圈算法，并给出其推导。
 

@@ -1,11 +1,12 @@
 ---
 title: C++之memset和fill函数
-date: 2021-04-17 00:37:45
 tags:
-- memset
-- fill
+  - memset
+  - fill
 categories:
-- C++
+  - C++
+abbrlink: 186e07c6
+date: 2021-04-17 00:37:45
 ---
 
 引言：memset和fill都能进行赋值操作，但是二者有所区别，使用场景和方法也不同。
